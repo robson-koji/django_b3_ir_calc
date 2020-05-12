@@ -1,0 +1,107 @@
+{% load iterate_dicts %}
+{% load mathfilters %}
+
+
+
+<style media="screen">
+  td {text-align:center}
+  table {
+    margin-bottom:40px;
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .up20000{
+    color:blue;
+    font-weight: bold;
+  }
+  .dit{
+    text-align:left;
+    font-weight: bold;
+  }
+  table, th, td {
+    border: 1px solid black;
+  }
+</style>
+
+
+
+{% for key, value in months.items %}
+  <h1>{{ value.dt|date:"F Y" }}</h1>
+
+
+    <table>
+      <tr>
+        <th colspan='4'>Month</th>
+        <th colspan='2'>Cumulate</th>
+      </tr>
+      <tr>
+        <th>Buy</th><th>Sell</th>
+        <th>Gain</th><th>Loss</th>
+        <th>Gain</th><th>Loss</th>
+      </tr>
+      <tr>
+        <td>{{ value.month_buy }}</td>
+        {% if value.month_sell > 20000 %}
+          <td class='up20000'>{{ value.month_sell }}</td>
+          <td class='up20000'>{{ value.month_gain|floatformat:"2" }}</td>
+          <td class='up20000'>{{ value.month_loss|floatformat:"2" }}</td>
+        {% else %}
+          <td>{{ value.month_sell }}</td>
+          <td>{{ value.month_gain|floatformat:"2" }}</td>
+          <td>{{ value.month_loss|floatformat:"2" }}</td>
+        {% endif %}
+        <td>{{ value.cumulate_gain|floatformat:"2" }}</td>
+        <td>{{ value.cumulate_loss|floatformat:"2" }}</td>
+      </tr>
+      {% if value.month_sell > 20000 and value.month_gain > 0 and value.cumulate_loss == 0 %}
+        <tr><td colspan=11 class='up20000 dit'> Due income tax = {{ value.month_gain|mul:.2|floatformat:"2" }}</td> </tr>
+      {% else %}
+        <tr><td colspan=11 class='dit'> Due income tax = 0 </td></tr>
+      {% endif %}
+    </table>
+
+
+    {% with months_operations|get_item:key as operations %}
+    <table>
+      <tr>
+        <th></th>
+        <th colspan='6'>Operation</th>
+        <th colspan='4'>Position</th>
+      </tr>
+      <tr>
+        <th></th>
+
+        <th>Oper</th>
+        <th>Dt</th>
+        <th>Qt</th>
+        <th>Value</th>
+        <th>Price</th>
+        <th>Profit</th>
+        <th>Loss</th>
+
+        <th>Qt</th>
+        <th>AvgPrice</th>
+        <th>AvgPricePrev</th>
+      </tr>
+      {% for stock, value in operations.items %}
+        <tr>
+        {% for oper in value %}
+          <td>{{oper.name}}</td>
+          <td>{{oper.buy_sell}}</td>
+          <td>{{oper.dt}}</td>
+          <td>{{oper.qt}}</td>
+          <td>{{oper.value}}</td>
+          <td>{{oper.unit_price}}</td>
+          <td>{{oper.profit|floatformat:"2"}}</td>
+          <td>{{oper.loss|floatformat:"2"}}</td>
+
+          <td>{{oper.qt_total}}</td>
+          <td>{{oper.avg_price|floatformat:"2"}}</td>
+          <td>{{oper.avg_price_prev|floatformat:"2"}}</td>
+        </tr>
+        {% endfor %}
+      {% endfor %}
+    </table>
+    {% endwith %}
+    <hr>
+{% endfor %}

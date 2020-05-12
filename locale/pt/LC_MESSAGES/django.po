@@ -1,0 +1,83 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-05-12 04:34+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: django_b3_ir_calc/settings.py:129
+msgid "English"
+msgstr ""
+
+#: django_b3_ir_calc/settings.py:130
+msgid "Portuguese"
+msgstr ""
+
+#: templates/base.html:240
+msgid "History"
+msgstr "Histórico"
+
+#: templates/base.html:253
+#, fuzzy
+#| msgid "Current Position"
+msgid "Position"
+msgstr "Posição"
+
+#: templates/report/position.html:14
+msgid "Current Position"
+msgstr "Posição atual"
+
+#: templates/report/position.html:80
+msgid "Total Buy"
+msgstr "Total Comprado"
+
+#: templates/report/position.html:87
+msgid "Total Current"
+msgstr "Total Corrente"
+
+#: templates/report/position.html:94 templates/report/position.html:133
+msgid "Balance"
+msgstr "Saldo"
+
+#: templates/report/position.html:101 templates/report/position.html:134
+msgid "Change"
+msgstr "Variação"
+
+#: templates/report/position.html:118
+msgid "Stock Wallet"
+msgstr "Carteira de Ações"
+
+#: templates/report/position.html:128
+#, fuzzy
+#| msgid "Qt."
+msgid "Qt."
+msgstr "Qt."
+
+#: templates/report/position.html:129
+msgid "Buy Avg."
+msgstr "Preço Médio"
+
+#: templates/report/position.html:130
+msgid "Curr. Price"
+msgstr "Preço Atual"
+
+#: templates/report/position.html:131
+msgid "Buy Total"
+msgstr "Total Comprado"
+
+#: templates/report/position.html:132
+msgid "Curr. Total"
+msgstr "Total Corrente"

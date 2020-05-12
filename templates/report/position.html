@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+
+{% block content %}
+
+
+      <!-- Dashboard wrapper start -->
+      <div class="dashboard-wrapper">
+
+        <!-- Page title start -->
+        <div class="page-title clearfix">
+          <h2>
+            {% trans "Current Position" %}
+            <small>
+              <ul>
+                <li>Home</li>
+                <li>/</li>
+                <li>Dashboard</li>
+                <li>/</li>
+                <li>Tables</li>
+              </ul>
+            </small>
+          </h2>
+
+
+          <ul class="stats hidden-xs">
+            {% comment %}
+            <li class="jet-blue-bg">
+              <span class="fs1" aria-hidden="true" data-icon="&#xe042;"></span>
+              <div class="details">
+                <span class="big">Ireland</span>
+                <span class="small">Current Location</span>
+              </div>
+            </li>
+            <li class="go-green-bg">
+              <span class="fs1" aria-hidden="true" data-icon="&#xe036;"></span>
+              <div class="details">
+                <span class="big">Ireland</span>
+                <span class="small">Current Location</span>
+              </div>
+            </li>
+            <li class="nagpur-orange-bg">
+              <span class="fs1" aria-hidden="true" data-icon="&#xe042;"></span>
+              <div class="details">
+                <span class="big">Ireland</span>
+                <span class="small">Current Location</span>
+              </div>
+            </li>
+            <li class="ruby-red-bg">
+              <span class="fs1" aria-hidden="true" data-icon="&#xe042;"></span>
+              <div class="details">
+                <span class="big">Ireland</span>
+                <span class="small">Current Location</span>
+              </div>
+            </li>
+            <li class="light-red-bg">
+              <span class="fs1" aria-hidden="true" data-icon="&#xe042;"></span>
+              <div class="details">
+                <span class="big">Ireland</span>
+                <span class="small">Current Location</span>
+              </div>
+            </li>
+            <li class="lemon-yellow-bg">
+              <span class="fs1" aria-hidden="true" data-icon="&#xe042;"></span>
+              <div class="details">
+                <span class="big">Ireland</span>
+                <span class="small">Current Location</span>
+              </div>
+            </li>
+            {% endcomment %}
+
+
+
+            <li class="sea-green-bg">
+              <span class="fs1" aria-hidden="true" data-icon="&#xe037;"></span>
+              <div class="details">
+                <span class="big">R$ {{ summary.buy_total|floatformat:"2" }}</span>
+                <span class="small">{% trans "Total Buy" %}</span>
+              </div>
+            </li>
+            <li class="go-green-bg">
+              <span class="fs1" aria-hidden="true" data-icon="&#xe039;"></span>
+              <div class="details">
+                <span class="big">R$ {{ summary.cur_total|floatformat:"2" }}</span>
+                <span class="small">{% trans "Total Current" %}</span>
+              </div>
+            </li>
+            <li class="dark-grey-bg">
+              <span class="fs1" aria-hidden="true" data-icon="&#xe004;"></span>
+              <div class="details">
+                <span class="big">R$ {{ summary.balance|floatformat:"2" }}</span>
+                <span class="small">{% trans "Balance" %}</span>
+              </div>
+            </li>
+            <li class="light-grey-bg">
+              <span class="fs1" aria-hidden="true" data-icon="&#xe096;"></span>
+              <div class="details">
+                <span class="big">{{ summary.balance_pct|floatformat:"2" }}%</span>
+                <span class="small">{% trans "Change" %} %</span>
+              </div>
+            </li>
+
+          </ul>
+        </div>
+        <!-- Page title end -->
+
+
+
+
+        <!-- Row start -->
+        <div class="row">
+          <div class="col-md-12">
+            <div class="widget">
+              <div class="widget-header">
+                <div class="title">
+                  <span class="fs1" aria-hidden="true" data-icon="&#xe14a;"></span> {% trans 'Stock Wallet' %} - {% now "F Y" %}
+                </div>
+              </div>
+              <div class="widget-body">
+                <div id="dt_example" class="example_alt_pagination">
+
+                  <table class="table table-condensed table-striped table-hover table-bordered pull-left" id="data-table-position">
+                    <thead>
+                      <tr>
+                        <th></th>
+                        <th class="text-center">{% trans "Qt." %}</th>
+                        <th class="text-center">{% trans "Buy Avg." %}</th>
+                        <th class="text-center">{% trans "Curr. Price" %}</th>
+                        <th class="text-center">{% trans "Buy Total" %}</th>
+                        <th class="text-center">{% trans "Curr. Total" %}</th>
+                        <th class="text-center">{% trans "Balance" %}</th>
+                        <th class="text-center">{% trans "Change" %} %</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for position in current_position%}
+                        <tr class="gradeX">
+                          <td><b>{{ position.stock }}</b></td>
+                          <td class="text-center">{{ position.qt }}</td>
+                          <td class="text-right">{{ position.buy_avg|floatformat:"2" }}</td>
+                          <td class="text-right">{{ position.curr_price|floatformat:"2" }}</td>
+                          <td class="text-right">{{ position.buy_total|floatformat:"2" }}</td>
+                          <td class="text-right">{{ position.cur_total|floatformat:"2" }}</td>
+                          <td class="text-right">{{ position.balance|floatformat:"2" }}</td>
+                          <td class="text-right">{{ position.balance_pct|floatformat:"2" }}</td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!-- Row end -->
+
+      </div>
+      <!-- Dashboard wrapper end -->
+
+
+
+{% endblock content %}

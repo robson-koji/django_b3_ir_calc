@@ -1,0 +1,20 @@
+.label_cp1{
+  font-size: 105%
+}
+
+
+/* Tamanho do titulo das paginas */
+.page-title ul.stats li [data-icon]:before{
+  font-size: 23px;
+}
+
+
+/* Para o campo de busca da tabela de poisicao */
+input[type="search"] {
+    border: 1px solid #adadad;
+}
+
+/* Para o select da tabela de posicao */
+#dt_example .dataTables_length select{
+  height: unset;
+}

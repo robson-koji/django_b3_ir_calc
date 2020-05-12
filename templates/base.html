@@ -1,0 +1,323 @@
+{% load i18n %}
+
+
+<!DOCTYPE html>
+
+  <!--[if lt IE 7]>
+    <html class="lt-ie9 lt-ie8 lt-ie7" lang="en">
+  <![endif]-->
+
+  <!--[if IE 7]>
+    <html class="lt-ie9 lt-ie8" lang="en">
+  <![endif]-->
+
+  <!--[if IE 8]>
+    <html class="lt-ie9" lang="en">
+  <![endif]-->
+
+  <!--[if gt IE 8]>
+    <!-->
+    <html lang="en">
+    <!--
+  <![endif]-->
+
+  <head>
+    <meta charset="utf-8">
+    <title>B3 - Calculo de Imposto de Renda</title>
+    <meta name="author" content="Srinu">
+    <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
+    <meta name="description" content="Slick Admin Admin UI">
+    <meta name="keywords" content="Slick Admin, Admin UI, Admin Dashboard, John">
+
+    <script src="/static/js/html5-trunk.js"></script>
+
+    <link href="/static/icomoon/style.css" rel="stylesheet">
+    <!--[if lte IE 7]>
+    <script src="/static/css/icomoon-font/lte-ie7.js"></script>
+    <![endif]-->
+
+    <!-- font awesome -->
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!-- bootstrap css -->
+    <link href="/static/css/bootstrap.css" rel="stylesheet">
+
+    <!-- custom css -->
+    <link href="/static/css/main.css" rel="stylesheet">
+    <link href="/static/css/custom.css" rel="stylesheet">
+
+    <!-- datatables -->
+    <link href="/static/css/datatables.min.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+    <!-- Header start -->
+    <header>
+
+      <!-- Logo start -->
+      <div class="logo">
+        B3<span> IR Calc</span>
+      </div>
+      <!-- Logo end -->
+
+      <!-- Optional Dropdown start -->
+      <div id="optional-dropdown">
+        <ul>
+          <li>
+            <a href="index.html">
+              <span class="fs1" aria-hidden="true" data-icon="&#xe000;" ></span>
+            </a>
+          </li>
+          <li>
+            <a href="invoice.html">
+              <span class="fs1" aria-hidden="true" data-icon="&#xe099;"></span>
+              <span class="count-label"></span>
+            </a>
+            <ul>
+              <li>
+                <a href="invoice.html"><span class="fs1" aria-hidden="true" data-icon="&#xe004;"></span> Invoice</a>
+              </li>
+              <li>
+                <a href="maps.html"><span class="fs1" aria-hidden="true" data-icon="&#xe042;"></span> Maps</a>
+              </li>
+              <li>
+                <a href="profile.html"><span class="fs1" aria-hidden="true" data-icon="&#xe074;"></span> Profile</a>
+              </li>
+              <li>
+                <a href="typography.html"> <span class="fs1" aria-hidden="true" data-icon="&#xe141;"></span> Typography</a>
+              </li>
+              <li>
+                <a href="calendar.html"><span class="fs1" aria-hidden="true" data-icon="&#xe052;"></span> Calendar</a>
+              </li>
+              <li>
+                <a href="mail.html"><span class="fs1" aria-hidden="true" data-icon="&#xe004;"></span> Messages</a>
+              </li>
+              <li>
+                <a href="icons.html"><span class="fs1" aria-hidden="true" data-icon="&#xe0a9;"></span> Icons</a>
+              </li>
+              <li>
+                <a href="grid.html"><span class="fs1" aria-hidden="true" data-icon="&#xe14c;"></span> Grid</a>
+              </li>
+              <li>
+                <a href="error.html"><span class="fs1" aria-hidden="true" data-icon="&#xe0f4;"></span> 404</a>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a href="mail.html">
+              <span class="fs1" aria-hidden="true" data-icon="&#xe040;" ></span>
+              <span class="count-label"></span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <!-- Optional Dropdown end -->
+
+      <!-- Search bar start -->
+      <div class="custom-search hidden-phone">
+        <input type="text" class="search-query">
+        <button> <span class="fs1" aria-hidden="true" data-icon="&#xe07f;"></span></button>
+      </div>
+      <!-- Search bar end -->
+
+      <!-- Mini navigation start -->
+      <div id="mini-nav" class="hidden-phone">
+        <ul>
+          <li class="hidden-sm">
+            <a href="maps.html">Dropdown
+              <span class="fs1" aria-hidden="true" data-icon="&#xe099;"></span>
+              <span class="count-label">7</span>
+            </a>
+            <ul>
+              <li>
+                <a href="maps.html"><span class="fs1" aria-hidden="true" data-icon="&#xe042;"></span> Maps</a>
+              </li>
+              <li>
+                <a href="invoice.html"><span class="fs1" aria-hidden="true" data-icon="&#xe004;"></span> Invoice</a>
+              </li>
+            </ul>
+          </li>
+          <li class="hidden-sm">
+            <a href="maps.html">
+              <span class="fs1" aria-hidden="true" data-icon="&#xe042;" ></span>
+              <span class="count-label">6</span>
+            </a>
+            <ul>
+              <li>
+                <a href="maps.html"><span class="fs1" aria-hidden="true" data-icon="&#xe042;"></span> Maps</a>
+              </li>
+            </ul>
+          </li>
+          <li class="hidden-sm">
+            <a href="mail.html">
+              <span class="fs1" aria-hidden="true" data-icon="&#xe049;" ></span>
+              <span class="count-label">5</span>
+            </a>
+            <ul>
+              <li>
+                <a href="mail.html"><span class="fs1" aria-hidden="true" data-icon="&#xe049;"></span> Messages</a>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a href="login.html">
+              <span class="text-label">Mr. John </span><span class="fs1" aria-hidden="true" data-icon="&#xe088;"></span>
+            </a>
+            <ul class="user-summary">
+              <li>
+                <div class="summary">
+                  <div class="user-pic">
+                    <img src="/static/img/logo2.png" alt="Slick Admin"/>
+                  </div>
+                  <div class="basic-details">
+                    <h4 class="no-margin">Johnny</h4>
+                    <h5 class="no-margin">UX Designer</h5>
+                    <small>Garabandha, India</small>
+                  </div>
+                  <div class="profile-progress">
+                    <div class="chart-progress" data-percent="68">
+                      68%
+                    </div>
+                  </div>
+                  <div class="clearfix"></div>
+                </div>
+              </li>
+              <li>
+                <button class="btn btn-xs btn-danger pull-right" onclick="location.href='login.html'">Logout</button>
+                <span class="clearfix"></span>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <!-- Mini navigation end -->
+
+    </header>
+    <!-- Header end -->
+
+
+
+        <!-- Main Container start -->
+        <div class="main-container">
+
+          <!-- Sidebar start -->
+          <div class="sidebar hidden-xs">
+            <div class="user-profile-pic">
+              <img src="/static/img/logo3.png" alt="Slick Admin">
+            </div>
+            <ul class="slick-menu">
+              <li>
+                <a href="index.html">
+                  <span class="fs1" aria-hidden="true" data-icon="&#xe0a2;"></span>
+                  <strong>Dashboard</strong>
+                </a>
+              </li>
+              <li class="drop-menu">
+                <a href="">
+                  <span class="fs1" aria-hidden="true" data-icon="&#xe0d2;"></span>
+
+                  <strong>UI Elements</strong>
+                </a>
+                <ul>
+                  <li><a href="ui-elements.html"><span class="fs1" aria-hidden="true" data-icon="&#xe02d;"></span>UI Elements</a></li>
+                  <li><a href="panels.html"><span class="fs1" aria-hidden="true" data-icon="&#xe0b8;"></span>Panels</a></li>
+                  <li><a href="icons.html"><span class="fs1" aria-hidden="true" data-icon="&#xe00a;"></span>Icons</a></li>
+                  <li><a href="grid.html"><span class="fs1" aria-hidden="true" data-icon="&#xe14c;"></span>Grid</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="forms.html">
+                  <span class="fs1" aria-hidden="true" data-icon="&#xe0b8;"></span>
+                  <strong>Forms</strong>
+                </a>
+              </li>
+              <li class="drop-menu">
+                <a href="">
+                  <span class="fs1" aria-hidden="true" data-icon="&#xe096;"></span>
+
+                  <strong>{% trans "History" %}</strong>
+                </a>
+                <ul>
+                  <li><a href="charts.html"><span class="fs1" aria-hidden="true" data-icon="&#xe096;"></span>Google</a></li>
+                  <li><a href="flot.html"><span class="fs1" aria-hidden="true" data-icon="&#xe095;"></span>Flot</a></li>
+                  <li><a href="maps.html"><span class="fs1" aria-hidden="true" data-icon="&#xe046;"></span>Maps</a></li>
+                </ul>
+              </li>
+              <li class="active">
+                <a href="tables.html">
+                  <div class="current-page"></div>
+                  <!-- <span class="fs1" aria-hidden="true" data-icon="&#xe14a;"></span> -->
+                  <span class="fs1" aria-hidden="true" data-icon="&#xe14a;"></span>
+                  <strong>{% trans "Current Position" %} </strong>
+                </a>
+              </li>
+              <li>
+                <a href="gallery.html">
+                  <span class="fs1" aria-hidden="true" data-icon="&#xe00d;"></span>
+                  <strong>Gallery</strong>
+                </a>
+              </li>
+              <li>
+                <a href="login.html">
+                  <span class="fs1" aria-hidden="true" data-icon="&#xe088;"></span>
+                  <strong>Login</strong>
+                </a>
+              </li>
+            </ul>
+          </div>
+          <!-- Sidebar end -->
+
+          {% block content %}
+          {% endblock %}
+
+        </div>
+        <!-- Main Container end -->
+
+
+    <!-- Scripts -->
+    <script src="/static/js/jquery-1.12.4.min.js"></script>
+    <script src="/static/js/bootstrap.js"></script>
+    <script src="/static/js/jquery-ui-1.8.23.custom.min.js"></script>
+
+    <!-- Easy pie charts -->
+    <script src="/static/js/jquery.easy-pie-chart.js"></script>
+
+    <!-- Sparkline graphs -->
+    <script src="/static/js/jquery.sparkline.js"></script>
+
+    <!-- Data tables -->
+    <!-- <script src="/static/js/jquery.dataTables.js"></script> -->
+    <script src="/static/js/datatables.min.js"></script>
+
+
+
+    <!-- Custom Js -->
+    <script src="/static/js/custom-tables.js"></script>
+
+    <!-- custom Js -->
+    <script src="/static/js/custom.js"></script>
+
+
+    <script type="text/javascript">
+
+       $(document).ready(function() {
+         $('#data-table-position').dataTable({
+         aLengthMenu: [
+         [25, 50, 100, 200, -1],
+         [25, 50, 100, 200, "All"]
+         ],
+         iDisplayLength: -1,
+         "language": {
+           "decimal": ",",
+           "thousands": "."
+          }
+
+        });
+      });
+  </script>
+
+  </body>
+
+  </html>

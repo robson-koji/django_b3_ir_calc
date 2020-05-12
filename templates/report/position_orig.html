@@ -1,0 +1,51 @@
+<style media="screen">
+  td {text-align:center}
+  table {
+    margin-bottom:40px;
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .up20000{
+    color:blue;
+    font-weight: bold;
+  }
+  .dit{
+    text-align:left;
+    font-weight: bold;
+  }
+  table, th, td {
+    border: 1px solid black;
+  }
+</style>
+
+<p>
+Total Buy : {{ summary.buy_total|floatformat:"2" }}<br>
+Total Current: {{ summary.cur_total|floatformat:"2" }}<br>
+Balance: {{ summary.balance|floatformat:"2" }}<br>
+Balance pct: {{ summary.balance_pct|floatformat:"2" }}%<br>
+</p>
+
+<table>
+  <tr>
+    <th></th>
+    <th>Qt</th>
+    <th>Buy Avg</th>
+    <th>Curr. Price</th>
+    <th>Buy Total</th>
+    <th>Curr. Total</th>
+    <th>Balance</th>
+    <th>Balance %</th>
+  </tr>
+  {% for position in current_position%}
+    <tr>
+      <td>{{ position.stock }}</td>
+      <td>{{ position.qt }}</td>
+      <td>{{ position.buy_avg|floatformat:"2" }}</td>
+      <td>{{ position.curr_price }}</td>
+      <td>{{ position.buy_total|floatformat:"2" }}</td>
+      <td>{{ position.cur_total }}</td>
+      <td>{{ position.balance|floatformat:"2" }}</td>
+      <td>{{ position.balance_pct }}</td>
+    </tr>
+  {% endfor %}
+</table>

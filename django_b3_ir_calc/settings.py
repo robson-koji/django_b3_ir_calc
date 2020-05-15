@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'mathfilters',
+    'file_upload',
     'report'
 ]
 
@@ -88,6 +89,12 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
+#MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+MEDIA_ROOT = os.path.join('/var/www/media/b3_ir_calc/')
+
+MEDIA_URL = '/media/'
 
 
 # Password validation
@@ -153,3 +160,6 @@ USE_TZ = True
 # Para moeda Real Brasil
 THOUSAND_SEPARATOR='.',
 USE_THOUSAND_SEPARATOR=True
+
+# For anonymous user session
+SESSION_SAVE_EVERY_REQUEST = True

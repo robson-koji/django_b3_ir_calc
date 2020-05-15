@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+<style media="screen">
+  .tim {
+    border: 0;
+    padding: 0;
+    display: inline;
+    background: none;
+    text-decoration: underline;
+    color: blue;
+  }
+  button:hover {
+    cursor: pointer;
+  }
+</style>
+
+<script type="text/javascript">
+  window.onload = function() {
+    $(".mylink").click(function () {
+         var path = $(this).attr("path");
+
+         var input = document.createElement("input");
+         input.setAttribute("type", "hidden");
+         input.setAttribute("name", "path");
+         input.setAttribute("value", path);
+         document.getElementById("analysis_form").appendChild(input);
+
+         // Submit form
+         document.getElementById('analysis_form').submit();
+         return false;
+     });
+  };
+</script>
+
+
+
+{% block content %}
+
+
+      <!-- Dashboard wrapper start -->
+      <div class="dashboard-wrapper">
+
+        <!-- Page title start -->
+        <div class="page-title clearfix">
+          <h2>
+            {% trans "File Upload" %}
+            <small>
+              <ul>
+                <li>Home</li>
+                <li>/</li>
+                <li>Dashboard</li>
+                <li>/</li>
+                <li>Tables</li>
+              </ul>
+            </small>
+          </h2>
+        </div>
+        <!-- Page title end -->
+
+
+
+
+      <div class="row">
+        <div class="col-md-12">
+
+
+
+
+
+        <!-- List of uploaded documents -->
+        {% if documents %}
+
+
+        <!-- Row start -->
+
+            <div class="widget">
+              <div class="widget-header">
+                <div class="title">
+                  <span class="fs1" aria-hidden="true" data-icon="&#xe1b5;"></span>B3 - Arquivos CEI
+                </div>
+              </div>
+
+
+
+                <form id="analysis_form" action="open_file/" method="POST">
+                   {% csrf_token %}
+                  <table class="table table-condensed table-bordered table-hover no-margin">
+                    <thead>
+                      <tr>
+                        <th>Arquivo / Data</th>
+                        <th>Fonte de dados</th>
+                        <th>Download (CSV)</th>
+
+                      </tr>
+                    </thead>
+                    {% for document in documents %}
+
+                      <tr>
+                          <td>
+                            {{ document.docfile.date }} - {{ document.docfile.short_name }}
+                          </td>
+                          <td>
+                            <a href="#" class="mylink" path="{{ document.docfile.url }}">Usar este arquivo</a>
+                          </td>
+                          <td>
+                            <a href="{{ document.docfile.csv_url }}">Download CSV</a><Br>
+                          </td>
+                      </tr>
+                    {% endfor %}
+                  </table>
+                </form>
+              </div>
+
+
+        {% else %}
+            <p>No documents.</p>
+        {% endif %}
+
+        <!-- Upload form. Note enctype attribute! -->
+        <form action="{% url "my-view" %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ message }}
+            <p>{{ form.non_field_errors }}</p>
+
+            <p>{{ form.docfile.label_tag }} {{ form.docfile.help_text }}</p>
+
+            <p>
+                {{ form.docfile.errors }}
+                {{ form.docfile }}
+            </p>
+
+            <p><input type="submit" value="Upload"/></p>
+        </form>
+
+
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

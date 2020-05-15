@@ -1,0 +1,59 @@
+"*":
+  "Remote-FTP":
+    beta:
+      multipleHosts: true
+  "atom-ctags":
+    autoBuildTagsWhenActive: true
+  "autocomplete-python":
+    useKite: false
+  "bracket-matcher":
+    highlightMatchingLineNumber: true
+  "browser-plus":
+    currentFile: false
+  core:
+    disabledPackages: [
+      "vim-mode-plus"
+      "symbols-view"
+    ]
+    packagesWithKeymapsDisabled: [
+      "atom-ctags"
+    ]
+    projectHome: "/home/robson/.atom"
+    themes: [
+      "atom-light-ui"
+      "one-dark-syntax"
+    ]
+    uriHandlerRegistration: "always"
+  editor:
+    fontSize: 16
+  "exception-reporting":
+    userId: "2b6aadc0-5565-4953-9a0a-c27ef6542118"
+  minimap:
+    plugins:
+      bookmarks: true
+      bookmarksDecorationsZIndex: 0
+      cursorline: true
+      cursorlineDecorationsZIndex: 0
+      "find-and-replace": true
+      "find-and-replaceDecorationsZIndex": 0
+      "git-diff": true
+      "git-diffDecorationsZIndex": 0
+      "highlight-selected": true
+      "highlight-selectedDecorationsZIndex": 0
+      selection: true
+      selectionDecorationsZIndex: 0
+  navigate:
+    f1: "http://devdocs.io/#q=&searchterm"
+    f10: "https://duckduckgo.com/?q=&searchterm"
+    f6: "http://www.bing.com/search?q=&searchterm"
+  "remote-ftp":
+    connector:
+      autoUploadOnSave: "only when connected"
+      sshConfigPath: "~/.ssh/.ftpconfig"
+  "symbols-tree-view":
+    autoToggle: true
+    zAutoHideTypes: "Default:\"namespace\""
+  "tree-view":
+    hideVcsIgnoredFiles: true
+  welcome:
+    showOnStartup: false

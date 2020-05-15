@@ -17,18 +17,26 @@ Including another URLconf
 from django.conf import settings
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls import url
 from django.conf.urls.static import static
 
 from report import urls
+from report.views import StockPriceView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    path('report/', include(urls)),
-    #(r'^report/', include('django_b3_ir_calc.report.urls'))
+    path('report/', include('report.urls')),
+    path('file_upload/', include('file_upload.urls')),
+
+
+    url(r'^stock_quotes/$', StockPriceView.as_view(), name='stock_quotes'),
 ]
 
+
+
 # For static development
-
-
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+# Upload files
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

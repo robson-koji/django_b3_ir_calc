@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block content %}
+    <!-- Dashboard wrapper start -->
+    <div class="dashboard-wrapper">
+
+      <!-- Page title start -->
+      <div class="page-title clearfix">
+        <h2>
+          {% trans "Stock Quotes" %}
+          <small>
+            <ul>
+              <li>Home</li>
+              <li>/</li>
+              <li>Dashboard</li>
+              <li>/</li>
+              <li>Tables</li>
+            </ul>
+          </small>
+        </h2>
+
+        <ul class="stats hidden-xs">
+          <li class="jet-blue-bg">
+            <span class="fs1" aria-hidden="true" data-icon="&#xe047;"></span>
+            <div class="details">
+              <span class="big">{{ date }}</span>
+              <span class="small">Last Update</span>
+            </div>
+          </li>
+          </ul>
+      </div>
+      <!-- Page title end -->
+
+      <div class="row">
+        <div class="col-md-12">
+        <!-- List of uploaded documents -->
+        <!-- Row start -->
+            <div class="widget">
+              <div class="widget-header">
+                <div class="title">
+                  <span class="fs1" aria-hidden="true" data-icon="&#xe1b5;"></span>B3 - Arquivos CEI
+                </div>
+              </div>
+
+              <table class="table table-condensed table-bordered table-hover no-margin">
+                <thead>
+                  <tr>
+                    <th>Stock</th>
+                    <th class="text-center">Price</th>
+                    <th class="text-center">Time</th>
+
+                  </tr>
+                </thead>
+                {% for stock, data in values.items %}
+                  <tr>
+                      <td>{{ stock }}</td>
+                      <td class="text-right">{{ data.price|floatformat:"2" }}</td>
+                      <td class="text-right">{{ data.hour }}</td>
+                  </tr>
+                {% endfor %}
+              </table>
+
+            </div>
+          </div>
+        </div>
+      </div>
+{% endblock %}

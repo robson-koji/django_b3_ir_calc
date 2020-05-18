@@ -14,7 +14,7 @@ class ProxyView(View):
     # Input data from each user
     # path ='/home/robson/invest/'
     # file = 'mirae.csv'
-    stock_price_file = '/tmp/stock_price.json'
+    stock_price_file = '/var/tmp/stock_price.json'
 
     def dispatch(self, request, *args, **kwargs):
         # Get anonymous user data
@@ -76,7 +76,7 @@ class HistoryView(ProxyView, TemplateView):
 
 
 class StockPriceView(TemplateView):
-    stock_price_file = '/tmp/stock_price.json'
+    stock_price_file = '/var/tmp/stock_price.json'
     template_name = "generic/stock_price.html"
 
 

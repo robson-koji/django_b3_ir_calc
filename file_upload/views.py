@@ -1,5 +1,7 @@
 from django.shortcuts import redirect, render
-from .models import Document
+from django.contrib.auth.models import User, AnonymousUser
+
+from .models import Document, get_upload_path
 from .forms import DocumentForm
 
 from b3_ir_calc.b3excel2csv import excel_to_csv
@@ -34,7 +36,7 @@ def redirect_view(request):
             mas precisa saber como identifica-lo.
             """
             try:
-                excel_to_csv(path=path, file=file)
+                # excel_to_csv(path=path, file=file)
                 request.session['file'] = request.session['file'].replace('.xls', '.csv')
                 return redirect('position')
             except:
@@ -51,6 +53,17 @@ def my_view(request):
     print(f"Great! You're using Python 3.6+. If you fail here, use the right version.")
     # message = 'Upload as many files as you want!'
     message = ''
+
+
+    if not request.user.is_authenticated:
+        # Init session
+        user = AnonymousUser()
+        if not request.session.keys():
+            request.session['anonymous'] = True
+            request.session.save()
+
+    session_key = request.session.session_key
+
     # Handle file upload
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
@@ -60,14 +73,20 @@ def my_view(request):
             newdoc.save()
             """
             # File with session, to split in model
-            request.session['anonymous'] = True
-            session_key = request.session.session_key
             session_file = "|%s" % (session_key)
             request.FILES['docfile'].name += session_file
-            newdoc = Document(docfile=request.FILES['docfile'])
+            if user.is_anonymous:
+                newdoc = Document(docfile=request.FILES['docfile'], user=None, session_key=session_key)
+            else:
+                newdoc = Document(docfile=request.FILES['docfile'], user=user, session_key=session_key)
             newdoc.save()
-            # """
-            # Redirect to the document list after POST
+
+            # Excel 2 CSV conversion
+            file = newdoc.docfile.name.split('/')[-1]
+            path = get_upload_path(newdoc, request.FILES['docfile'].name).rsplit('/', 1)[0]
+            # import pdb; pdb.set_trace()
+            excel_to_csv(path=path, file=file)
+
             return redirect('my-view')
 
         else:
@@ -76,7 +95,7 @@ def my_view(request):
         form = DocumentForm()  # An empty, unbound form
 
     # Load documents for the list page
-    documents = Document.objects.all()
+    documents = Document.objects.filter(session_key=session_key)
 
     # names = []
     for doc in documents:

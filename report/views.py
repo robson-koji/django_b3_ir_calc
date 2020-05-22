@@ -17,7 +17,15 @@ class ProxyView(View):
     stock_price_file = '/var/tmp/stock_price.json'
 
     def dispatch(self, request, *args, **kwargs):
-        # Get anonymous user data
+        # import pdb; pdb.set_trace()
+        if request.session.is_empty():
+            from file_upload.forms import DocumentForm
+            form = DocumentForm()
+
+            message = 'Sessão expirada. Efetue o login com o Facebook para salvar os seus arquivos B3 CEI, ou faça o upload novamente.'
+            context = {'form': form, 'message': message}
+            return render(request, 'list.html', context)
+                # Get anonymous user data
         request.session['path'] = request.session['path'].replace('/media/', '')
         self.path = "%s%s/" % (settings.MEDIA_ROOT, request.session['path'])
         self.file = request.session['file']

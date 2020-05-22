@@ -49,29 +49,32 @@ def redirect_view(request):
             context = {'message': message}
             return render(request, 'list.html', context)
 
-def my_view(request):
-    print(f"Great! You're using Python 3.6+. If you fail here, use the right version.")
-    # message = 'Upload as many files as you want!'
-    message = ''
 
-
+def get_session_key(request):
     if not request.user.is_authenticated:
         # Init session
         user = AnonymousUser()
         if not request.session.keys():
             request.session['anonymous'] = True
             request.session.save()
-
     session_key = request.session.session_key
+    return (user, session_key)
+
+
+
+
+def my_view(request):
+    print(f"Great! You're using Python 3.6+. If you fail here, use the right version.")
+    # message = 'Upload as many files as you want!'
+    message = ''
 
     # Handle file upload
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
         if form.is_valid():
-            """
-            newdoc = Document(docfile=request.FILES['docfile'])
-            newdoc.save()
-            """
+            # Check anonymous User
+            (user, session_key) = get_session_key(request)
+
             # File with session, to split in model
             session_file = "|%s" % (session_key)
             request.FILES['docfile'].name += session_file
@@ -95,7 +98,9 @@ def my_view(request):
         form = DocumentForm()  # An empty, unbound form
 
     # Load documents for the list page
-    documents = Document.objects.filter(session_key=session_key)
+    documents = Document.objects.filter(session_key=request.session.session_key)
+
+    # import pdb; pdb.set_trace()
 
     # names = []
     for doc in documents:

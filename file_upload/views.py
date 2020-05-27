@@ -4,7 +4,6 @@ from django.contrib.auth.models import User, AnonymousUser
 from .models import Document, get_upload_path
 from .forms import DocumentForm
 
-from b3_ir_calc.b3excel2csv import excel_to_csv
 
 
 
@@ -83,12 +82,6 @@ def my_view(request):
             else:
                 newdoc = Document(docfile=request.FILES['docfile'], user=user, session_key=session_key)
             newdoc.save()
-
-            # Excel 2 CSV conversion
-            file = newdoc.docfile.name.split('/')[-1]
-            path = get_upload_path(newdoc, request.FILES['docfile'].name).rsplit('/', 1)[0]
-            # import pdb; pdb.set_trace()
-            excel_to_csv(path=path, file=file)
 
             return redirect('my-view')
 

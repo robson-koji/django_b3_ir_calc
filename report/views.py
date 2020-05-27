@@ -1,10 +1,13 @@
 from django.views.generic.base import TemplateView
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.conf import settings
 from django.views import View
 
+from datetime import datetime, timedelta, date
+
 from b3_ir_calc.ir_calc import *
-from django.conf import settings
+from stock_price.models import StockPrice
 
 
 
@@ -26,6 +29,8 @@ class ProxyView(View):
             context = {'form': form, 'message': message}
             return render(request, 'list.html', context)
                 # Get anonymous user data
+
+        # import pdb; pdb.set_trace()
         request.session['path'] = request.session['path'].replace('/media/', '')
         self.path = "%s%s/" % (settings.MEDIA_ROOT, request.session['path'])
         self.file = request.session['file']
@@ -65,6 +70,20 @@ class PositionView(ProxyView, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         self.report.get_current_quotations()
+
+
+        stocks = StockPrice.objects.all()
+
+        # Set stock current prices. 
+        tmp_dict = {}
+        for stock in stocks:
+            tmp_dict[stock.stock]= {'price': str(stock.price), 'hour':stock.hour }
+
+        self.report.current_prices = tmp_dict
+
+        # which date to show here? Last update?
+        self.curr_prices_dt = date.today()
+
         (current_position, summary) = self.report.current_position()
         context['current_position'] = current_position
         context['summary'] = summary

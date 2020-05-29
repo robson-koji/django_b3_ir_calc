@@ -6,7 +6,7 @@ from django.views import View
 
 from datetime import datetime, timedelta, date
 
-from b3_ir_calc.ir_calc import *
+from b3_ir_calc.b3_ir_calc.ir_calc import *
 from stock_price.models import StockPrice
 
 
@@ -17,7 +17,7 @@ class ProxyView(View):
     # Input data from each user
     # path ='/home/robson/invest/'
     # file = 'mirae.csv'
-    stock_price_file = '/var/tmp/stock_price.json'
+    stock_price_file = None
 
     def dispatch(self, request, *args, **kwargs):
         # import pdb; pdb.set_trace()
@@ -69,12 +69,12 @@ class PositionView(ProxyView, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        self.report.get_current_quotations()
+        # self.report.get_current_quotations()
 
 
         stocks = StockPrice.objects.all()
 
-        # Set stock current prices. 
+        # Set stock current prices.
         tmp_dict = {}
         for stock in stocks:
             tmp_dict[stock.stock]= {'price': str(stock.price), 'hour':stock.hour }

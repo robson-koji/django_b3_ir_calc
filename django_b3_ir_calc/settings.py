@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'mathfilters',
     'file_upload',
     'stock_price',
+    'b3_ir_calc',
     'report'
 ]
 

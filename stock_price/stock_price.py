@@ -9,34 +9,6 @@ from collections import defaultdict
 from datetime import datetime, date
 
 
-import os
-import sys
-
-
-
-!!!!!!! NAO RECONHECE O APP STOCK_PRICE !!!!!!!
-
-import django
-from django.conf import settings
-from django_b3_ir_calc import settings as myapp_defaults
-#sys.path.append('/home/robson/projetos/django_b3_ir_calc/')
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_b3_ir_calc.settings')
-# if not settings.configured:
-#      settings.configure(DATABASES=myapp_defaults.DATABASES, INSTALLED_APPS=myapp_defaults.INSTALLED_APPS, DEBUG=True)
-django.setup()
-import pdb; pdb.set_trace()
-from stock_price.models import StockPrice
-
-
-#
-# os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_b3_ir_calc.settings')
-# settings.configure(DATABASES=myapp_defaults.DATABASES, DEBUG=True)
-# #settings.configure()
-# django.setup()
-
-# from stock_price import models
-import pdb; pdb.set_trace()
-
 def get_stocks(filename, stocks):
     """ Read CSV file to store stocks on DB """
 
@@ -135,8 +107,8 @@ if __name__ == "__main__":
         except:
             pass
 
-        import pdb; pdb.set_trace()
-        save_stocks(stock, price, hour)
+        # import pdb; pdb.set_trace()
+        # save_stocks(stock, price, hour)
 
 
-    # save_json(stock_price)
+    save_json(stock_price)

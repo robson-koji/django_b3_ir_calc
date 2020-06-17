@@ -10,12 +10,20 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
+
+
 import os
 from django.utils.translation import ugettext_lazy as _
+
+IS_DOCKER = os.environ.get('IS_DOCKER', 0)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+if IS_DOCKER:
+    SQLITE_DIR = BASE_DIR + '/sqlite'
+else:
+    SQLITE_DIR = BASE_DIR
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -88,7 +96,7 @@ WSGI_APPLICATION = 'django_b3_ir_calc.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': os.path.join(SQLITE_DIR, 'db.sqlite3'),
     }
 }
 
@@ -161,3 +169,15 @@ USE_THOUSAND_SEPARATOR=True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_AGE = 3600 # set just 10 seconds to test
 SESSION_SAVE_EVERY_REQUEST = True # For anonymous user session
+
+
+
+
+
+try:
+    if IS_DOCKER:
+        from django_b3_ir_calc.local_settings.local_settings import *
+    else:
+        from django_b3_ir_calc.local_settings import *
+except ImportError as e:
+    print("Failed to import local_settings.py")

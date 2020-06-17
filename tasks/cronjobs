@@ -1,0 +1,5 @@
+PYTHONPATH=/django_b3_ir_calc
+
+#*/10 * * * 1-5 root /opt/venv/bin/python3 /django_b3_ir_calc/tasks/get_stocks_prices.py  >> /var/log/cron.log 2>&1
+
+35 10,13,16,19 * * 1-5 root /opt/venv/bin/python3 /django_b3_ir_calc/tasks/get_stocks_prices.py  >> /var/log/cron.log 2>&1

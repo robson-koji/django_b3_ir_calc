@@ -14,9 +14,10 @@ COPY tasks/cronjobs /etc/cron.d/cronjobs
 RUN chmod 0644 /etc/cron.d/cronjobs
 RUN crontab /etc/cron.d/cronjobs
 RUN touch /var/log/cron.log
-CMD ["cron", "-f"]
+CMD ["crond", "-f"]
 
 #CMD cron && tail -f /var/log/cron.log
+
 
 # To use in Django settings.py
 ENV IS_DOCKER=1

@@ -4,11 +4,18 @@ services:
     build: .
     #image: django_b3_ir_calc_web
     command: python manage.py runserver 0.0.0.0:8000
-    #command: python manage.py runserver localhost:8000
+    #command: [ "python", "./manage.py",  "runserver", "0.0.0.0:8000" ]
     volumes:
+
+      # !!!
       # Habilitar somente em dev !!! Senao apaga tudo no deploy.
+      #
       # - .:/django_b3_ir_calc  # <--  THIS line enables hot code reloading!
+
       - /var/tmp/django_b3_ir_calc/local_settings/:/django_b3_ir_calc/django_b3_ir_calc/local_settings/
       - /var/tmp/django_b3_ir_calc/sqlite/:/django_b3_ir_calc/sqlite/
+      - /var/www/django_b3_ir_calc/static/:/django_b3_ir_calc/static/
     ports:
       - "8000:8000"
+    stdin_open: true
+    tty: true

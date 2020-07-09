@@ -132,12 +132,14 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = "/var/www/example.com/static/"
+STATIC_ROOT = "/var/www/django_b3_ir_calc/static/"
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
-    '/var/www/static/',
-]
+
+
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, "static"),
+#     # '/var/www/static/',
+# ]
 
 
 LANGUAGES = (
@@ -167,7 +169,7 @@ USE_THOUSAND_SEPARATOR=True
 
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-SESSION_COOKIE_AGE = 3600 # set just 10 seconds to test
+SESSION_COOKIE_AGE = 3600000 # set just 10 seconds to test # Estah em 1000 horas, 40 dias.
 SESSION_SAVE_EVERY_REQUEST = True # For anonymous user session
 
 

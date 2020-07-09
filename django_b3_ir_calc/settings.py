@@ -136,10 +136,9 @@ STATIC_ROOT = "/var/www/django_b3_ir_calc/static/"
 
 
 
-# STATICFILES_DIRS = [
-#     os.path.join(BASE_DIR, "static"),
-#     # '/var/www/static/',
-# ]
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
 
 
 LANGUAGES = (

@@ -1,0 +1,293 @@
+{% extends 'base.html' %}
+{% load iterate_dicts %}
+{% load mathfilters %}
+{% block content %}
+
+
+<style media="screen">
+  h3:after {
+    content:"";
+    /* top:80%; */
+    bottom: 7px;
+    left: 0;
+    right: 0;
+
+    width:97%;
+    margin-left:15px;
+
+    height:2px;
+    position:absolute;
+    background:#4264ab;
+
+}
+</style>
+
+
+
+      <!-- Dashboard wrapper start -->
+      <div class="dashboard-wrapper">
+
+        <!-- Page title start -->
+        <div class="page-title clearfix">
+          <h2>
+            History
+            <small>
+              <ul>
+                <li>Home</li>
+                <li>/</li>
+                <li>Dashboard</li>
+                <li>/</li>
+                <li>Tables</li>
+              </ul>
+            </small>
+          </h2>
+
+          {% comment %}
+          <ul class="stats hidden-xs">
+            <li class="sea-green-bg">
+              <span class="fs1" aria-hidden="true" data-icon="&#xe037;"></span>
+              <div class="details">
+                <span class="big">R$ {{ summary.buy_total|floatformat:"2" }}</span>
+                <span class="small">Buy</span>
+              </div>
+            </li>
+
+            <li class="jet-blue-bg">
+              <span class="fs1" aria-hidden="true" data-icon="&#xe042;"></span>
+              <div class="details">
+                <span class="big">Sell</span>
+                <span class="small">Current Location</span>
+              </div>
+            </li>
+            <li class="go-green-bg">
+              <span class="fs1" aria-hidden="true" data-icon="&#xe036;"></span>
+              <div class="details">
+                <span class="big">Gain</span>
+                <span class="small">Current Location</span>
+              </div>
+            </li>
+
+            <li class="ruby-red-bg">
+              <span class="fs1" aria-hidden="true" data-icon="&#xe042;"></span>
+              <div class="details">
+                <span class="big">Ireland</span>
+                <span class="small">Loss</span>
+              </div>
+            </li>
+
+
+
+            <li class="light-grey-bg">
+              <span class="fs1" aria-hidden="true" data-icon="&#xe096;"></span>
+              <div class="details">
+                <span class="big">{{ summary.balance_pct|floatformat:"2" }}%</span>
+                <span class="small">Cumulate Loss</span>
+              </div>
+            </li>
+          </ul>
+          {% endcomment %}
+        </div>
+        <!-- Page title end -->
+
+
+
+
+        {% for key, value in months.items %}
+        <!-- Row start -->
+
+
+
+{% comment %}
+<div id="dt_example_{{ value.dt|date:"F Y" }}" class="example_alt_pagination">
+    <table class="table table-condensed table-striped table-hover table-bordered pull-left" id="data-table_{{ value.dt|date:"F Y" }}_1">
+      <thead>
+        <tr>
+          <th colspan='4'>Month</th>
+          <th colspan='2'>Cumulate</th>
+        </tr>
+        <tr>
+          <th>Buy</th><th>Sell</th>
+          <th>Gain</th><th>Loss</th>
+          <th>Gain</th><th>Loss</th>
+        </tr>
+      </thead>
+        <tr>
+          <td>{{ value.month_buy }}</td>
+          {% if value.month_sell > 20000 %}
+            <td class='up20000'>{{ value.month_sell }}</td>
+            <td class='up20000'>{{ value.month_gain|floatformat:"2" }}</td>
+            <td class='up20000'>{{ value.month_loss|floatformat:"2" }}</td>
+          {% else %}
+            <td>{{ value.month_sell }}</td>
+            <td>{{ value.month_gain|floatformat:"2" }}</td>
+            <td>{{ value.month_loss|floatformat:"2" }}</td>
+          {% endif %}
+          <td>{{ value.cumulate_gain|floatformat:"2" }}</td>
+          <td>{{ value.cumulate_loss|floatformat:"2" }}</td>
+        </tr>
+        {% if value.month_sell > 20000 and value.month_gain > 0 and value.cumulate_loss == 0 %}
+          <tr><td colspan=11 class='up20000 dit'> Due income tax = {{ value.month_gain|mul:.2|floatformat:"2" }}</td> </tr>
+        {% else %}
+          <tr><td colspan=11 class='dit'> Due income tax = 0 </td></tr>
+        {% endif %}
+      </table>
+
+      </div>
+
+{% endcomment %}
+
+
+
+
+
+        <div class="row">
+          <div class="col-md-12">
+
+          <h3>{{ value.dt|date:"F Y" }}</h3>
+          </div>
+
+          <div class="col-md-4">
+            <div class="widget">
+              <div class="widget-header">
+                <div class="title">
+                  <span class="fs1" aria-hidden="true" data-icon=""></span> Transactions
+                </div>
+              </div>
+              <div class="widget-body">
+                <table class="table table-condensed table-bordered table-hover no-margin">
+                  <tbody>
+                    <tr>
+                      <th style="width:60%">Buy</th>
+                      <td style="width:40%" class="text-right"><span class="label label-info label_cp1">{{ value.month_buy }}</span></td>
+                    </tr>
+                    <tr>
+                      <th>Sell</th>
+                      <td class="text-right"><span class="label label-warning label_cp1">{{ value.month_sell }}</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <!-- Span4 end -->
+
+          <!-- Span4 start -->
+          <div class="col-md-4">
+            <div class="widget">
+              <div class="widget-header">
+                <div class="title">
+                  <span class="fs1" aria-hidden="true" data-icon=""></span> Outcome
+                </div>
+              </div>
+              <div class="widget-body">
+                <table class="table table-condensed table-bordered table-hover no-margin">
+                  <tbody>
+                    <tr>
+                      <th style="width:60%">Gain</th>
+                      <td style="width:40%" class="text-right"><span class="label label-success label_cp1">{{ value.month_gain|floatformat:"2" }}</span></td>
+                    </tr>
+                    <tr>
+                      <th>Loss</th>
+                      <td class="text-right"><span class="label label-danger label_cp1">{{ value.month_loss|floatformat:"2" }}</span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <!-- Span4 end -->
+
+          <!-- Span4 start -->
+          <div class="col-md-4">
+            <div class="widget">
+              <div class="widget-header">
+                <div class="title">
+                  <span class="fs1" aria-hidden="true" data-icon=""></span> Accumulated
+                </div>
+              </div>
+              <div class="widget-body">
+                <table class="table table-condensed table-bordered table-hover no-margin">
+                  <tbody>
+                    <tr>
+                      <th style="width:60%">Gain</th>
+                      <td style="width:40%" class="text-right"><span class="label label-success label_cp1">{{ value.cumulate_gain|floatformat:"2" }}</span></td>
+                    </tr>
+                    <tr>
+                      <th>Loss</th>
+                      <td class="text-right"><span class="label label-danger label_cp1">{{ value.cumulate_loss|floatformat:"2" }}</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <!-- Span4 end -->
+
+
+          <div class="col-md-12">
+            <div class="widget">
+              <div class="widget-header">
+                <div class="title">
+                  <span class="fs1" aria-hidden="true" data-icon=""></span> Account Balance
+                </div>
+              </div>
+
+                      {% with months_operations|get_item:key as operations %}
+                      <table class="table table-condensed table-striped table-hover table-bordered pull-left" id="data-table_{{ value.dt|date:"F Y" }}_2">
+                        <thead>
+                          <tr>
+                            <th></th>
+                            <th colspan='6' class="text-center">Operation</th>
+                            <th colspan='4' class="text-center">Position</th>
+                          </tr>
+                          <tr>
+                            <th></th>
+
+                            <th>Oper</th>
+                            <th>Dt</th>
+                            <th>Qt</th>
+                            <th>Value</th>
+                            <th>Price</th>
+                            <th>Profit</th>
+                            <th>Loss</th>
+
+                            <th>Qt</th>
+                            <th>AvgPrice</th>
+                            <th>AvgPricePrev</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                        {% for stock, value in operations.items %}
+                        {% for oper in value %}
+                          <tr>
+                              <td>{{oper.name}}</td>
+                              <td>{{oper.buy_sell}}</td>
+                              <td>{{oper.dt}}</td>
+                              <td>{{oper.qt}}</td>
+                              <td>{{oper.value}}</td>
+                              <td>{{oper.unit_price}}</td>
+                              <td>{{oper.profit|floatformat:"2"}}</td>
+                              <td>{{oper.loss|floatformat:"2"}}</td>
+
+                              <td>{{oper.qt_total}}</td>
+                              <td>{{oper.avg_price|floatformat:"2"}}</td>
+                              <td>{{oper.avg_price_prev|floatformat:"2"}}</td>
+                          </tr>
+                          {% endfor %}
+                        {% endfor %}
+                      </tbody>
+                      </table>
+                      {% endwith %}
+
+
+            </div>
+            <!-- Row end -->
+          </div>
+      </div>
+      {% endfor %}
+      <!-- Dashboard wrapper end -->
+    </div>
+
+
+{% endblock content %}

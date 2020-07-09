@@ -32,7 +32,7 @@ from datetime import datetime, date, timedelta
 
 import csv
 
-from b3_ir_calc.b3_ir_calc.b3excel2csv import excel_to_csv
+from b3_ir_calc.b3excel2csv import excel_to_csv
 
 
 """

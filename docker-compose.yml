@@ -2,6 +2,13 @@ version: '2'
 services:
   web:
     build: .
+
+    #
+    # Em prod, apos carregar a imagem com o
+    # * docker load - <imagem>,
+    # precisa habilitar aqui para subir com o comando:
+    # * docker-compose up
+    #
     #image: django_b3_ir_calc_web
     command: python manage.py runserver 0.0.0.0:8000
     #command: [ "python", "./manage.py",  "runserver", "0.0.0.0:8000" ]
@@ -14,8 +21,8 @@ services:
 
       - /var/tmp/django_b3_ir_calc/local_settings/:/django_b3_ir_calc/django_b3_ir_calc/local_settings/
       - /var/tmp/django_b3_ir_calc/sqlite/:/django_b3_ir_calc/sqlite/
-      - /var/www/django_b3_ir_calc/static/:/django_b3_ir_calc/static/
+      - /var/www/django_b3_ir_calc/static/:/var/www/django_b3_ir_calc/static/
     ports:
       - "8000:8000"
-    stdin_open: true
-    tty: true
+    # stdin_open: true
+    # tty: true

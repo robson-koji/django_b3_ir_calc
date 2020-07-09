@@ -116,3 +116,17 @@ class StockPriceView(TemplateView):
             context['values'] = stock_price_file[context['date']]
 
         return context
+
+
+
+class Endorse_11(ProxyView, TemplateView):
+    """ History of operations """
+
+    template_name = "report/endorse_11.html"
+
+    def get_context_data(self, **kwargs):
+        import pdb; pdb.set_trace()
+        context = super().get_context_data(**kwargs)
+        # context['months'] = self.report.months_build_data()[0]
+        # context['months_operations'] = self.report.months_build_data()[1]
+        return context

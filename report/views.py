@@ -9,7 +9,7 @@ from datetime import datetime, timedelta, date
 from b3_ir_calc.b3_ir_calc.ir_calc import *
 from recomenda_11 import extract_table
 from stock_price.models import StockPrice
-from django_excel_csv.django_excel_csv.views import GetExcel
+from django_excel_csv.views import GetExcel
 
 
 

@@ -29,8 +29,14 @@ def save_stocks(stock, price, hour):
 
 if __name__ == "__main__":
     stocks = read_csvs_dir()
+    stocks_db =  StockPrice.objects.values_list('stock', flat=True)
     stock_price = defaultdict()
-    for stock in stocks:
+
+    # Juntando acoes dos arquivos csv (b3 CEI), com o que estah no banco.
+    # No banco pode ter acoes do 11 recomenda. 
+    stocks_list = list(set(stocks) | set(stocks_db))
+    import pdb; pdb.set_trace()
+    for stock in stocks_list:
         try:
             (price, hour) = get_price(stock)
             if price and hour:

@@ -9,7 +9,7 @@ services:
     # precisa habilitar aqui para subir com o comando:
     # * docker-compose up
     #
-    #image: django_b3_ir_calc_web
+    image: django_b3_ir_calc_web
     command: python manage.py runserver 0.0.0.0:8000
     #command: [ "python", "./manage.py",  "runserver", "0.0.0.0:8000" ]
     volumes:
@@ -17,12 +17,17 @@ services:
       # !!!
       # Habilitar somente em dev !!! Senao apaga tudo no deploy.
       #
-      # - .:/django_b3_ir_calc  # <--  THIS line enables hot code reloading!
+      - .:/django_b3_ir_calc  # <--  THIS line enables hot code reloading!
 
       - /var/tmp/django_b3_ir_calc/local_settings/:/django_b3_ir_calc/django_b3_ir_calc/local_settings/
       - /var/tmp/django_b3_ir_calc/sqlite/:/django_b3_ir_calc/sqlite/
+      - /var/tmp/django_b3_ir_calc/log/:/var/log/
       - /var/www/django_b3_ir_calc/static/:/var/www/django_b3_ir_calc/static/
     ports:
       - "8000:8000"
     # stdin_open: true
     # tty: true
+
+  # cronjobs:
+  #   build: .
+  #   command: ["cron", "-f"]

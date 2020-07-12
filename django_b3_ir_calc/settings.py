@@ -16,7 +16,7 @@ import os
 from django.utils.translation import ugettext_lazy as _
 
 IS_DOCKER = os.environ.get('IS_DOCKER', 0)
-
+PROJECT_PATH = os.path.dirname(os.path.abspath(__file__))
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -47,10 +47,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'mathfilters',
+    'pdftotext',
     'file_upload',
     'stock_price',
     'b3_ir_calc',
-    'report'
+    'report',
+    'recomenda_11',
+    'django_excel_csv'
 ]
 
 MIDDLEWARE = [

@@ -7,7 +7,9 @@ from django.views import View
 from datetime import datetime, timedelta, date
 
 from b3_ir_calc.b3_ir_calc.ir_calc import *
+from recomenda_11 import extract_table
 from stock_price.models import StockPrice
+from django_excel_csv.django_excel_csv.views import GetExcel
 
 
 
@@ -84,8 +86,8 @@ class PositionView(ProxyView, TemplateView):
         # which date to show here? Last update?
         self.curr_prices_dt = date.today()
 
-        (current_position, summary) = self.report.current_position()
-        context['current_position'] = current_position
+        (self.current_position, summary) = self.report.current_position()
+        context['current_position'] = self.current_position
         context['summary'] = summary
         return context
 
@@ -119,14 +121,63 @@ class StockPriceView(TemplateView):
 
 
 
-class Endorse_11(ProxyView, TemplateView):
+class Endorse_11(PositionView, GetExcel):
     """ History of operations """
 
     template_name = "report/endorse_11.html"
 
+    def merge(self):
+        """ Merge dos dados de current_position e 11 recomenda """
+        self.recomenda_11 = extract_table.get_csv_data()
+        self.current_position
+
+        cp_endorsed = []
+        for recomenda in self.recomenda_11:
+            """ Check endorsed stocks against wallet stocks """
+            tem_recomenda = 0
+            for cp in self.current_position:
+                cp_data = [ str(cp['qt']),  str(cp['buy_avg']), str(cp['curr_price']),
+                            str(cp['buy_total']), str(cp['cur_total']), str(cp['balance']),
+                            str(cp['balance_pct']) ]
+                if cp['stock'] == recomenda[1]:
+                    cp_endorsed.append( recomenda[1] )
+                    recomenda += cp_data
+
+        for cp in self.current_position:
+            """ Check in wallet stocks but not endorsed """
+            if not cp['stock'] in cp_endorsed:
+                # print(cp['stock'])
+                self.recomenda_11.append(['',cp['stock'],'','','','','','','','','','','','',
+                                            str(cp['qt']),  str(cp['buy_avg']), str(cp['curr_price']),
+                                                        str(cp['buy_total']), str(cp['cur_total']), str(cp['balance']),
+                                                        str(cp['balance_pct'])])
+
+    def get_column_names(self):
+        column_names = ['Companhia', 'Ticker',  '', 'Preço Atual', '', 'Preço Alvo',
+        '', 'Preço Limite', 'Recomendação',  'Risco',  'Qualidade',  'Índice',
+        'Up/Down', '', 'Qt', 'Buy Avg',  'Curr. Price', 'Buy Total',  'Curr. Total',
+         'Balance',  'Balance %']
+        return column_names
+
+    def get_data(self):
+        los = [';'.join(x) for x in self.recomenda_11]
+        return los
+
+
+        # import pdb; pdb.set_trace()
+        # return map(''.join, self.recomenda_11)
+
     def get_context_data(self, **kwargs):
-        import pdb; pdb.set_trace()
         context = super().get_context_data(**kwargs)
+
+        self.merge()
+
+        # import pdb; pdb.set_trace()
+        # self.recomenda_11
+        # get_column_names(column_names)
+        # get_data(map(''.join, self.recomenda_11)
+
+
         # context['months'] = self.report.months_build_data()[0]
         # context['months_operations'] = self.report.months_build_data()[1]
         return context

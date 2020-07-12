@@ -26,7 +26,7 @@ CMD [ "python", "./manage.py",  "runserver", "0.0.0.0:8000" ]
 
 
 Docker build
-============
+============load
 docker build --tag build_name .
 
 
@@ -109,13 +109,32 @@ Claro que o volume precisa estar montado para hot code reloading, e somente em a
 
 
 
+Para iniciar apagar todos os containers e imagens
 
-Para fazer o deploy.
-Fazer o docker save -o
+To stop all containers, enter:
+docker container stop $(docker container ls -aq)
+
+To remove all stopped containers:
+docker container rm $(docker container ls -aq)
+
+To delete all containers including its volumes use,
+docker rm -vf $(docker ps -a -q)
+
+To delete all the images,
+docker rmi -f $(docker images -a -q)
+
+
+###Para fazer o deploy.###
+Configurar o Dockerfile
+Configurar o docker-compose.yml
+Fazer o build com docker-compose up
+Fazer o docker save -o (Usar o nome e nao o id, senao nao salva o repositorio.)
 Fazer o ssh do arquivo gerado
 Fazer o docker load -i arquivo.tar
-Copiar o Dockerfile e o docker compose.yml
+Copiar o Dockerfile e o docker-compose.yml
+No docker-compose.yml **precisa ter** o image, e hot reloading **precisa estar comentado**
 Subir com o comando docker-compose up
+
 
 Pendencia
   - Ver se estao mantendo os volumes

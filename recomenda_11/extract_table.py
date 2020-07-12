@@ -1,11 +1,17 @@
 import os, csv, glob
 import pdftotext
+from django.conf import settings
 
+BASE_DIR = settings.BASE_DIR
 
 def get_last_pdf():
     """ Pega o ultimo arquivo """
-    list_of_files = glob.glob('pdfs/*') # * means all if need specific format then *.csv
-    latest_file = max(list_of_files, key=os.path.getctime)
+    pdfs_dir = BASE_DIR + '/recomenda_11/pdfs/*'
+    list_of_files = glob.glob(pdfs_dir) # * means all if need specific format then *.csv
+    try:
+        latest_file = max(list_of_files, key=os.path.getctime)
+    except:
+        latest_file = None
     return (latest_file)
 
 
@@ -77,10 +83,19 @@ def read_pdf(pdf_file):
 def store_csv(final_data):
     """ Grava arquivo CSV em disco """
     #print(*final_data, sep='\n')
-    with open("csv/out.csv", "w", newline="") as f:
+    csv_path = BASE_DIR + '/recomenda_11/csv/out.csv'
+    with open(csv_path, "w", newline="") as f:
         writer = csv.writer(f)
         writer.writerows(final_data)
 
-pdf_file = get_last_pdf()
-final_data = read_pdf(pdf_file)
-store_csv(final_data)
+
+def get_csv_data():
+    pdf_file = get_last_pdf()
+    if pdf_file is not None:
+        final_data = read_pdf(pdf_file)
+        return final_data
+
+
+if __name__ == '__main__':
+    final_data = get_csv_data()
+    store_csv(final_data)

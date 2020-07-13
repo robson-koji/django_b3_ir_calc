@@ -33,9 +33,9 @@ if __name__ == "__main__":
     stock_price = defaultdict()
 
     # Juntando acoes dos arquivos csv (b3 CEI), com o que estah no banco.
-    # No banco pode ter acoes do 11 recomenda. 
+    # No banco pode ter acoes do 11 recomenda.
     stocks_list = list(set(stocks) | set(stocks_db))
-    import pdb; pdb.set_trace()
+    # import pdb; pdb.set_trace()
     for stock in stocks_list:
         try:
             (price, hour) = get_price(stock)

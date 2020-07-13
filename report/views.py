@@ -153,19 +153,29 @@ class Endorse_11(PositionView, GetExcel):
                                                         str(cp['balance_pct'])])
 
     def get_column_names(self):
-        column_names = ['Companhia', 'Ticker',  '', 'Preço Atual', '', 'Preço Alvo',
-        '', 'Preço Limite', 'Recomendação',  'Risco',  'Qualidade',  'Índice',
-        'Up/Down', '', 'Qt', 'Buy Avg',  'Curr. Price', 'Buy Total',  'Curr. Total',
+        # column_names = ['Companhia', 'Ticker',  '', 'Preço Atual', '', 'Preço Alvo',
+        # '', 'Preço Limite', 'Recomendação',  'Risco',  'Qualidade',  'Índice',
+        # 'Up/Down', '', 'Qt', 'Buy Avg',  'Curr. Price', 'Buy Total',  'Curr. Total',
+        #  'Balance',  'Balance %']
+        column_names = ['Companhia', 'Ticker',  'Preço Atual', 'Preço Alvo',
+        'Preço Limite', 'Recomendação',  'Risco',  'Qualidade',  'Índice',
+        'Up/Down', 'Mudou', 'Qt', 'Buy Avg',  'Curr. Price', 'Buy Total',  'Curr. Total',
          'Balance',  'Balance %']
         return column_names
 
     def get_data(self):
-        los = [';'.join(x) for x in self.recomenda_11]
+        ignore_columns = [2, 3, 4]
+        los = []
+
+        # Cleanup lines
+        for line in self.recomenda_11:
+            result_line = ''
+            for idx, val in enumerate(line):
+                if idx in ignore_columns:
+                    line.pop(idx)
+            los.append(';'.join(line))
+
         return los
-
-
-        # import pdb; pdb.set_trace()
-        # return map(''.join, self.recomenda_11)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

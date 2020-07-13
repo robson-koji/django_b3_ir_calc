@@ -4,6 +4,8 @@
 {% block content %}
 
 
+
+
 <style media="screen">
   h3:after {
     content:"";
@@ -30,7 +32,7 @@
         <!-- Page title start -->
         <div class="page-title clearfix">
           <h2>
-            History
+            Endorsement by ...
             <small>
               <ul>
                 <li>Home</li>
@@ -45,22 +47,30 @@
         </div>
         <!-- Page title end -->
 
-        <form class="" action="." method="post">
-          {%csrf_token%}
-          <button type="submit" name="button"></button>
+        <div class="row">
+          <div class="col-md-12">
+            <h3>Download CSV file</h3>
+          </div>
+          <script>
+            function postExample() {
+              $.ajax({
+                type: "POST",
+                url: '',
+                data: {'csrfmiddlewaretoken': '{{csrf_token}}'},
+              });
+            }
+          </script>          
+          <form class="" action="." method="post">
+            {%csrf_token%}
+            <button type="submit" name="button">Click to download</button>
+          </form>
 
-        </form>
-        <script>
-             function postExample() {
-                 $.ajax({
-                   type: "POST",
-                   url: '',
-                   data: {'csrfmiddlewaretoken': '{{csrf_token}}'},
-                 });
-             }
-        </script>
-        <a href="#" onclick="postExample(); return false;">Your Link here</a>
-      <!-- Dashboard wrapper end -->
+          <div class="col-md-12">
+            <h3>Upload PDF file</h3>
+          </div>
+          ... TODO ...
+        </div>
+
     </div>
 
 

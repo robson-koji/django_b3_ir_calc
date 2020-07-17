@@ -1,8 +1,10 @@
 {% extends 'base.html' %}
 {% load iterate_dicts %}
 {% load mathfilters %}
-{% block content %}
+{% load i18n %}
 
+
+{% block content %}
 
 
 
@@ -47,31 +49,142 @@
         </div>
         <!-- Page title end -->
 
+
+
+
+
+
+
+        <!-- Row start -->
         <div class="row">
           <div class="col-md-12">
-            <h3>Download CSV file</h3>
-          </div>
-          <script>
-            function postExample() {
-              $.ajax({
-                type: "POST",
-                url: '',
-                data: {'csrfmiddlewaretoken': '{{csrf_token}}'},
-              });
-            }
-          </script>          
-          <form class="" action="." method="post">
-            {%csrf_token%}
-            <button type="submit" name="button">Click to download</button>
-          </form>
+            <h3>Endorsement Guide</h3>
+                <input type="radio" name="sort_endorse" value="sort_endorse_default" id=""> Buy - Check opportunities<br>
+                <input type="radio" name="sort_endorse" value="sort_endorse_1" id=""> Sell - Check wallet
+            <div class="widget">
+              <div class="widget-body">
+                <div id="dt_example" class="example_alt_pagination">
 
-          <div class="col-md-12">
-            <h3>Upload PDF file</h3>
+                  <table class="table table-condensed table-striped table-hover table-bordered pull-left" id="data-table-endorse">
+                    <thead>
+                      <tr>
+                        <th class="text-center">{% trans "Company" %}</th>
+                        <th class="text-center">{% trans "Ticker" %}</th>
+                        <th class="text-center">{% trans "Curr. Price" %}</th>
+                        <th class="text-center">{% trans "Target" %}</th>
+                        <th class="text-center">{% trans "Buy Lim." %}</th>
+                        <th class="text-center">{% trans "Status" %}</th>
+                        <th class="text-center">{% trans "Risk" %}</th>
+                        <th class="text-center">{% trans "Qual." %}</th>
+                        <th class="text-center">{% trans "Index" %}</th>
+                        <th class="text-center">{% trans "Up/Down" %}</th>
+                        <th class="text-center">{% trans "Change" %}</th>
+                        <th class="text-center">{% trans "Qt" %}</th>
+                        <th class="text-center">{% trans "Buy Avg." %}</th>
+                        <th class="text-center">{% trans "Curr. Price" %}</th>
+                        <th class="text-center">{% trans "Buy Total" %}</th>
+                        <th class="text-center">{% trans "Curr. Total" %}</th>
+                        <th class="text-center">{% trans "Balance" %}</th>
+                        <th class="text-center">{% trans "Balance %" %}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for row in data%}
+                      <tr class="gradeX">
+                          <td><b>{{ row.0 }}</b></td>
+                          <td class="text-center">{{ row.1 }}</td>
+                          <td class="text-right">{{ row.2 }}</td>
+                          <td class="text-center">{{ row.3 }}</td>
+                          <td class="text-right">{{ row.4 }}</td>
+                          <td class="text-center">{{ row.5 }}</td>
+                          <td class="text-right">{{ row.6 }}</td>
+                          <td class="text-center">{{ row.7 }}</td>
+                          <td class="text-right">{{ row.8 }}</td>
+                          <td class="text-center">{{ row.9 }}</td>
+                          <td class="text-right">{{ row.10 }}</td>
+                          <td class="text-center">{{ row.11 }}</td>
+                          <td class="text-right">{{ row.12|floatformat:"2" }}</td>
+                          <td class="text-right">{{ row.13|floatformat:"2" }}</td>
+                          <td class="text-center">{{ row.14|floatformat:"2" }}</td>
+                          <td class="text-right">{{ row.15|floatformat:"2" }}</td>
+                          <td class="text-right">{{ row.16|floatformat:"2" }}</td>
+                          <td class="text-center">{{ row.17|floatformat:"2" }}</td>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
           </div>
-          ... TODO ...
+
+        </div>
+        <!-- Row end -->
+
+
+
+
+
+
+
+
+
+
+        <div class="row">
+
+          <div class="col-md-6">
+            <h4>Endorsemet file upload</h4>
+
+              <form method="post" id="upload_endorse_form" enctype="multipart/form-data" action="/file_upload/upload_endorse_file/" accept-charset="utf-8" class="fill-up">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-lg-4">
+                        <!-- Anchor in error case -->
+                        <a name="upload_endorse_file"></a>
+                        <ul class="padded separate-sections">
+                           <li>
+                                <input type="file" name="upload_endorse_file" id="upload_endorse_file" />
+                           </li>
+                           <li>&nbsp;</li>
+                           <li>
+                             <button type="submit">Submit</button>
+                           </li>
+                        </ul>
+                    </div>
+                </div>
+            </form>
+            {% if messages %}
+            <div class="span6">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message|safe }}
+                </div>
+            {% endfor %}
+            </div>
+            {% endif %}
+          </div>
+
+          <div class="col-md-6">
+            <h4>Download merge CSV FIle</h4>
+            Endorsement PDF file + my wallet
+            <script>
+              function postExample() {
+                $.ajax({
+                  type: "POST",
+                  url: '',
+                  data: {'csrfmiddlewaretoken': '{{csrf_token}}'},
+                });
+              }
+            </script>
+            <form class="" action="{% url 'endorse_dwl' %}" method="post">
+              {%csrf_token%}
+              <button type="submit" name="button">Click to download</button>
+            </form>
+          </div>
         </div>
 
     </div>
+
+
 
 
 {% endblock content %}

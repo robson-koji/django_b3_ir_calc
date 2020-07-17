@@ -1,4 +1,5 @@
 *.sqlite3
+*.pdf
 
 files/*
 !files/test_sample/

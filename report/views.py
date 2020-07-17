@@ -121,8 +121,12 @@ class StockPriceView(TemplateView):
 
 
 
-class Endorse_11(PositionView, GetExcel):
-    """ History of operations """
+class Endorse11Download(PositionView, GetExcel):
+    """
+    Inherits from:
+    PositionView - To merge position on data
+    Get Excel - To generate csv file
+    """
 
     template_name = "report/endorse_11.html"
 
@@ -179,15 +183,64 @@ class Endorse_11(PositionView, GetExcel):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        self.merge()
+        return context
+
+
+
+class Endorse11View(PositionView):
+    """
+    Inherits from:
+    PositionView - To merge position on data
+    Get Excel - To generate csv file
+    """
+
+    template_name = "report/endorse_11.html"
+
+    def merge(self):
+        """ Merge dos dados de current_position e 11 recomenda """
+        self.recomenda_11 = extract_table.get_csv_data()
+        self.current_position
+
+        cp_endorsed = []
+        for recomenda in self.recomenda_11:
+            """ Check endorsed stocks against wallet stocks """
+            tem_recomenda = 0
+            for cp in self.current_position:
+                cp_data = [ str(cp['qt']),  str(cp['buy_avg']), str(cp['curr_price']),
+                            str(cp['buy_total']), str(cp['cur_total']), str(cp['balance']),
+                            str(cp['balance_pct']) ]
+                if cp['stock'] == recomenda[1]:
+                    cp_endorsed.append( recomenda[1] )
+                    recomenda += cp_data
+
+        for cp in self.current_position:
+            """ Check in wallet stocks but not endorsed """
+            if not cp['stock'] in cp_endorsed:
+                # print(cp['stock'])
+                self.recomenda_11.append(['',cp['stock'],'','','','','','','','','','','','',
+                                            str(cp['qt']),  str(cp['buy_avg']), str(cp['curr_price']),
+                                                        str(cp['buy_total']), str(cp['cur_total']), str(cp['balance']),
+                                                        str(cp['balance_pct'])])
+
+
+    def clean_data(self):
+        ignore_columns = [2, 3, 4]
+        # Cleanup lines
+        for line in self.recomenda_11:
+            result_line = ''
+            for idx, val in enumerate(line):
+                if idx in ignore_columns:
+                    line.pop(idx)
+                line[idx] = line[idx].replace(',', '.')
+
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
 
         self.merge()
-
+        self.clean_data()
+        context['data'] = self.recomenda_11
         # import pdb; pdb.set_trace()
-        # self.recomenda_11
-        # get_column_names(column_names)
-        # get_data(map(''.join, self.recomenda_11)
-
-
-        # context['months'] = self.report.months_build_data()[0]
-        # context['months_operations'] = self.report.months_build_data()[1]
         return context

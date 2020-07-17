@@ -1,9 +1,14 @@
-from django.shortcuts import redirect, render
 from django.contrib.auth.models import User, AnonymousUser
+from django.shortcuts import redirect, render
+from django.http import HttpResponseRedirect
+from django.contrib import messages
+from django.urls import reverse
 
 from .models import Document, get_upload_path
 from .forms import DocumentForm
 
+from django.conf import settings
+import os
 
 
 
@@ -101,15 +106,29 @@ def my_view(request):
         name = docfile[-1]
 
         date = "%s/%s/%s" % (docfile[2], docfile[3], docfile[4])
-
         doc.docfile.short_name = name
         doc.docfile.date = date
         doc.docfile.csv_url = doc.docfile.url.replace('.xls', '.csv')
-        #doc.docfile.short_name = name
-        # names.append(name)
-        # import pdb; pdb.set_trace()
-
 
     # Render list page with the documents and the form
     context = {'documents': documents, 'form': form, 'message': message}
     return render(request, 'list.html', context)
+
+
+def upload_endorse_file(request):
+    """ Upload 11 endorse file and store do path """
+
+    if not '.pdf' in request.FILES['upload_endorse_file'].name:
+        messages.error(request, 'Invalid file. Not PDF file extension: %s' % (request.FILES['upload_endorse_file'].name))
+        return HttpResponseRedirect(reverse('endorse') +  '#upload_endorse_file')
+
+    handle_uploaded_file(request.FILES['upload_endorse_file']) # error throws up here.
+    return HttpResponseRedirect(reverse('endorse'))
+
+
+def handle_uploaded_file(f):
+    file_path = settings.BASE_DIR + '/recomenda_11/pdfs/%s' % (f.name)
+    destination = open(file_path, 'wb')
+    for chunk in f.chunks():
+        destination.write(chunk)
+    destination.close()

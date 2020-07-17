@@ -53,7 +53,7 @@ INSTALLED_APPS = [
     'b3_ir_calc',
     'report',
     'recomenda_11',
-    'django_excel_csv'
+    'django_excel_csv',
 ]
 
 MIDDLEWARE = [

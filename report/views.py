@@ -106,18 +106,11 @@ class HistoryView(ProxyView, TemplateView):
 
 
 class StockPriceView(TemplateView):
-    stock_price_file = '/var/tmp/stock_price.json'
     template_name = "generic/stock_price.html"
-
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
-        with open(self.stock_price_file, 'r') as f:
-            stock_price_file = json.load(f)
-            context['date'] = list(stock_price_file)[0]
-            context['values'] = stock_price_file[context['date']]
-
+        context['stocks'] = StockPrice.objects.all()
         return context
 
 

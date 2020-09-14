@@ -2,6 +2,7 @@ from django.views.generic.base import TemplateView
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.conf import settings
+from django.urls import resolve
 from django.views import View
 
 from datetime import datetime, timedelta, date
@@ -242,5 +243,11 @@ class Endorse11View(PositionView):
         self.merge()
         self.clean_data()
         context['data'] = self.recomenda_11
-        # import pdb; pdb.set_trace()
+
+        """
+        Technical Analysis page uses exactly same data from
+        Endorsement page. Only changes the template
+        """
+        if resolve(self.request.path_info).url_name == 'tech_analysis':
+            self.template_name = "report/tech_analysis.html"
         return context

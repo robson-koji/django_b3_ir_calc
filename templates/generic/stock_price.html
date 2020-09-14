@@ -24,7 +24,7 @@
           <li class="jet-blue-bg">
             <span class="fs1" aria-hidden="true" data-icon="&#xe047;"></span>
             <div class="details">
-              <span class="big">{{ date }}</span>
+              <span class="big">{{ stocks.0.last_update }}</span>
               <span class="small">Last Update</span>
             </div>
           </li>
@@ -52,11 +52,11 @@
 
                   </tr>
                 </thead>
-                {% for stock, data in values.items %}
+                {% for stock in stocks %}
                   <tr>
-                      <td>{{ stock }}</td>
-                      <td class="text-right">{{ data.price|floatformat:"2" }}</td>
-                      <td class="text-right">{{ data.hour }}</td>
+                      <td>{{ stock.stock }}</td>
+                      <td class="text-right">{{ stock.price|floatformat:"2" }}</td>
+                      <td class="text-right">{{ stock.hour }}</td>
                   </tr>
                 {% endfor %}
               </table>

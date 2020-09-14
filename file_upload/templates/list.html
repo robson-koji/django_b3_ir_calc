@@ -19,25 +19,6 @@
     cursor: pointer;
   }
 </style>
-
-<script type="text/javascript">
-  window.onload = function() {
-    $(".mylink").click(function () {
-         var path = $(this).attr("path");
-
-         var input = document.createElement("input");
-         input.setAttribute("type", "hidden");
-         input.setAttribute("name", "path");
-         input.setAttribute("value", path);
-         document.getElementById("analysis_form").appendChild(input);
-
-         // Submit form
-         document.getElementById('analysis_form').submit();
-         return false;
-     });
-  };
-</script>
-
       <!-- Dashboard wrapper start -->
       <div class="dashboard-wrapper">
 

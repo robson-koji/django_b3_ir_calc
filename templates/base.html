@@ -324,16 +324,37 @@
   </script>
 
   <script type="text/javascript">
-    window.onload = $(function(){
-      var this_li = $('.slick-menu a').filter(function(){return this.href==location.href})
+    window.onload = function() {
+      /*
+      * Code to upload stock operations file at the page /file_upload/
+      */
+      $(".mylink").click(function () {
+           var path = $(this).attr("path");
 
-      // activate menu icon
-      this_li.parent().addClass('active').siblings().removeClass('active')
+           var input = document.createElement("input");
+           input.setAttribute("type", "hidden");
+           input.setAttribute("name", "path");
+           input.setAttribute("value", path);
+           document.getElementById("analysis_form").appendChild(input);
 
-      // Display arrow besides menu icon
-      $('.current-page').css("display", "none");
-      this_li.parent().find('.current-page').show()
-  	})
+           // Submit form
+           document.getElementById('analysis_form').submit();
+           return false;
+       });
+
+       /*
+       * Code bellow to control menu icon and arrow activation for all pages
+       */
+       var this_li = $('.slick-menu a').filter(function(){return this.href==location.href})
+
+       // activate menu icon
+       this_li.parent().addClass('active').siblings().removeClass('active')
+
+       // Display arrow besides menu icon
+       $('.current-page').css("display", "none");
+       this_li.parent().find('.current-page').show()
+
+    };
   </script>
 
   </body>

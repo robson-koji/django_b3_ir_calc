@@ -1,0 +1,258 @@
+{% extends 'base.html' %}
+{% load iterate_dicts %}
+{% load mathfilters %}
+{% load i18n %}
+
+
+{% block content %}
+
+
+
+<style media="screen">
+  h3:after {
+    content:"";
+    /* top:80%; */
+    bottom: 7px;
+    left: 0;
+    right: 0;
+
+    width:97%;
+    margin-left:15px;
+
+    height:2px;
+    position:absolute;
+    background:#4264ab;
+
+}
+</style>
+
+
+
+      <!-- Dashboard wrapper start -->
+      <div class="dashboard-wrapper">
+
+        <!-- Page title start -->
+        <div class="page-title clearfix">
+          <h2>
+            Technical Analysis
+            <small>
+              <ul>
+                <li>Home</li>
+                <li>/</li>
+                <li>Dashboard</li>
+                <li>/</li>
+                <li>Tables</li>
+              </ul>
+            </small>
+          </h2>
+
+        </div>
+        <!-- Page title end -->
+
+
+
+
+
+
+
+        <!-- Row start -->
+        <div class="row">
+          <div class="col-md-12">
+            <h3>Technical Analysis - <span id='curr_id'></span> </h3>
+            <div class="widget">
+              <div class="widget-body">
+                <div id="dt_example" class="example_alt_pagination">
+
+                  <p style="font-size:x-large">
+                  <span id='prev_id' style="padding:50px; font-size:large"></span>
+                  <a href="javascript:void(0)" class="dropbtn" onClick="prevProject();">
+                    <i class="fa fa-step-backward"></i>
+                  </a>
+
+                  <span id='curr_id' style='padding:50px;'></span>
+
+                  <a href="javascript:void(0)" class="dropbtn" onClick="nextProject();">
+                    <i class="fa fa-step-forward"></i>
+                  </a>
+
+                  <span id='next_id' style='padding:50px; font-size:large'></span>
+                  </p>
+
+
+
+
+
+                  <table class="table table-condensed table-striped table-hover table-bordered pull-left" id="">
+                    <thead>
+                      <tr>
+                        <th class="text-center">{% trans "Company" %}</th>
+                        <th class="text-center">{% trans "Ticker" %}</th>
+                        <th class="text-center">{% trans "Curr. Price" %}</th>
+                        <th class="text-center">{% trans "Target" %}</th>
+                        <th class="text-center">{% trans "Buy Lim." %}</th>
+                        <th class="text-center">{% trans "Status" %}</th>
+                        <th class="text-center">{% trans "Risk" %}</th>
+                        <th class="text-center">{% trans "Qual." %}</th>
+                        <th class="text-center">{% trans "Index" %}</th>
+                        <th class="text-center">{% trans "Up/Down" %}</th>
+                        <th class="text-center">{% trans "Change" %}</th>
+                        <th class="text-center">{% trans "Qt" %}</th>
+                        <th class="text-center">{% trans "Buy Avg." %}</th>
+                        <th class="text-center">{% trans "Curr. Price" %}</th>
+                        <th class="text-center">{% trans "Buy Total" %}</th>
+                        <th class="text-center">{% trans "Curr. Total" %}</th>
+                        <th class="text-center">{% trans "Balance" %}</th>
+                        <th class="text-center">{% trans "Balance %" %}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for row in data%}
+                      <tr class="gradeX" id="{{row.1}}" style="display:None">
+                          <td><b>{{ row.0 }}</b></td>
+                          <td class="text-center">
+                            <a href="https://br.tradingview.com/chart?symbol=BMFBOVESPA%3A{{ row.1 }}">{{ row.1 }}</a></td>
+                          <td class="text-right">{{ row.2 }}</td>
+                          <td class="text-center">{{ row.3 }}</td>
+                          <td class="text-right">{{ row.4 }}</td>
+                          <td class="text-center">{{ row.5 }}</td>
+                          <td class="text-right">{{ row.6 }}</td>
+                          <td class="text-center">{{ row.7 }}</td>
+                          <td class="text-right">{{ row.8 }}</td>
+                          <td class="text-center">{{ row.9 }}</td>
+                          <td class="text-right">{{ row.10 }}</td>
+                          <td class="text-center">{{ row.11 }}</td>
+                          <td class="text-right">{{ row.12|floatformat:"2" }}</td>
+                          <td class="text-right">{{ row.13|floatformat:"2" }}</td>
+                          <td class="text-center">{{ row.14|floatformat:"2" }}</td>
+                          <td class="text-right">{{ row.15|floatformat:"2" }}</td>
+                          <td class="text-right">{{ row.16|floatformat:"2" }}</td>
+                          <td class="text-center">{{ row.17|floatformat:"2" }}</td>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+
+                <div id="endors" style="width:30%; float:left; margin:10px">
+                  <b>Endorsed <br> Upside > 40% </b>
+                </div>
+                <div id="wendors" style="width:30%; float:left; margin:10px">
+                  <b>Wallet endorsed</b>
+                </div>
+                <div id="wnendors" style="width:30%; float:left; margin:10px">
+                  <b>Wallet not endorsed</b>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+
+
+    </div>
+
+
+    <script type="text/javascript">
+      var papeis = {{ data|safe }}
+      var num = -1
+      var curr, next, prev;
+      var all_stocks = []
+
+
+      function setCnp(num){
+        // Set current, next and prev elements based on ids
+        $('#' + all_stocks[num][1]).show()
+        try{
+          $('#curr_id').text(all_stocks[num][1])
+        } catch (e) {
+          $('#curr_id').text(' - ')
+        }
+        try{
+          $('#next_id').text(all_stocks[num + 1][1])
+        } catch (e) {
+          $('#next_id').text(all_stocks[0][1])
+        }
+        try{
+          $('#prev_id').text(all_stocks[num - 1][1])
+        } catch (e) {
+          $('#prev_id').text(all_stocks[all_stocks.length - 1][1])
+        }
+
+        $("#li_"+all_stocks[num][1]).css("background-color","lightgrey");
+      }
+
+
+      function nextProject() {
+        try{
+          $('#' + all_stocks[num][1]).hide()
+        } catch (e){}
+
+        num++
+        if ( num >= all_stocks.length){ num=0 }
+        setCnp(num)
+
+        openWin(all_stocks[num][1])
+        // return all_stocks[num];
+      }
+      function prevProject() {
+        $('#' + all_stocks[num][1]).hide()
+        num--
+        if ( num < 0 ){ num=all_stocks.length + num }
+
+        setCnp(num)
+        openWin(all_stocks[num][1])
+        // return all_stocks[num];
+      }
+
+
+      /* Get only those papers to analyze */
+      window.onload = function(){
+        var stocks_endorsed = []
+        var my_stocks_endorsed = []
+        var my_stocks_nendorsed = []
+        for (i = 0; i < papeis.length; i++) {
+          var up_down = Number(papeis[i][9])
+          if (papeis[i][0] && papeis[i][11]){ my_stocks_endorsed.push(papeis[i]) }
+          if (papeis[i][0] == ''){ my_stocks_nendorsed.push(papeis[i]) }
+          if ( isNaN(up_down) || up_down < 40){ continue }
+          if ( papeis[i][5] != 'COMPRA'){ continue }
+          stocks_endorsed.push(papeis[i])
+        }
+        all_stocks = stocks_endorsed.concat(my_stocks_endorsed, my_stocks_nendorsed);
+        $('#next_id').text(all_stocks[0][1])
+
+        // Call auxiliar function to create ul elements
+        $('#endors').append(acoes_ul(stocks_endorsed))
+        $('#wendors').append(acoes_ul(my_stocks_endorsed))
+        $('#wnendors').append(acoes_ul(my_stocks_nendorsed))
+
+      }
+
+      function acoes_ul(list){
+        /*
+        * Auxiliar function
+        * Create each ul "endors", "wendors", "nwendors"
+        */
+        var acoes_list = '<ul>'
+        $.each(list, function( index, value ) {
+            acoes_list += '<li id="li_' + value[1] + '">' + value[1] + '</li>'
+        });
+        acoes_list += '</ul>'
+        return acoes_list
+      }
+
+    </script>
+
+    <!--  Open and close TradingView window -->
+    <script type="text/javascript">
+      function openWin(papel) {
+        var href = "https://br.tradingview.com/chart?symbol=BMFBOVESPA%3A" + papel
+        myWindow = window.open(href, "myWindow", "_blank");
+      }
+      function closeWin() {
+        myWindow.close();
+      }
+    </script>
+
+{% endblock content %}

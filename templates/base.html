@@ -205,6 +205,7 @@
               <img src="/static/img/logo3.png" alt="Slick Admin">
             </div>
             <ul class="slick-menu">
+              <!--
               <li>
                 <a href="index.html">
                   <span class="fs1" aria-hidden="true" data-icon="&#xe0a2;"></span>
@@ -224,34 +225,46 @@
                   <li><a href="grid.html"><span class="fs1" aria-hidden="true" data-icon="&#xe14c;"></span>Grid</a></li>
                 </ul>
               </li>
-              <li>
-                <a href="/report/endorse/">
-                  <span class="fs1" aria-hidden="true" data-icon="&#xe0b8;"></span>
-                  <strong>Endorsement</strong>
-                </a>
-              </li>
-              <li class="active">
-                <a href="/report/history/">
-                  <span class="fs1" aria-hidden="true" data-icon="&#xe096;"></span>
-                  <strong>{% trans "History" %}</strong>
-                </a>
-              </li>
-              <li class="active">
+              -->
+              <li class="li-menu">
                 <a href="/report/position/">
-                  <div class="current-page"></div>
+                  <div class="current-page" style="display:None"></div>
                   <!-- <span class="fs1" aria-hidden="true" data-icon="&#xe14a;"></span> -->
                   <span class="fs1" aria-hidden="true" data-icon="&#xe14a;"></span>
                   <strong>{% trans "Current Position" %} </strong>
                 </a>
               </li>
-              <li>
+              <li class="li-menu">
+                <a href="/report/history/">
+                  <div class="current-page" style="display:None"></div>
+                  <span class="fs1" aria-hidden="true" data-icon="&#xe097;"></span>
+                  <strong>{% trans "History" %}</strong>
+                </a>
+              </li>
+              <li class="li-menu">
+                <a href="/report/tech_analysis/">
+                  <div class="current-page" style="display:None"></div>
+                  <span class="fs1" aria-hidden="true" data-icon="&#xe096;"></span>
+                  <strong>Technical Analysis</strong>
+                </a>
+              </li>
+              <li class="li-menu">
+                <a href="/report/endorse/">
+                  <div class="current-page" style="display:None"></div>
+                  <span class="fs1" aria-hidden="true" data-icon="&#xe007;"></span>
+                  <strong>Endorsement</strong>
+                </a>
+              </li>
+              <li class="li-menu">
                 <a href="/stock_quotes/">
+                  <div class="current-page" style="display:None"></div>
                   <span class="fs1" aria-hidden="true" data-icon="&#xe038;"></span>
                   <strong>Stock Quotes</strong>
                 </a>
               </li>
-              <li>
+              <li class="li-menu">
                 <a href="/file_upload/">
+                  <div class="current-page" style="display:None"></div>
                   <span class="fs1" aria-hidden="true" data-icon="&#xe130;"></span>
                   <strong>Upload de Arquivo</strong>
                 </a>
@@ -271,7 +284,7 @@
     <script src="/static/js/jquery-1.12.4.min.js"></script>
     <script src="/static/js/bootstrap.js"></script>
     <script src="/static/js/jquery-ui-1.8.23.custom.min.js"></script>
-    <script src="/static/js/b3_ir_calc.js"></script>    
+    <script src="/static/js/b3_ir_calc.js"></script>
 
     <!-- Easy pie charts -->
     <script src="/static/js/jquery.easy-pie-chart.js"></script>
@@ -308,6 +321,19 @@
 
         });
       });
+  </script>
+
+  <script type="text/javascript">
+    window.onload = $(function(){
+      var this_li = $('.slick-menu a').filter(function(){return this.href==location.href})
+
+      // activate menu icon
+      this_li.parent().addClass('active').siblings().removeClass('active')
+
+      // Display arrow besides menu icon
+      $('.current-page').css("display", "none");
+      this_li.parent().find('.current-page').show()
+  	})
   </script>
 
   </body>

@@ -65,17 +65,28 @@
 
                   <p style="font-size:x-large">
                   <span id='prev_id' style="padding:50px; font-size:large"></span>
-                  <a href="javascript:void(0)" class="dropbtn" onClick="prevProject();">
+                  <a href="javascript:void(0)" class="dropbtn" onClick="prevProject();return false;">
                     <i class="fa fa-step-backward"></i>
                   </a>
 
                   <span id='curr_id' style='padding:50px;'></span>
 
-                  <a href="javascript:void(0)" class="dropbtn" onClick="nextProject();">
+                  <a href="javascript:void(0)" class="dropbtn" onClick="nextProject();return false;">
                     <i class="fa fa-step-forward"></i>
                   </a>
 
                   <span id='next_id' style='padding:50px; font-size:large'></span>
+
+
+                  <!-- Max min inputs -->
+                  <span id='' style='padding:5px; font-size:small'>Min: </span>
+                  <input class='max_min' id='input_min' type="text" name="" value="40" size="2" maxlength="3" style='font-size:50%'>
+                  <span id='' style='font-size:small'>%</span>
+                  <span id='' style='padding:5px; font-size:small'>Max: </span>
+                  <input class='max_min' id='input_max' type="text" name="" value="300" size="2" maxlength="3" style='font-size:50%'>
+                  <span id='' style='font-size:small'>%</span>
+
+
                   </p>
 
 
@@ -183,11 +194,12 @@
       }
 
 
-      function nextProject() {
+      function nextProject(idx) {
         try{
           $('#' + all_stocks[num][1]).hide()
         } catch (e){}
 
+        if (idx){num = idx}
         num++
         if ( num >= all_stocks.length){ num=0 }
         setCnp(num)
@@ -203,44 +215,64 @@
         setCnp(num)
         openWin(all_stocks[num][1])
         // return all_stocks[num];
-      }
+      };
 
 
-      /* Get only those papers to analyze */
+
+
+
+      /* FunctionToRunOnPageLoad
+      * Get only those papers to analyze
+      */
+
       var gather_stocks = function(){
+        var max = $('#input_max').val()
+        var min = $('#input_min').val()
         var stocks_endorsed = []
         var my_stocks_endorsed = []
         var my_stocks_nendorsed = []
+        // $('#endors').empty()
+        // $('#wendors').empty()
+        // $('#wnendors').empty()
+
         for (i = 0; i < papeis.length; i++) {
           var up_down = Number(papeis[i][9])
           if (papeis[i][0] && papeis[i][11]){ my_stocks_endorsed.push(papeis[i]); continue }
           if (papeis[i][0] == ''){ my_stocks_nendorsed.push(papeis[i]); continue }
-          if ( isNaN(up_down) || up_down < 40){ continue }
+
           if ( papeis[i][5] != 'COMPRA'){ continue }
+          if ( isNaN(up_down)){ continue }
+          if ( up_down < min || up_down > max){ continue }
           stocks_endorsed.push(papeis[i])
         }
         all_stocks = stocks_endorsed.concat(my_stocks_endorsed, my_stocks_nendorsed);
         $('#next_id').text(all_stocks[0][1])
 
         // Call auxiliar function to create ul elements
-        $('#endors').append(acoes_ul(stocks_endorsed))
-        $('#wendors').append(acoes_ul(my_stocks_endorsed))
-        $('#wnendors').append(acoes_ul(my_stocks_nendorsed))
+        $('#endors').html(acoes_ul(stocks_endorsed, 0))
+        $('#wendors').html(acoes_ul(my_stocks_endorsed, stocks_endorsed.length))
+        $('#wnendors').html(acoes_ul(my_stocks_nendorsed, stocks_endorsed.length, my_stocks_endorsed.length))
 
       }
 
-      // nameOfSomeFunctionToRunOnPageLoad
 
 
 
-      function acoes_ul(list){
+      function acoes_ul(list, idx1, idx2){
         /*
         * Auxiliar function
         * Create each ul "endors", "wendors", "nwendors"
         */
+
+        // Something wrong on idx while change stocks manualy
+
+        idx = -1
+        if (idx1 ){ idx = idx1 - 1}
+        if (idx2 ){ idx = idx1 + idx2 -1}
         var acoes_list = '<ul>'
         $.each(list, function( index, value ) {
-            acoes_list += '<li id="li_' + value[1] + '">' + value[1] + '</li>'
+            acoes_list += '<li id="li_' + value[1] + '">' + '<a href="javascript:void(0)" onClick=nextProject(' + idx + ');return false;>' +  value[1] + '</a></li>'
+            idx++
         });
         acoes_list += '</ul>'
         return acoes_list

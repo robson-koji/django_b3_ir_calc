@@ -30,6 +30,12 @@ try{
 
 
 
+// Add onblur event to change technical analysis
+$(document).ready(function() {
+  $('.max_min').on('blur', function() {
+     gather_stocks()
+   })
+});
 
 
 

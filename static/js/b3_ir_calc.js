@@ -17,9 +17,16 @@ function addLoadEvent(func) {
 		}
 	}
 }
-addLoadEvent(gather_stocks);
-addLoadEvent(upld_stock_sbmt_form);
 addLoadEvent(activate_icons);
+
+try{
+  addLoadEvent(gather_stocks);
+}catch(e){
+}
+try{
+  addLoadEvent(upld_stock_sbmt_form);
+}catch(e){
+}
 
 
 

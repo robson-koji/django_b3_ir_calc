@@ -213,8 +213,8 @@
         var my_stocks_nendorsed = []
         for (i = 0; i < papeis.length; i++) {
           var up_down = Number(papeis[i][9])
-          if (papeis[i][0] && papeis[i][11]){ my_stocks_endorsed.push(papeis[i]) }
-          if (papeis[i][0] == ''){ my_stocks_nendorsed.push(papeis[i]) }
+          if (papeis[i][0] && papeis[i][11]){ my_stocks_endorsed.push(papeis[i]); continue }
+          if (papeis[i][0] == ''){ my_stocks_nendorsed.push(papeis[i]); continue }
           if ( isNaN(up_down) || up_down < 40){ continue }
           if ( papeis[i][5] != 'COMPRA'){ continue }
           stocks_endorsed.push(papeis[i])

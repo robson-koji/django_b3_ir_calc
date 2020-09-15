@@ -127,6 +127,7 @@ def upload_endorse_file(request):
         return HttpResponseRedirect(reverse('endorse') +  '#upload_endorse_file')
 
     handle_uploaded_file(request.FILES['upload_endorse_file']) # error throws up here.
+    request.session['endorsement_file'] = request.FILES['upload_endorse_file'].name
     return HttpResponseRedirect(reverse('endorse'))
 
 

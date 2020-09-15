@@ -126,36 +126,17 @@
       <div id="mini-nav" class="hidden-phone">
         <ul>
           <li class="hidden-sm">
-            <a href="maps.html">Dropdown
-              <span class="fs1" aria-hidden="true" data-icon="&#xe099;"></span>
+            <a href="mail.html">Viewing File
+              <span class="fs1" aria-hidden="true" data-icon="&#xe026;" ></span>
             </a>
             <ul>
               <li>
-                <a href="maps.html"><span class="fs1" aria-hidden="true" data-icon="&#xe042;"></span> Maps</a>
+                <b>File Name:</b> {{request.session.file}}
               </li>
               <li>
-                <a href="invoice.html"><span class="fs1" aria-hidden="true" data-icon="&#xe004;"></span> Invoice</a>
+                <b>Upload date:</b> {{request.session.date}}
               </li>
-            </ul>
-          </li>
-          <li class="hidden-sm">
-            <a href="maps.html">
-              <span class="fs1" aria-hidden="true" data-icon="&#xe042;" ></span>
-            </a>
-            <ul>
-              <li>
-                <a href="maps.html"><span class="fs1" aria-hidden="true" data-icon="&#xe042;"></span> Maps</a>
-              </li>
-            </ul>
-          </li>
-          <li class="hidden-sm">
-            <a href="mail.html">
-              <span class="fs1" aria-hidden="true" data-icon="&#xe049;" ></span>
-            </a>
-            <ul>
-              <li>
-                <a href="mail.html"><span class="fs1" aria-hidden="true" data-icon="&#xe049;"></span> Messages</a>
-              </li>
+
             </ul>
           </li>
           <li>
@@ -284,7 +265,6 @@
     <script src="/static/js/jquery-1.12.4.min.js"></script>
     <script src="/static/js/bootstrap.js"></script>
     <script src="/static/js/jquery-ui-1.8.23.custom.min.js"></script>
-    <script src="/static/js/b3_ir_calc.js"></script>
 
     <!-- Easy pie charts -->
     <script src="/static/js/jquery.easy-pie-chart.js"></script>
@@ -343,7 +323,7 @@
        });
 
        /*
-       * Code bellow to control menu icon and arrow activation for all pages
+       * Code to control menu icon and arrow activation for all pages
        */
        var this_li = $('.slick-menu a').filter(function(){return this.href==location.href})
 
@@ -354,8 +334,13 @@
        $('.current-page').css("display", "none");
        this_li.parent().find('.current-page').show()
 
+
+
     };
   </script>
+
+  <!-- Precisa carregar aqui no final por causa da funcao addLoadEvent -->
+  <script src="/static/js/b3_ir_calc.js"></script>
 
   </body>
 

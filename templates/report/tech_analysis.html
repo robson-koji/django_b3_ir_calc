@@ -207,7 +207,7 @@
 
 
       /* Get only those papers to analyze */
-      window.onload = function(){
+      var gather_stocks = function(){
         var stocks_endorsed = []
         var my_stocks_endorsed = []
         var my_stocks_nendorsed = []
@@ -228,6 +228,10 @@
         $('#wnendors').append(acoes_ul(my_stocks_nendorsed))
 
       }
+
+      // nameOfSomeFunctionToRunOnPageLoad
+
+
 
       function acoes_ul(list){
         /*

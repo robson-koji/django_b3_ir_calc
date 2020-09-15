@@ -126,8 +126,9 @@
       <div id="mini-nav" class="hidden-phone">
         <ul>
           <li class="hidden-sm">
-            <a href="mail.html">Viewing File
+            <a href="mail.html">
               <span class="fs1" aria-hidden="true" data-icon="&#xe026;" ></span>
+              Stocks File
             </a>
             <ul>
               <li>
@@ -137,6 +138,19 @@
                 <b>Upload date:</b> {{request.session.date}}
               </li>
 
+            </ul>
+          </li>
+
+
+          <li class="hidden-sm">
+            <a href="mail.html">
+              <span class="fs1" aria-hidden="true" data-icon="&#xe026;" ></span>
+              Endorsement File
+            </a>
+            <ul>
+              <li>
+                <b> {{request.session.endorsement_file}}</b>
+              </li>
             </ul>
           </li>
           <li>
@@ -304,27 +318,10 @@
   </script>
 
   <script type="text/javascript">
-    window.onload = function() {
-      /*
-      * Code to upload stock operations file at the page /file_upload/
-      */
-      $(".mylink").click(function () {
-           var path = $(this).attr("path");
-
-           var input = document.createElement("input");
-           input.setAttribute("type", "hidden");
-           input.setAttribute("name", "path");
-           input.setAttribute("value", path);
-           document.getElementById("analysis_form").appendChild(input);
-
-           // Submit form
-           document.getElementById('analysis_form').submit();
-           return false;
-       });
-
-       /*
-       * Code to control menu icon and arrow activation for all pages
-       */
+    /*
+    * Code to control menu icon and arrow activation for all pages
+    */
+    activate_icons = function() {
        var this_li = $('.slick-menu a').filter(function(){return this.href==location.href})
 
        // activate menu icon
@@ -333,9 +330,6 @@
        // Display arrow besides menu icon
        $('.current-page').css("display", "none");
        this_li.parent().find('.current-page').show()
-
-
-
     };
   </script>
 

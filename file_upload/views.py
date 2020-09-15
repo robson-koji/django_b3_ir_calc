@@ -26,8 +26,12 @@ def redirect_view(request):
             print(path)
             print(file)
 
+            docfile = path.split('/')
+            date = "%s/%s/%s" % (docfile[4], docfile[5], docfile[6])
+
             request.session['path'] = path
             request.session['file'] = file
+            request.session['date'] = date
             # return redirect('position')
 
 

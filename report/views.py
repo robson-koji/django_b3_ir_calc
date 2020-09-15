@@ -242,5 +242,6 @@ class Endorse11View(PositionView):
         Endorsement page. Only changes the template
         """
         if resolve(self.request.path_info).url_name == 'tech_analysis':
+            # import pdb; pdb.set_trace()
             self.template_name = "report/tech_analysis.html"
         return context

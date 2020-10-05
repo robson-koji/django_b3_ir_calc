@@ -33,12 +33,30 @@ class ProxyView(View):
             return render(request, 'list.html', context)
                 # Get anonymous user data
 
-        # import pdb; pdb.set_trace()
+        if not 'file' in request.session or not 'path' in request.session:
+            message = {'title':'Nenhum arquivo selecionado',
+                        'body':'Clique no botão abaixo para selecionar um arquivo para ver a sua posição atual.',
+                        'btn_text':'Selecionar arquivo',
+                        'href': 'documents_home' }
+            context = {'message': message}
+            return render(request, 'error.html', context)
+
         request.session['path'] = request.session['path'].replace('/media/', '')
         self.path = "%s%s/" % (settings.MEDIA_ROOT, request.session['path'])
         self.file = request.session['file']
 
-        b3_tax_obj = self.handle_data(self.path, self.file)
+
+        try:
+            b3_tax_obj = self.handle_data(self.path, self.file)
+        except FileNotFoundError:
+            message = {'title': 'Arquivo não encontrado',
+                        'body': 'Arquivo não encontrado: %s/%s. <br> Clique no botão abaixo para selecionar outro arquivo.' % (request.session['path'], request.session['file']) ,
+                        'btn_text':'Selecionar arquivo',
+                        'href': 'documents_home' }
+            context = {'message': message}
+            return render(request, 'error.html', context)
+
+
         # self.gather_iligal_operation(b3_tax_obj.iligal_operation)
         self.months = self.months_reconcile(b3_tax_obj)
         self.report = self.generate_reports(self.stock_price_file, b3_tax_obj.stocks_wallet, self.months)
@@ -50,8 +68,13 @@ class ProxyView(View):
         print( "ProxyView")
         print( path)
         print( file)
-        b3_tax_obj = ObjectifyData(mkt_type='VIS', path=path, file=file)
-        return b3_tax_obj
+        # import pdb; pdb.set_trace()
+        try:
+            b3_tax_obj = ObjectifyData(mkt_type='VIS', path=path, file=file)
+            return b3_tax_obj
+        except FileNotFoundError:
+            raise
+
 
     # def gather_iligal_operation(self, iligal_operation):
     #     self.iligal_operations.append(iligal_operation)

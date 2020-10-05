@@ -62,6 +62,8 @@
       </div>
       <!-- Logo end -->
 
+
+
       <!-- Optional Dropdown start -->
       <div id="optional-dropdown">
         <ul>
@@ -106,20 +108,23 @@
             </ul>
           </li>
           <li>
-            <a href="mail.html">
-              <span class="fs1" aria-hidden="true" data-icon="&#xe040;" ></span>
-              <span class="count-label"></span>
+            <a href="faq.html">
+              <i class="fa fa-question fa-2x" aria-hidden="true"></i>
+
+
             </a>
           </li>
         </ul>
       </div>
       <!-- Optional Dropdown end -->
 
-      <!-- Search bar start -->
+
+      <!-- Search bar start
       <div class="custom-search hidden-phone">
         <input type="text" class="search-query">
         <button> <span class="fs1" aria-hidden="true" data-icon="&#xe07f;"></span></button>
       </div>
+      -->
       <!-- Search bar end -->
 
       <!-- Mini navigation start -->
@@ -153,9 +158,16 @@
               </li>
             </ul>
           </li>
+
+
           <li>
-            <a href="login.html">
-              <span class="text-label">Mr. John </span><span class="fs1" aria-hidden="true" data-icon="&#xe088;"></span>
+            {% if not user.is_authenticated %}
+            <a href="/accounts/login">
+              <span class="text-label">Login </span><span class="fs1" aria-hidden="true" data-icon="&#xe088;"></span>
+            </a>
+            {% else %}
+            <a href="/profile">
+              <span class="text-label">{{ user.email }} </span><span class="fs1" aria-hidden="true" data-icon="&#xe088;"></span>
             </a>
             <ul class="user-summary">
               <li>
@@ -177,14 +189,25 @@
                 </div>
               </li>
               <li>
-                <button class="btn btn-xs btn-danger pull-right" onclick="location.href='login.html'">Logout</button>
+                <button class="btn btn-xs btn-danger pull-right" onclick="location.href='/accounts/logout'">Logout</button>
                 <span class="clearfix"></span>
               </li>
             </ul>
+            {% endif %}
           </li>
+
         </ul>
       </div>
       <!-- Mini navigation end -->
+
+      {% if not user or user != 'AnonymousUser' %}
+      <div style="padding-top:10px; padding-left:300px">
+        <span class="label label-danger">
+              <span class="fs1" aria-hidden="true" data-icon=""></span> Signup to save your files
+              {{ request.session.session_key }}
+        </span>
+      </div>
+      {% endif %}
 
     </header>
     <!-- Header end -->
@@ -232,7 +255,7 @@
               <li class="li-menu">
                 <a href="/report/history/">
                   <div class="current-page" style="display:None"></div>
-                  <span class="fs1" aria-hidden="true" data-icon="&#xe097;"></span>
+                  <span class="fs1" aria-hidden="true" data-icon="&#xe053;"></span>
                   <strong>{% trans "History" %}</strong>
                 </a>
               </li>
@@ -266,9 +289,19 @@
               </li>
             </ul>
           </div>
+
+
           <!-- Sidebar end -->
 
+
+
+
+
+
+
+
           {% block content %}
+
           {% endblock %}
 
         </div>
@@ -276,6 +309,8 @@
 
 
     <!-- Scripts -->
+    <script src="https://use.fontawesome.com/965df85dd0.js"></script>
+
     <script src="/static/js/jquery-1.12.4.min.js"></script>
     <script src="/static/js/bootstrap.js"></script>
     <script src="/static/js/jquery-ui-1.8.23.custom.min.js"></script>

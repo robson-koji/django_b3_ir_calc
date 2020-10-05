@@ -29,10 +29,12 @@ urlpatterns = [
     path('report/', include('report.urls')),
     path('file_upload/', include('file_upload.urls')),
 
-
     url(r'^stock_quotes/$', StockPriceView.as_view(), name='stock_quotes'),
-]
 
+    url(r'^accounts/', include('allauth.urls')),
+
+
+]
 
 
 # For static development

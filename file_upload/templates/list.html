@@ -44,6 +44,7 @@
         <!-- Page title start -->
         <div class="page-title clearfix">
           <h2>
+
             {% trans "File Upload" %}
             <small>
               <ul>
@@ -59,6 +60,116 @@
         <!-- Page title end -->
 
 
+        <div class="row">
+                  <div class="col-md-12">
+                    <div class="widget">
+                      <div class="widget-header">
+                        <div class="title">
+                          <span class="fs1" aria-hidden="true" data-icon=""></span> B3 CEI File
+                        </div>
+                      </div>
+                      <div class="widget-body">
+                        <ul class="media-list">
+                          <li class="media">
+                            <a class="pull-left" href="#" data-original-title="" title="">
+                              <img class="media-object" alt="64x64" style="width: 64px; height: 64px;" src="/static/imagens/cei.png">
+                            </a>
+                            <div class="media-body">
+                              <h4 class="media-heading">Get your B3 CEI file</h4>
+                              <p>
+                                You can have it from <a href="https://cei.b3.com.br/CEI_Responsivo/" target="_blank"><b>B3 - Canal Eletrônico do Investidor</b> </a>
+                              </p>
+                            </div>
+                          </li>
+
+                          {% if documents %}
+                          <li class="media">
+                            <a class="pull-left" href="#" data-original-title="" title="">
+                              <img class="media-object" alt="64x64" style="width: 64px; height: 64px;" src="/static/imagens/cei.png">
+                            </a>
+                            <div class="media-body">
+                              <h4 class="media-heading">Your B3 CEI file</h4>
+                              <p>These are your uploaded files.</p>
+
+                              <!-- List of uploaded documents -->
+                              <!-- Row start -->
+                              <form id="analysis_form" action="open_file/" method="POST">
+                                 {% csrf_token %}
+                                <table class="table table-condensed table-bordered table-hover no-margin">
+                                  <thead>
+                                    <tr>
+                                      <th>Arquivo / Data</th>
+                                      <th>Fonte de dados</th>
+                                      <th>Download (CSV)</th>
+
+                                    </tr>
+                                  </thead>
+                                  {% for document in documents %}
+
+                                    <tr>
+                                        <td>
+                                          {{ document.docfile.date }} - {{ document.docfile.short_name }}
+                                        </td>
+                                        <td>
+                                          <a href="#" class="mylink" path="{{ document.docfile.url }}">Usar este arquivo</a>
+                                        </td>
+                                        <td>
+                                          <a href="{{ document.docfile.csv_url }}">Download CSV</a><Br>
+                                        </td>
+                                    </tr>
+                                  {% endfor %}
+                                </table>
+                              </form>
+                            </div>
+                          </li>
+                          {% endif %}
+
+                          <li class="media">
+                            <a class="pull-left" href="#" data-original-title="" title="">
+                              <img class="media-object" alt="64x64" style="width: 64px; height: 64px;" src="/static/imagens/cei.png">
+                            </a>
+                            <div class="media-body">
+                              <h4 class="media-heading">Upload your B3 CEI file</h4>
+                              <p>You can upload as many as you want, to compare then</p>
+                              <!-- Upload form. Note enctype attribute! -->
+                              <form action="{% url "documents_home" %}" method="post" enctype="multipart/form-data">
+                                  {% csrf_token %}
+                                  {{ message }}
+                                  <p>{{ form.non_field_errors }}</p>
+
+                                  <!-- <p>{{ form.docfile.label_tag }} {{ form.docfile.help_text }}</p> -->
+                                  <p>
+                                      {{ form.docfile.errors }}
+                                      {{ form.docfile }}
+                                  </p>
+
+                                  <p><input type="submit" value="Upload"/></p>
+                              </form>
+
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+        {% if request.session.session_key == None %}
+        <div class="col-md-12 col-sm-12">
+            <div class="alert alert-block alert-info jet-blue-bg no-margin">
+              <button data-dismiss="alert" class="close" type="button" data-original-title="" title="">
+                ×
+              </button>
+              <h3 class="text-white">Anonymous User!</h3>
+              <p class="text-white">You can use this site anonymously, just upload your files to check your stocks.</p>
+              <p class="text-white">Login to see your saved files.</p>
+              <p class="text-white">Signup to create account and save your files.</p>
+            </div>
+          </div>
+        {% endif %}
+
+
 
 
       <div class="row">
@@ -68,70 +179,7 @@
 
 
 
-        <!-- List of uploaded documents -->
-        {% if documents %}
 
-
-        <!-- Row start -->
-
-            <div class="widget">
-              <div class="widget-header">
-                <div class="title">
-                  <span class="fs1" aria-hidden="true" data-icon="&#xe1b5;"></span>B3 - Arquivos CEI
-                </div>
-              </div>
-
-
-
-                <form id="analysis_form" action="open_file/" method="POST">
-                   {% csrf_token %}
-                  <table class="table table-condensed table-bordered table-hover no-margin">
-                    <thead>
-                      <tr>
-                        <th>Arquivo / Data</th>
-                        <th>Fonte de dados</th>
-                        <th>Download (CSV)</th>
-
-                      </tr>
-                    </thead>
-                    {% for document in documents %}
-
-                      <tr>
-                          <td>
-                            {{ document.docfile.date }} - {{ document.docfile.short_name }}
-                          </td>
-                          <td>
-                            <a href="#" class="mylink" path="{{ document.docfile.url }}">Usar este arquivo</a>
-                          </td>
-                          <td>
-                            <a href="{{ document.docfile.csv_url }}">Download CSV</a><Br>
-                          </td>
-                      </tr>
-                    {% endfor %}
-                  </table>
-                </form>
-              </div>
-
-
-        {% else %}
-            <p>No documents.</p>
-        {% endif %}
-
-        <!-- Upload form. Note enctype attribute! -->
-        <form action="{% url "my-view" %}" method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ message }}
-            <p>{{ form.non_field_errors }}</p>
-
-            <p>{{ form.docfile.label_tag }} {{ form.docfile.help_text }}</p>
-
-            <p>
-                {{ form.docfile.errors }}
-                {{ form.docfile }}
-            </p>
-
-            <p><input type="submit" value="Upload"/></p>
-        </form>
 
 
       </div>

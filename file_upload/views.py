@@ -3,6 +3,7 @@ from django.shortcuts import redirect, render
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.urls import reverse
+from django.db.models import Q
 
 from .models import Document, get_upload_path
 from .forms import DocumentForm
@@ -14,11 +15,13 @@ import os
 
 def redirect_view(request):
     if request.method == 'POST':
-        # Check if user access your own files.
         # '/media/documents/2bsgj6idurknyuk9cdlztz7zy8z1vxg9/2020/05/13/TAEE11.SA_3W1hl3N.csv'
         path = request.POST.get('path').split('/')
         # Save file path to the user session
-        if path[3] == request.session.session_key:
+
+        # Check if user access your own files.
+        # Check on session or database user field.
+        if request.user.is_authenticated or path[3] == request.session.session_key:
             path = request.POST.get('path').rsplit('/', 1)[0]
             file = request.POST.get('path').split('/')[-1]
 
@@ -65,13 +68,15 @@ def get_session_key(request):
         if not request.session.keys():
             request.session['anonymous'] = True
             request.session.save()
+    user = request.user
     session_key = request.session.session_key
+    # import pdb; pdb.set_trace()
     return (user, session_key)
 
 
 
 
-def my_view(request):
+def documents_home(request):
     print(f"Great! You're using Python 3.6+. If you fail here, use the right version.")
     # message = 'Upload as many files as you want!'
     message = ''
@@ -100,9 +105,14 @@ def my_view(request):
         form = DocumentForm()  # An empty, unbound form
 
     # Load documents for the list page
-    documents = Document.objects.filter(session_key=request.session.session_key)
 
-    # import pdb; pdb.set_trace()
+
+    if request.user.is_anonymous:
+        documents = Document.objects.filter(session_key=request.session.session_key)
+    else:
+        documents = Document.objects.filter(Q(session_key=request.session.session_key) | Q(user=request.user) )
+
+
 
     # names = []
     for doc in documents:
@@ -115,6 +125,7 @@ def my_view(request):
         doc.docfile.csv_url = doc.docfile.url.replace('.xls', '.csv')
 
     # Render list page with the documents and the form
+    #import pdb; pdb.set_trace()
     context = {'documents': documents, 'form': form, 'message': message}
     return render(request, 'list.html', context)
 

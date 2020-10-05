@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+
+
+
+
+{% block content %}
+<style media="screen">
+  .tim {
+    border: 0;
+    padding: 0;
+    display: inline;
+    background: none;
+    text-decoration: underline;
+    color: blue;
+  }
+  button:hover {
+    cursor: pointer;
+  }
+</style>
+
+<script type="text/javascript">
+  upld_stock_sbmt_form = function() {
+    $(".mylink").click(function () {
+         var path = $(this).attr("path");
+
+         var input = document.createElement("input");
+         input.setAttribute("type", "hidden");
+         input.setAttribute("name", "path");
+         input.setAttribute("value", path);
+         document.getElementById("analysis_form").appendChild(input);
+
+         // Submit form
+         document.getElementById('analysis_form').submit();
+         return false;
+     });
+  };
+</script>
+
+      <!-- Dashboard wrapper start -->
+      <div class="dashboard-wrapper">
+
+        <!-- Page title start -->
+        <div class="page-title clearfix">
+          <h2>
+            {% trans "Error" %}
+          </h2>
+        </div>
+        <!-- Page title end -->
+
+        <div class="row">
+          <div class="col-md-6 col-sm-4 col-xs-12">
+            <div class="panel panel-danger">
+              <div class="panel-heading">
+                <h3 class="panel-title">{{ message.title }}</h3>
+              </div>
+              <div class="panel-body">
+                <p>{{ message.body|safe }} </p>
+                {% if message.href %}
+                  <a class="btn btn-default" href={% url message.href %} data-original-title="" title=""> {{ message.btn_text }} </a>
+                {% endif %}
+              </div>
+
+            </div>
+          </div>
+        </div>
+  </div>
+
+{% endblock %}

@@ -1,0 +1,31 @@
+
+Pegar aluguel e termo
+https://investmax.com.br/iM/content.asp?contentid=959&acao=ARZZ3
+
+Aluguel direto na b3. Comparar com o investmax. Os valores batem.
+http://www.b3.com.br/pt_br/produtos-e-servicos/emprestimo-de-ativos/renda-variavel/posicoes-em-aberto/renda-variavel-8AE490C9701B5B35017039842ACE1F91.htm?data=08/10/2020&f=0
+
+Termo direto na b3. Comparar com o investmax. Os valores batem.
+http://www.b3.com.br/pt_br/market-data-e-indices/servicos-de-dados/market-data/consultas/mercado-a-vista/termo/posicoes-em-aberto/
+Valor mercado
+http://www.b3.com.br/pt_br/market-data-e-indices/servicos-de-dados/market-data/consultas/mercado-a-vista/valor-de-mercado-das-empresas-listadas/bolsa-de-valores/
+
+Classificação Setorial
+http://www.b3.com.br/pt_br/produtos-e-servicos/negociacao/renda-variavel/acoes/consultas/classificacao-setorial/
+
+Instrumentos Listados
+https://arquivos.b3.com.br/Web/Consolidated
+
+CEI - Download (pronto do github)
+/projetos/portal_cei/portal-cei-master/CEIHIST-262_26044.csv
+
+
+Criar um algoritmo que verifique
+1. Aluguel x Valor de mercado
+2. Termo x Valor de mercado
+3. Aluguel x Termo
+
+Regras
+1. Importa primeiro a relacao de 1 e de 2, para saber se estao alavancando.
+2. Dupla checagem para ver se não é hedge. A relação precisa estar fora da curva.
+3. Ainda não tenho idéia dos parametros de comparação dos dois itens acima.

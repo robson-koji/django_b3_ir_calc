@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'report',
     'recomenda_11',
     'django_excel_csv',
+    'b3_reference_data',
 
 
 # The following apps are required by allauth:

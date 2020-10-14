@@ -24,6 +24,9 @@ from report import urls
 from report.views import StockPriceView
 
 urlpatterns = [
+
+    path('', include('file_upload.urls')),    
+
     path('admin/', admin.site.urls),
 
     path('report/', include('report.urls')),

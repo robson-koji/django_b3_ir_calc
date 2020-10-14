@@ -1,3 +1,5 @@
+import string
+
 from django.views.generic.base import TemplateView
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -11,6 +13,7 @@ from b3_ir_calc.b3_ir_calc.ir_calc import *
 from recomenda_11 import extract_table
 from stock_price.models import StockPrice
 from django_excel_csv.views import GetExcel
+from b3_reference_data.models import Ativos, Setorial
 
 
 
@@ -214,8 +217,19 @@ class Endorse11View(PositionView):
 
     template_name = "report/endorse_11.html"
 
+    def get_btc_termo(self, papel):
+        papel = papel.rstrip(string.digits)
+        try:
+            ativo = Ativos.objects.get(ativo=papel)
+            return (str(ativo.get_pct_sum_btc_termo_vm()),
+                    str(ativo.get_pct_btc_vm()),
+                    str(ativo.get_pct_termo_vm()))
+        except:
+            return ('','','')
+
+
     def merge(self):
-        """ Merge dos dados de current_position e 11 recomenda """
+        """ Merge dos dados de current_position, 11 recomenda, btc e termo """
         self.recomenda_11 = extract_table.get_csv_data()
         self.current_position
 
@@ -224,21 +238,32 @@ class Endorse11View(PositionView):
             """ Check endorsed stocks against wallet stocks """
             tem_recomenda = 0
             for cp in self.current_position:
+                (btc_termo_vm, btc_vm, termo_vm) = self.get_btc_termo(cp['stock'])
                 cp_data = [ str(cp['qt']),  str(cp['buy_avg']), str(cp['curr_price']),
                             str(cp['buy_total']), str(cp['cur_total']), str(cp['balance']),
-                            str(cp['balance_pct']) ]
+                            str(cp['balance_pct']), btc_termo_vm, btc_vm, termo_vm ]
                 if cp['stock'] == recomenda[1]:
                     cp_endorsed.append( recomenda[1] )
                     recomenda += cp_data
+                    tem_recomenda = 1
+            if not tem_recomenda:
+                (btc_termo_vm, btc_vm, termo_vm) = self.get_btc_termo(recomenda[1])
+                recomenda += [ '', '', '', '', '', '', '',
+                                btc_termo_vm, btc_vm, termo_vm ]
+
+
 
         for cp in self.current_position:
             """ Check in wallet stocks but not endorsed """
+            # import pdb; pdb.set_trace()
+            (btc_termo_vm, btc_vm, termo_vm) = self.get_btc_termo(cp['stock'])
             if not cp['stock'] in cp_endorsed:
                 # print(cp['stock'])
                 self.recomenda_11.append(['',cp['stock'],'','','','','','','','','','','','',
                                             str(cp['qt']),  str(cp['buy_avg']), str(cp['curr_price']),
-                                                        str(cp['buy_total']), str(cp['cur_total']), str(cp['balance']),
-                                                        str(cp['balance_pct'])])
+                                                        str(cp['buy_total']), str(cp['cur_total']),
+                                                        str(cp['balance']), str(cp['balance_pct']),
+                                                        btc_termo_vm, btc_vm, termo_vm])
 
 
     def clean_data(self):

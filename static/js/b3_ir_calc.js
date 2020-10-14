@@ -39,12 +39,35 @@ $(document).ready(function() {
 
 
 
+
 $(document).ready(function() {
     /* Endorsement page */
     // Initialization
     $('#data-table-endorse').DataTable( {
         "order": [[ 9, "desc" ], [ 6, "asc" ], [ 5, "asc" ]],
-        "pageLength": 100
+        "pageLength": 100,
+
+				/* Show hide columns */
+				dom: 'Bfrtip',
+        buttons: [
+            {
+                extend: 'colvisGroup',
+                text: 'BTC/Termo - Show',
+                show: [ 2,3,4 ],
+                hide: [  ]
+            },
+            {
+                extend: 'colvisGroup',
+                text: 'BTC/Termo - Hide',
+                show: [ ],
+                hide: [ 2, 3, 4]
+            },
+            {
+                extend: 'colvisGroup',
+                text: 'Show all',
+                show: ':hidden'
+            }
+        ]
     } );
     var rowCallback;
 

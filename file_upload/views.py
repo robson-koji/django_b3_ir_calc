@@ -97,7 +97,7 @@ def documents_home(request):
                 newdoc = Document(docfile=request.FILES['docfile'], user=user, session_key=session_key)
             newdoc.save()
 
-            return redirect('my-view')
+            return redirect('documents_home')
 
         else:
             message = 'The form is not valid. Fix the following error:'

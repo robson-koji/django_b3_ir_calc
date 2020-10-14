@@ -114,6 +114,9 @@
                         <th class="text-center">{% trans "Curr. Total" %}</th>
                         <th class="text-center">{% trans "Balance" %}</th>
                         <th class="text-center">{% trans "Balance %" %}</th>
+                        <th class="text-center">{% trans "BTC Termo/VM" %}</th>
+                        <th class="text-center">{% trans "BTC/VM" %}</th>
+                        <th class="text-center">{% trans "Termo/VM" %}</th>                                                                        
                       </tr>
                     </thead>
                     <tbody>
@@ -138,6 +141,9 @@
                           <td class="text-right">{{ row.15|floatformat:"2" }}</td>
                           <td class="text-right">{{ row.16|floatformat:"2" }}</td>
                           <td class="text-center">{{ row.17|floatformat:"2" }}</td>
+                          <td class="text-center">{{ row.18|floatformat:"2" }}</td>
+                          <td class="text-center">{{ row.19|floatformat:"2" }}</td>
+                          <td class="text-center">{{ row.20|floatformat:"2" }}</td>
                       {% endfor %}
                     </tbody>
                   </table>

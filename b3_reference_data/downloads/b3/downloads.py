@@ -4,7 +4,7 @@ django.setup()
 
 from pandas.api.types import is_numeric_dtype
 from collections import defaultdict
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 from zipfile import ZipFile
@@ -83,7 +83,7 @@ class classifSetorial(downloadMain):
         self.unzip_file(zipped_archive)
 
     def read_csv(self):
-        self.file = 'b3_reference_data/downloads/b3/files/Setorial B3 05-10-2020 (português).xlsx'
+        #self.file = 'b3_reference_data/downloads/b3/files/Setorial B3 05-10-2020 (português).xlsx'
         df = pd.read_excel(self.file, sheet_name=0)
         setores = defaultdict(lambda: defaultdict(dict))
         setor = subsetor = segmento = ''
@@ -151,7 +151,7 @@ class valorMercado(downloadMain):
         open(self.file, 'wb').write(self.response.content)
 
     def read_csv_store_valor_mercado(self):
-        self.file = 'b3_reference_data/downloads/b3/files/VMDiadet%20-%202020-10-08.xlsx'
+        #self.file = 'b3_reference_data/downloads/b3/files/VMDiadet%20-%202020-10-08.xlsx'
         df = pd.read_excel(self.file, sheet_name=0, dtype={'Unnamed: 4': str})
 
         for index, row in df.iterrows():
@@ -178,11 +178,17 @@ class PdTableMixin():
 
 
 class Aluguel(downloadMain, PdTableMixin):
-    url = 'http://www.b3.com.br/pt_br/produtos-e-servicos/emprestimo-de-ativos/renda-variavel/posicoes-em-aberto/renda-variavel-8AE490C9701B5B35017039842ACE1F91.htm?data=08/10/2020&f=0'
-    column_data = 4
+    # column_data = 4
+    def __init__(self):
+        super(Aluguel, self).__init__()
+        self.column_data = 4
+        self.today = (date.today() - timedelta(days=1)).strftime("%d/%m/%Y")
+        #self.pg_url = 'http://www.b3.com.br/pt_br/market-data-e-indices/servicos-de-dados/market-data/consultas/mercado-a-vista/termo/posicoes-em-aberto/'
+        self.pg_url = 'http://www.b3.com.br/pt_br/produtos-e-servicos/emprestimo-de-ativos/renda-variavel/posicoes-em-aberto/renda-variavel-8AE490C9701B5B35017039842ACE1F91.htm?data=%s&f=0' % (self.today)
 
     def get_pg_data(self):
-        r = self.req_session.get(self.url)
+        import pdb; pdb.set_trace()
+        r = self.req_session.get(self.pg_url)
         soup = BeautifulSoup(r.content, 'html.parser')
         table = soup.find_all('table', attrs = {'class': 'responsive'})
         self.table_data = table[0]
@@ -205,11 +211,11 @@ class Termo(downloadMain, PdTableMixin):
         super(Termo, self).__init__()
         self.column_data = 5
         self.link_id_form = 'filtroListaCompleta'
-        self.today = date.today().strftime("%d/%m/%Y")
+        self.today = (date.today() - timedelta(days=1)).strftime("%d/%m/%Y")
         self.pg_url = 'http://www.b3.com.br/pt_br/market-data-e-indices/servicos-de-dados/market-data/consultas/mercado-a-vista/termo/posicoes-em-aberto/'
 
     def download(self):
-        self.today = '09/10/2020'
+        # self.today = '09/10/2020'
         self.get_download_url()
         self.download_url = self.download_url.replace('../', '')
         self.download_url = self.b3_domain + self.download_url + '?data=%s' % (self.today)

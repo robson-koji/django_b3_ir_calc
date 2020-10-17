@@ -1,0 +1,7 @@
+stock, event, data_ex, data_new, 'group_valid', stock_qt_operation, stock_code_operation,
+
+BMGB11, desdobramento, 11292019, 11292019, 1, '* 4', 'BMGB4'
+BBDC3, bonificacao, 04142020, 04162020, 10, '* 1.1',
+BBDC4, bonificacao, 04142020, 04162020, 10, '* 1.1',
+JSLG3, conversao,09182020, 09182020, 1, , SIMH3
+MGLU3, desdobramento,10142020 10162020, 1, '* 4',

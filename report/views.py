@@ -26,7 +26,8 @@ class ProxyView(View):
     stock_price_file = None
 
     def dispatch(self, request, *args, **kwargs):
-        # import pdb; pdb.set_trace()
+        self.ativos = Ativos.objects.all()
+
         if request.session.is_empty():
             from file_upload.forms import DocumentForm
             form = DocumentForm()
@@ -43,6 +44,7 @@ class ProxyView(View):
                         'href': 'documents_home' }
             context = {'message': message}
             return render(request, 'error.html', context)
+
 
         request.session['path'] = request.session['path'].replace('/media/', '')
         self.path = "%s%s/" % (settings.MEDIA_ROOT, request.session['path'])
@@ -217,15 +219,18 @@ class Endorse11View(PositionView):
 
     template_name = "report/endorse_11.html"
 
-    def get_btc_termo(self, papel):
+    def get_btc_termo_setorial(self, papel):
         papel = papel.rstrip(string.digits)
+
         try:
-            ativo = Ativos.objects.get(ativo=papel)
+            ativo = self.ativos.get(ativo=papel)
+            setorial = ativo.setorial.get_arvore_setorial()
             return (str(ativo.get_pct_sum_btc_termo_vm()),
                     str(ativo.get_pct_btc_vm()),
-                    str(ativo.get_pct_termo_vm()))
+                    str(ativo.get_pct_termo_vm()),
+                    setorial)
         except:
-            return ('','','')
+            return ('','','','')
 
 
     def merge(self):
@@ -238,32 +243,32 @@ class Endorse11View(PositionView):
             """ Check endorsed stocks against wallet stocks """
             tem_recomenda = 0
             for cp in self.current_position:
-                (btc_termo_vm, btc_vm, termo_vm) = self.get_btc_termo(cp['stock'])
+                (btc_termo_vm, btc_vm, termo_vm, setorial) = self.get_btc_termo_setorial(cp['stock'])
                 cp_data = [ str(cp['qt']),  str(cp['buy_avg']), str(cp['curr_price']),
                             str(cp['buy_total']), str(cp['cur_total']), str(cp['balance']),
-                            str(cp['balance_pct']), btc_termo_vm, btc_vm, termo_vm ]
+                            str(cp['balance_pct']), btc_termo_vm, btc_vm, termo_vm, setorial ]
                 if cp['stock'] == recomenda[1]:
                     cp_endorsed.append( recomenda[1] )
                     recomenda += cp_data
                     tem_recomenda = 1
             if not tem_recomenda:
-                (btc_termo_vm, btc_vm, termo_vm) = self.get_btc_termo(recomenda[1])
+                (btc_termo_vm, btc_vm, termo_vm, setorial) = self.get_btc_termo_setorial(recomenda[1])
                 recomenda += [ '', '', '', '', '', '', '',
-                                btc_termo_vm, btc_vm, termo_vm ]
+                                btc_termo_vm, btc_vm, termo_vm, setorial ]
 
 
 
         for cp in self.current_position:
             """ Check in wallet stocks but not endorsed """
             # import pdb; pdb.set_trace()
-            (btc_termo_vm, btc_vm, termo_vm) = self.get_btc_termo(cp['stock'])
+            (btc_termo_vm, btc_vm, termo_vm, setorial) = self.get_btc_termo_setorial(cp['stock'])
             if not cp['stock'] in cp_endorsed:
                 # print(cp['stock'])
                 self.recomenda_11.append(['',cp['stock'],'','','','','','','','','','','','',
                                             str(cp['qt']),  str(cp['buy_avg']), str(cp['curr_price']),
                                                         str(cp['buy_total']), str(cp['cur_total']),
                                                         str(cp['balance']), str(cp['balance_pct']),
-                                                        btc_termo_vm, btc_vm, termo_vm])
+                                                        btc_termo_vm, btc_vm, termo_vm, setorial])
 
 
     def clean_data(self):

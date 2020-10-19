@@ -25,29 +25,23 @@ class Ativos(models.Model):
     termo = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True, help_text=u"Soma termo de preferenciais e ordinarias")
 
     def get_pct_sum_btc_termo_vm(self):
-        try:
-            btc_termo  = self.btc + self.termo
-            get_pct_sum_btc_termo_vm = btc_termo * 100 / (self.valor_mercado * 1000)
-            return get_pct_sum_btc_termo_vm
-        except Exception as e:
-            print(e)
+        if not self.valor_mercado or not self.btc or not self.termo:
             return None
+        btc_termo  = self.btc + self.termo
+        get_pct_sum_btc_termo_vm = btc_termo * 100 / (self.valor_mercado * 1000)
+        return get_pct_sum_btc_termo_vm
 
     def get_pct_btc_vm(self):
-        try:
-            get_pct_btc_vm = self.btc * 100 / (self.valor_mercado * 1000)
-            return get_pct_btc_vm
-        except Exception as e:
-            print(e)
+        if not self.valor_mercado or not self.btc or not self.termo:
             return None
+        get_pct_btc_vm = self.btc * 100 / (self.valor_mercado * 1000)
+        return get_pct_btc_vm
 
     def get_pct_termo_vm(self):
-        try:
-            get_pct_termo_vm = self.termo * 100 / (self.valor_mercado * 1000)
-            return get_pct_termo_vm
-        except Exception as e:
-            print(e)
+        if not self.valor_mercado or not self.btc or not self.termo:
             return None
+        get_pct_termo_vm = self.termo * 100 / (self.valor_mercado * 1000)
+        return get_pct_termo_vm
 
     def __str__(self):
             return self.ativo

@@ -98,6 +98,8 @@ class PositionView(ProxyView, TemplateView):
     """ Current position """
     template_name = "report/position.html"
 
+    defensivas = ['BRAP4','CESP6','CPLE6','ENBR3', 'GTWR11','TAEE11','TIET11','VALE3']
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # self.report.get_current_quotations()
@@ -108,6 +110,12 @@ class PositionView(ProxyView, TemplateView):
         # Set stock current prices.
         tmp_dict = {}
         for stock in stocks:
+            """
+            !!! - Para filtrar grupos de acoes.
+            """
+            # if stock.stock in self.defensivas:
+            #     continue
+            # import pdb; pdb.set_trace()
             tmp_dict[stock.stock]= {'price': str(stock.price), 'hour':stock.hour }
 
         self.report.current_prices = tmp_dict

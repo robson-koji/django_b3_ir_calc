@@ -155,9 +155,11 @@
               Endorsement File
             </a>
             <ul>
+              {% for ed in request.session.endorsement_file %}
               <li>
-                <b> {{request.session.endorsement_file}}</b>
+                <b> {{ ed }}</b>
               </li>
+              {% endfor %}
             </ul>
           </li>
 

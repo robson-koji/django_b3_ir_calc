@@ -52,7 +52,7 @@ INSTALLED_APPS = [
     'stock_price',
     'b3_ir_calc',
     'report',
-    'recomenda_11',
+    'endorsement',
     'django_excel_csv',
     'b3_reference_data',
 

@@ -153,7 +153,8 @@ def upload_endorse_file(request):
 
     if not 'endorsement_file' in request.session:
         request.session['endorsement_file'] = []
-    request.session['endorsement_file'].append(request.FILES['upload_endorse_file'].name)
+    if not request.FILES['upload_endorse_file'].name in request.session['endorsement_file']:
+        request.session['endorsement_file'].append(request.FILES['upload_endorse_file'].name)
     return HttpResponseRedirect(reverse('endorse'))
 
 

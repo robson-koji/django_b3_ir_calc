@@ -8,6 +8,7 @@ from django.urls import resolve
 from django.views import View
 
 from datetime import datetime, timedelta, date
+from builtins import any as b_any
 
 from b3_ir_calc.b3_ir_calc.ir_calc import *
 from stock_price.models import StockPrice
@@ -240,9 +241,20 @@ class Endorse11View(PositionView):
         except:
             return ('','','','')
 
+    def check_exists_in_list_get_index(self, segmento):
+        segmento = segmento.replace(',', '')
+        for idx, val in enumerate(self.recomenda_xp):
+            if (segmento.lower() in val):
+                return idx
+        return 99 # high number to not dirty data.
+
 
     def merge(self):
         """ Merge dos dados de current_position, 11 recomenda, btc e termo """
+
+        """
+        !!! - Fazer um set decente para acabar com loop sobre loop
+        """
 
         cp_endorsed = []
         for recomenda in self.recomenda_11:
@@ -250,28 +262,25 @@ class Endorse11View(PositionView):
             tem_recomenda = 0
             for cp in self.current_position:
                 (btc_termo_vm, btc_vm, termo_vm, setorial) = self.get_btc_termo_setorial(cp['stock'])
-                xp_top_20 = ''
-                segmento = setorial.split('|')[-1]
 
-                if hasattr(self, 'recomenda_xp') and segmento in self.recomenda_xp:
-                    xp_top_20 = str(self.recomenda_xp.index(segmento))
+                segmento = setorial.split('|')[-1].lower()
+                xp_top_20 = self.check_exists_in_list_get_index(segmento)
 
                 cp_data = [ str(cp['qt']),  str(cp['buy_avg']), str(cp['curr_price']),
                             str(cp['buy_total']), str(cp['cur_total']), str(cp['balance']),
-                            str(cp['balance_pct']), btc_termo_vm, btc_vm, termo_vm, setorial, xp_top_20 ]
+                            str(cp['balance_pct']), btc_termo_vm, btc_vm, termo_vm, setorial, str(xp_top_20) ]
                 if cp['stock'] == recomenda[1]:
                     cp_endorsed.append( recomenda[1] )
                     recomenda += cp_data
                     tem_recomenda = 1
+                    continue
+
             if not tem_recomenda:
                 (btc_termo_vm, btc_vm, termo_vm, setorial) = self.get_btc_termo_setorial(recomenda[1])
-                xp_top_20 = ''
                 segmento = setorial.split('|')[-1]
-
-                if hasattr(self, 'recomenda_xp') and segmento in self.recomenda_xp:
-                    xp_top_20 = str(self.recomenda_xp.index(segmento))
+                xp_top_20 = self.check_exists_in_list_get_index(segmento)
                 recomenda += [ '', '', '', '', '', '', '',
-                                btc_termo_vm, btc_vm, termo_vm, setorial, xp_top_20 ]
+                                btc_termo_vm, btc_vm, termo_vm, setorial, str(xp_top_20) ]
 
 
 

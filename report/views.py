@@ -244,8 +244,6 @@ class Endorse11View(PositionView):
     def merge(self):
         """ Merge dos dados de current_position, 11 recomenda, btc e termo """
 
-        #self.recomenda_xp
-
         cp_endorsed = []
         for recomenda in self.recomenda_11:
             """ Check endorsed stocks against wallet stocks """
@@ -255,7 +253,7 @@ class Endorse11View(PositionView):
                 xp_top_20 = ''
                 segmento = setorial.split('|')[-1]
 
-                if segmento in self.recomenda_xp:
+                if hasattr(self, 'recomenda_xp') and segmento in self.recomenda_xp:
                     xp_top_20 = str(self.recomenda_xp.index(segmento))
 
                 cp_data = [ str(cp['qt']),  str(cp['buy_avg']), str(cp['curr_price']),
@@ -270,7 +268,7 @@ class Endorse11View(PositionView):
                 xp_top_20 = ''
                 segmento = setorial.split('|')[-1]
 
-                if segmento in self.recomenda_xp:
+                if hasattr(self, 'recomenda_xp') and segmento in self.recomenda_xp:
                     xp_top_20 = str(self.recomenda_xp.index(segmento))
                 recomenda += [ '', '', '', '', '', '', '',
                                 btc_termo_vm, btc_vm, termo_vm, setorial, xp_top_20 ]

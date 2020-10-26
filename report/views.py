@@ -10,10 +10,10 @@ from django.views import View
 from datetime import datetime, timedelta, date
 
 from b3_ir_calc.b3_ir_calc.ir_calc import *
-from recomenda_11 import extract_table
 from stock_price.models import StockPrice
 from django_excel_csv.views import GetExcel
 from b3_reference_data.models import Ativos, Setorial
+from endorsement.views import DataEleven, DataXp, endorsement_broker
 
 
 
@@ -162,7 +162,7 @@ class Endorse11Download(PositionView, GetExcel):
 
     def merge(self):
         """ Merge dos dados de current_position e 11 recomenda """
-        self.recomenda_11 = extract_table.get_csv_data()
+        self.recomenda_11 = data_11.get_csv_from_file()
         self.current_position
 
         cp_endorsed = []
@@ -243,8 +243,8 @@ class Endorse11View(PositionView):
 
     def merge(self):
         """ Merge dos dados de current_position, 11 recomenda, btc e termo """
-        self.recomenda_11 = extract_table.get_csv_data()
-        self.current_position
+
+        #self.recomenda_xp
 
         cp_endorsed = []
         for recomenda in self.recomenda_11:
@@ -252,17 +252,28 @@ class Endorse11View(PositionView):
             tem_recomenda = 0
             for cp in self.current_position:
                 (btc_termo_vm, btc_vm, termo_vm, setorial) = self.get_btc_termo_setorial(cp['stock'])
+                xp_top_20 = ''
+                segmento = setorial.split('|')[-1]
+
+                if segmento in self.recomenda_xp:
+                    xp_top_20 = str(self.recomenda_xp.index(segmento))
+
                 cp_data = [ str(cp['qt']),  str(cp['buy_avg']), str(cp['curr_price']),
                             str(cp['buy_total']), str(cp['cur_total']), str(cp['balance']),
-                            str(cp['balance_pct']), btc_termo_vm, btc_vm, termo_vm, setorial ]
+                            str(cp['balance_pct']), btc_termo_vm, btc_vm, termo_vm, setorial, xp_top_20 ]
                 if cp['stock'] == recomenda[1]:
                     cp_endorsed.append( recomenda[1] )
                     recomenda += cp_data
                     tem_recomenda = 1
             if not tem_recomenda:
                 (btc_termo_vm, btc_vm, termo_vm, setorial) = self.get_btc_termo_setorial(recomenda[1])
+                xp_top_20 = ''
+                segmento = setorial.split('|')[-1]
+
+                if segmento in self.recomenda_xp:
+                    xp_top_20 = str(self.recomenda_xp.index(segmento))
                 recomenda += [ '', '', '', '', '', '', '',
-                                btc_termo_vm, btc_vm, termo_vm, setorial ]
+                                btc_termo_vm, btc_vm, termo_vm, setorial, xp_top_20 ]
 
 
 
@@ -293,6 +304,24 @@ class Endorse11View(PositionView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        csv_dir_eleven = endorsement_broker['eleven']['csv_dir']
+        pdfs_dir_eleven = endorsement_broker['eleven']['pdfs_dir']
+
+        endorsement_file_11 = endorsement_broker['eleven']['class'](csv_dir_eleven, pdfs_dir_eleven)
+        self.recomenda_11 = endorsement_file_11.get_csv_from_file()
+
+
+        csv_dir_xp = endorsement_broker['xp']['csv_dir']
+        pdfs_dir_xp = endorsement_broker['xp']['pdfs_dir']
+
+        endorsement_file_xp = endorsement_broker['xp']['class'](csv_dir_xp, pdfs_dir_xp)
+        self.recomenda_xp = endorsement_file_xp.get_csv_data()
+
+        # import pdb; pdb.set_trace()
+
+        # import pdb; pdb.set_trace()
+        if not self.recomenda_11:
+            return
 
         self.merge()
         self.clean_data()

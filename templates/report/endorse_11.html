@@ -71,6 +71,7 @@
                         <th class="text-center">{% trans "Company" %}</th>
                         <th class="text-center">{% trans "Ticker" %}</th>
                         <th class="text-center">{% trans "Setorial" %}</th>
+                        <th class="text-center">{% trans "XP top 20" %}</th>
                         <th class="text-center">{% trans "BTC + Termo/VM" %}</th>
                         <th class="text-center">{% trans "BTC/VM" %}</th>
                         <th class="text-center">{% trans "Termo/VM" %}</th>
@@ -99,6 +100,7 @@
                           <td><b>{{ row.0 }}</b></td>
                           <td class="text-center"><a target="_blank" href="https://br.tradingview.com/chart?symbol=BMFBOVESPA%3A{{ row.1 }}">{{ row.1 }}</a></td>
                           <td class="text-center">{{ row.21 }}</td>
+                          <td class="text-center">{{ row.22 }}</td>                          
                           <td class="text-center"><a target="_blank" href="https://investmax.com.br/iM/content.asp?contentid=959&acao={{ row.1 }}">{{ row.18|floatformat:"2" }}</a></td>
                           <td class="text-center">{{ row.19|floatformat:"2" }}</td>
                           <td class="text-center">{{ row.20|floatformat:"2" }}</td>
@@ -151,15 +153,19 @@
                     <div class="col-lg-4">
                         <!-- Anchor in error case -->
                         <a name="upload_endorse_file"></a>
-                        <ul class="padded separate-sections">
-                           <li>
-                                <input type="file" name="upload_endorse_file" id="upload_endorse_file" />
-                           </li>
-                           <li>&nbsp;</li>
-                           <li>
-                             <button type="submit">Submit</button>
-                           </li>
-                        </ul>
+                        <h5>
+                          Brokerage analysis
+                        </h5>
+                        <p>
+                          <label class="radio-inline">
+                            <input type="radio" name="optionsRadiosEndorsement" value="eleven"> Eleven
+                          </label>
+                          <label class="radio-inline">
+                            <input type="radio" name="optionsRadiosEndorsement" value="xp">XP
+                          </label>
+                        </p>
+                        <p><input type="file" name="upload_endorse_file" id="upload_endorse_file" /></p>
+                        <p><button type="submit">Submit</button></p>
                     </div>
                 </div>
             </form>

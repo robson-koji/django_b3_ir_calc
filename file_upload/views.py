@@ -9,6 +9,7 @@ from .models import Document, get_upload_path
 from .forms import DocumentForm
 
 from django.conf import settings
+from endorsement.views import DataEleven, DataXp, endorsement_broker
 import os
 
 
@@ -137,13 +138,27 @@ def upload_endorse_file(request):
         messages.error(request, 'Invalid file. Not PDF file extension: %s' % (request.FILES['upload_endorse_file'].name))
         return HttpResponseRedirect(reverse('endorse') +  '#upload_endorse_file')
 
-    handle_uploaded_file(request.FILES['upload_endorse_file']) # error throws up here.
-    request.session['endorsement_file'] = request.FILES['upload_endorse_file'].name
+    # import pdb; pdb.set_trace()
+    eb = request.POST['optionsRadiosEndorsement']
+    csv_dir = endorsement_broker[eb]['csv_dir']
+    pdfs_dir = endorsement_broker[eb]['pdfs_dir']
+
+    # Write PDF file to disk
+    handle_uploaded_file(request.FILES['upload_endorse_file'], pdfs_dir) # error throws up here.
+
+    # Call endorsement App to convert PDF to CSV
+    endorsement_file = endorsement_broker[eb]['class'](csv_dir, pdfs_dir)
+    csv_data = endorsement_file.get_csv_data()
+    endorsement_file.store_csv(csv_data)
+
+    if not 'endorsement_file' in request.session:
+        request.session['endorsement_file'] = []
+    request.session['endorsement_file'].append(request.FILES['upload_endorse_file'].name)
     return HttpResponseRedirect(reverse('endorse'))
 
 
-def handle_uploaded_file(f):
-    file_path = settings.BASE_DIR + '/recomenda_11/pdfs/%s' % (f.name)
+def handle_uploaded_file(f, pdfs_dir):
+    file_path = settings.BASE_DIR + pdfs_dir + (f.name)
     destination = open(file_path, 'wb')
     for chunk in f.chunks():
         destination.write(chunk)

@@ -242,6 +242,8 @@ class Endorse11View(PositionView):
             return ('','','','')
 
     def check_exists_in_list_get_index(self, segmento):
+        if self.recomenda_xp is None:
+            return ''
         segmento = segmento.replace(',', '')
         for idx, val in enumerate(self.recomenda_xp):
             if (segmento.lower() in val):

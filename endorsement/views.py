@@ -74,7 +74,7 @@ class DataXp(EndorsementFile):
                             ignore = True
                         else:
                             ignore = False
-                            sector = (line.split('  ')[1])
+                            sector = (line.split('  ')[1]).lower()                            
                             if sector: final_data.append(sector)
         return final_data
 

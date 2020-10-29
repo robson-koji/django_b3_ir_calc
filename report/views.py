@@ -8,6 +8,7 @@ from django.urls import resolve
 from django.views import View
 
 from datetime import datetime, timedelta, date
+from collections import defaultdict, deque
 from builtins import any as b_any
 
 from b3_ir_calc.b3_ir_calc.ir_calc import *
@@ -25,6 +26,7 @@ class ProxyView(View):
     # path ='/home/robson/invest/'
     # file = 'mirae.csv'
     stock_price_file = None
+    stock_detail = None
 
     def dispatch(self, request, *args, **kwargs):
         self.ativos = Ativos.objects.all()
@@ -64,9 +66,10 @@ class ProxyView(View):
 
 
         # self.gather_iligal_operation(b3_tax_obj.iligal_operation)
+        # import pdb; pdb.set_trace()
         self.months = self.months_reconcile(b3_tax_obj)
         self.report = self.generate_reports(self.stock_price_file, b3_tax_obj.stocks_wallet, self.months)
-        self.get_context_data()
+        # self.get_context_data()
         return super(ProxyView, self).dispatch(request, *args, **kwargs)
 
     def handle_data(self, path, file):
@@ -86,7 +89,7 @@ class ProxyView(View):
     #     self.iligal_operations.append(iligal_operation)
 
     def months_reconcile(self, b3_tax_obj):
-        months = b3_tax_obj.file2object()
+        months = b3_tax_obj.file2object(stock_detail=self.stock_detail)
         months.month_add_detail()
         return months
 
@@ -141,6 +144,76 @@ class HistoryView(ProxyView, TemplateView):
         context['months_operations'] = self.report.months_build_data()[1]
         return context
 
+
+class HistoryDetailView(ProxyView, TemplateView):
+    """ History of operations for one specific stock """
+    template_name = "report/history.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        self.stock_detail = kwargs['stock']
+        return super(HistoryDetailView, self).dispatch(request, *args, **kwargs)
+
+
+    def get_higher_values(self, val):
+        """ Calculate and get the higher values of each chart element """
+        if val['qt_total'] > self.higher_values['qt_total']:self.higher_values['qt_total']  = Decimal(val['qt_total'])
+        if val['avg_price'] > self.higher_values['avg_price']: self.higher_values['avg_price'] = val['avg_price']
+        if val['value'] > self.higher_values['value']: self.higher_values['value'] = val['value']
+        if val['loss'] > self.higher_values['loss']: self.higher_values['loss'] = val['loss']
+        if val['profit'] > self.higher_values['profit']: self.higher_values['profit'] = val['profit']
+
+
+    def normalize_chart_values(self):
+        """ Calculate and create a dict to normalize data at chart.  """
+        self.normalized_chart_values = defaultdict(Decimal)
+        max_key = max(self.higher_values, key=self.higher_values.get)
+        for key, val in self.higher_values.items():
+            if self.higher_values[key] <= 0:
+                 continue
+            self.normalized_chart_values[key] = str(round(self.higher_values[max_key]/self.higher_values[key], 2))
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        self.higher_values = defaultdict(Decimal)
+        bar_chart_data = defaultdict(deque)
+        for a in self.report.months_build_data()[1]:
+            for b in self.report.months_build_data()[1][a]:
+                operations_list = self.report.months_build_data()[1][a][b]
+                operations_list.reverse()
+                for idx, val in enumerate(  operations_list ):
+                    self.get_higher_values(val)
+                    # date = "%i%i%i%i" % (val['dt'].year, val['dt'].month, val['dt'].day, idx)
+                    date = "%i%i%i" % (val['dt'].year, val['dt'].month, val['dt'].day)
+
+                    bar_chart_data['qt_total'].appendleft(val['qt_total'])
+                    bar_chart_data['avg_price'].appendleft(str(val['avg_price']))
+                    bar_chart_data['value'].appendleft(str(val['value']))
+                    bar_chart_data['loss'].appendleft(str(val['loss']))
+                    bar_chart_data['profit'].appendleft(str(val['profit']))
+                    bar_chart_data['dt'].appendleft(date)
+
+        bar_chart_data['qt_total'].appendleft('qt_total')
+        bar_chart_data['avg_price'].appendleft('avg_price')
+        bar_chart_data['value'].appendleft('value')
+        bar_chart_data['loss'].appendleft('loss')
+        bar_chart_data['profit'].appendleft('profit')
+        # bar_chart_data['dt'].appendleft('dt')
+
+
+        for k in bar_chart_data:
+            bar_chart_data[k] = list(bar_chart_data[k])
+
+        self.normalize_chart_values()
+
+        # import pdb; pdb.set_trace()
+
+        context['bar_chart_data'] = bar_chart_data
+        context['normalized_chart_values'] = dict(self.normalized_chart_values)
+        context['months'] = self.report.months_build_data()[0]
+        context['months_operations'] = self.report.months_build_data()[1]
+
+        # import pdb; pdb.set_trace()
+        return context
 
 class StockPriceView(TemplateView):
     template_name = "generic/stock_price.html"

@@ -62,6 +62,7 @@ class DataXp(EndorsementFile):
         with open(pdf_file, "rb") as f:
             pdf = pdftotext.PDF(f)
 
+            # import pdb; pdb.set_trace()
             final_data = []
             for pg in pdf:
                 if 'Top 20' in pg:
@@ -70,12 +71,20 @@ class DataXp(EndorsementFile):
                     for line in lines:
                         if ignore and not 'Top 20' in line:
                             continue
+                        if line == '':
+                            continue
                         elif 'Disclaimer:' in line:
                             ignore = True
                         else:
                             ignore = False
-                            sector = (line.split('  ')[1]).lower()                            
-                            if sector: final_data.append(sector)
+                            try:
+                                sector = (line.split('  ')[1]).lower()
+                                if sector: final_data.append(sector)
+                                if sector == '':
+                                    sector = (line.split('  ')[0]).lower()
+                                    if sector: final_data.append(sector)
+                            except:
+                                continue
         return final_data
 
 class DataEleven(EndorsementFile):

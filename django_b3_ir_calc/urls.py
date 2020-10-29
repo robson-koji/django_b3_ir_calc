@@ -19,13 +19,15 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls import url
 from django.conf.urls.static import static
+from django.views.generic import TemplateView
+
 
 from report import urls
 from report.views import StockPriceView
 
 urlpatterns = [
 
-    path('', include('file_upload.urls')),    
+    path('', include('file_upload.urls')),
 
     path('admin/', admin.site.urls),
 
@@ -37,11 +39,12 @@ urlpatterns = [
     url(r'^accounts/', include('allauth.urls')),
 
 
+    path('foo/', TemplateView.as_view(template_name='stacked_1.html')),
 ]
 
 
 # For static development
-urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+# urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 # Upload files
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

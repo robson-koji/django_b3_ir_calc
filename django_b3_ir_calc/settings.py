@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'endorsement',
     'django_excel_csv',
     'b3_reference_data',
+    'charts',
 
 
 # The following apps are required by allauth:

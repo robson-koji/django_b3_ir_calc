@@ -1,0 +1,90 @@
+// Linhas - Preco medio, preco da acao
+// Barras - Qt, Valor mercado, Posicao
+// https://c3js.org/samples/chart_bar_stacked.html
+
+<link href="/static/charts/css/c3.0.7.min.css" rel="stylesheet">
+<script src="/static/charts/js/c3.0.7.min.js"></script>
+<script src="/static/charts/js/d3-5.8.2.min-c5268e33.js"></script>
+
+
+<style media="screen">
+
+	.c3-xgrid-line line {
+		stroke: #DEE0E1;
+	}
+
+	.tick line {
+		display: none;
+	}
+</style>
+
+<div id="chart"></div>
+
+
+Acertar tudo!!!!
+estrutura de dados, ordenacao, eixo x etc, etc etc....
+
+<script type="text/javascript">
+	var qt_total = {{ bar_chart_data.qt_total|safe }}
+	var avg_price = {{ bar_chart_data.avg_price|safe }}
+	var value = {{ bar_chart_data.value|safe }}
+	var loss = {{ bar_chart_data.loss|safe }}
+	var profit = {{ bar_chart_data.profit|safe }}
+	var dt = {{ bar_chart_data.dt|safe }}
+	var normalized_chart_values = {{ normalized_chart_values|safe }}
+
+	// Normalise
+	columns = [ qt_total, value, avg_price, loss, profit]
+	var scount = columns.length;
+	for (var m = 0; m < columns.length; m++) {
+		for (var n = 1; n < scount; n++) {
+			ratio = normalized_chart_values[columns[m][0]]
+			columns[m][n] *= ratio;
+		}
+	}
+
+
+		var chart = c3.generate({
+	    data: {
+					// x: 'dt',
+					columns:columns,
+	        type: 'bar',
+	        // groups: [
+	        //     ['data1', 'data2']
+	        // ]
+	    },
+	    grid: {
+	        y: {
+	            lines: [{value:0}]
+	        }
+	    },
+
+			axis: {
+	        x: {
+						type: 'category',
+         categories: dt,
+         label: {
+           text: 'open cases',
+           position: 'outer-middle'
+         }
+	        }
+	    }
+		});
+
+
+
+		/*
+		setTimeout(function () {
+		    chart.groups([['data1', 'data2', 'data3']])
+		}, 1000);
+		setTimeout(function () {
+		    chart.load({
+		        columns: [['data4', 100, -50, 150, 200, -300, -100]]
+		    });
+		}, 1500);
+		setTimeout(function () {
+		    chart.groups([['data1', 'data2', 'data3', 'data4']])
+		}, 2000);
+		*/
+
+	</script>

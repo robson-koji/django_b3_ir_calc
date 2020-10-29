@@ -41,105 +41,17 @@
               </ul>
             </small>
           </h2>
-
-          {% comment %}
-          <ul class="stats hidden-xs">
-            <li class="sea-green-bg">
-              <span class="fs1" aria-hidden="true" data-icon="&#xe037;"></span>
-              <div class="details">
-                <span class="big">R$ {{ summary.buy_total|floatformat:"2" }}</span>
-                <span class="small">Buy</span>
-              </div>
-            </li>
-
-            <li class="jet-blue-bg">
-              <span class="fs1" aria-hidden="true" data-icon="&#xe042;"></span>
-              <div class="details">
-                <span class="big">Sell</span>
-                <span class="small">Current Location</span>
-              </div>
-            </li>
-            <li class="go-green-bg">
-              <span class="fs1" aria-hidden="true" data-icon="&#xe036;"></span>
-              <div class="details">
-                <span class="big">Gain</span>
-                <span class="small">Current Location</span>
-              </div>
-            </li>
-
-            <li class="ruby-red-bg">
-              <span class="fs1" aria-hidden="true" data-icon="&#xe042;"></span>
-              <div class="details">
-                <span class="big">Ireland</span>
-                <span class="small">Loss</span>
-              </div>
-            </li>
-
-
-
-            <li class="light-grey-bg">
-              <span class="fs1" aria-hidden="true" data-icon="&#xe096;"></span>
-              <div class="details">
-                <span class="big">{{ summary.balance_pct|floatformat:"2" }}%</span>
-                <span class="small">Cumulate Loss</span>
-              </div>
-            </li>
-          </ul>
-          {% endcomment %}
         </div>
         <!-- Page title end -->
+
+
+        {% include "stacked_1.html" %}
 
 
 
 
         {% for key, value in months.items %}
         <!-- Row start -->
-
-
-
-{% comment %}
-<div id="dt_example_{{ value.dt|date:"F Y" }}" class="example_alt_pagination">
-    <table class="table table-condensed table-striped table-hover table-bordered pull-left" id="data-table_{{ value.dt|date:"F Y" }}_1">
-      <thead>
-        <tr>
-          <th colspan='4'>Month</th>
-          <th colspan='2'>Cumulate</th>
-        </tr>
-        <tr>
-          <th>Buy</th><th>Sell</th>
-          <th>Gain</th><th>Loss</th>
-          <th>Gain</th><th>Loss</th>
-        </tr>
-      </thead>
-        <tr>
-          <td>{{ value.month_buy }}</td>
-          {% if value.month_sell > 20000 %}
-            <td class='up20000'>{{ value.month_sell }}</td>
-            <td class='up20000'>{{ value.month_gain|floatformat:"2" }}</td>
-            <td class='up20000'>{{ value.month_loss|floatformat:"2" }}</td>
-          {% else %}
-            <td>{{ value.month_sell }}</td>
-            <td>{{ value.month_gain|floatformat:"2" }}</td>
-            <td>{{ value.month_loss|floatformat:"2" }}</td>
-          {% endif %}
-          <td>{{ value.cumulate_gain|floatformat:"2" }}</td>
-          <td>{{ value.cumulate_loss|floatformat:"2" }}</td>
-        </tr>
-        {% if value.month_sell > 20000 and value.month_gain > 0 and value.cumulate_loss == 0 %}
-          <tr><td colspan=11 class='up20000 dit'> Due income tax = {{ value.month_gain|mul:.2|floatformat:"2" }}</td> </tr>
-        {% else %}
-          <tr><td colspan=11 class='dit'> Due income tax = 0 </td></tr>
-        {% endif %}
-      </table>
-
-      </div>
-
-{% endcomment %}
-
-
-
-
-
         <div class="row">
           <div class="col-md-12">
 
@@ -261,7 +173,7 @@
                         {% for stock, value in operations.items %}
                         {% for oper in value %}
                           <tr>
-                              <td>{{oper.name}}</td>
+                              <td><a href={% url 'history_detail' stock=oper.name %}>{{oper.name}}</a></td>
                               <td>{{oper.buy_sell}}</td>
                               <td>{{oper.dt}}</td>
                               <td>{{oper.qt}}</td>

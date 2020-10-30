@@ -1,7 +1,11 @@
+<!--
 // Linhas - Preco medio, preco da acao
 // Barras - Qt, Valor mercado, Posicao
 // https://c3js.org/samples/chart_bar_stacked.html
 
+// valores negativos:
+//https://bl.ocks.org/rarpal/2d92f030c977f1fcc0b3
+-->
 <link href="/static/charts/css/c3.0.7.min.css" rel="stylesheet">
 <script src="/static/charts/js/c3.0.7.min.js"></script>
 <script src="/static/charts/js/d3-5.8.2.min-c5268e33.js"></script>
@@ -21,24 +25,27 @@
 <div id="chart"></div>
 
 
-Acertar tudo!!!!
-estrutura de dados, ordenacao, eixo x etc, etc etc....
+Incluir!!!
+Grafico de preco e posicao teorica atual.
+my postion, mkt postion to my price, mkt price
+
 
 <script type="text/javascript">
-	var qt_total = {{ bar_chart_data.qt_total|safe }}
-	var avg_price = {{ bar_chart_data.avg_price|safe }}
-	var value = {{ bar_chart_data.value|safe }}
-	var loss = {{ bar_chart_data.loss|safe }}
-	var profit = {{ bar_chart_data.profit|safe }}
-	var dt = {{ bar_chart_data.dt|safe }}
+	// Vars bar chart
+{% for key, value in bar_chart_data.items %}
+	var {{ key }} = {{ value|safe }}
+{% endfor %}
+
 	var normalized_chart_values = {{ normalized_chart_values|safe }}
 
+
 	// Normalise
-	columns = [ qt_total, value, avg_price, loss, profit]
-	var scount = columns.length;
+	columns = [ qt_total, loss, profit, my_position, mkt_position ]
+	var scount = columns[0].length;
+	// debugger;
 	for (var m = 0; m < columns.length; m++) {
+		ratio = normalized_chart_values[columns[m][0]]
 		for (var n = 1; n < scount; n++) {
-			ratio = normalized_chart_values[columns[m][0]]
 			columns[m][n] *= ratio;
 		}
 	}
@@ -47,8 +54,31 @@ estrutura de dados, ordenacao, eixo x etc, etc etc....
 		var chart = c3.generate({
 	    data: {
 					// x: 'dt',
-					columns:columns,
-	        type: 'bar',
+					columns: columns,
+	        // type: 'bar',
+					type: 'spline',
+					types: {
+	            // value_line: 'line',
+							// qt_total: 'line',
+							// avg_price_line: 'line',
+							loss: 'bar',
+							profit: 'bar'
+	        },
+					colors: {
+	            loss: '#ff0000',
+	            profit: '#009900',
+							avg_price: '#999999',
+							value: '#FFCC00'
+	        },
+					"onmouseover": customOver,
+
+					labels: {
+	//            format: function (v, id, i, j) { return "Default Format"; },
+	            format: {
+	                data1: d3.format('$'),
+	//                data1: function (v, id, i, j) { return "Format for data1"; },
+	            }
+	        }
 	        // groups: [
 	        //     ['data1', 'data2']
 	        // ]
@@ -72,7 +102,10 @@ estrutura de dados, ordenacao, eixo x etc, etc etc....
 		});
 
 
-
+		function customOver(d,i){
+			// Tentar engrossar a linha on hover
+			// debugger;
+			}
 		/*
 		setTimeout(function () {
 		    chart.groups([['data1', 'data2', 'data3']])
@@ -88,3 +121,9 @@ estrutura de dados, ordenacao, eixo x etc, etc etc....
 		*/
 
 	</script>
+
+	<style media="screen">
+		/* .c3-line {
+				stroke-width: 2px;
+		} */
+	</style>

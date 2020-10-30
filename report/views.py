@@ -156,58 +156,71 @@ class HistoryDetailView(ProxyView, TemplateView):
 
     def get_higher_values(self, val):
         """ Calculate and get the higher values of each chart element """
-        if val['qt_total'] > self.higher_values['qt_total']:self.higher_values['qt_total']  = Decimal(val['qt_total'])
-        if val['avg_price'] > self.higher_values['avg_price']: self.higher_values['avg_price'] = val['avg_price']
-        if val['value'] > self.higher_values['value']: self.higher_values['value'] = val['value']
-        if val['loss'] > self.higher_values['loss']: self.higher_values['loss'] = val['loss']
-        if val['profit'] > self.higher_values['profit']: self.higher_values['profit'] = val['profit']
+        for key in val:
+            if key not in self.for_chart_values:
+                continue
+            try:
+                if val[key] > self.higher_values[key]: self.higher_values[key] = val[key]
+            except Exception as e:
+                import pdb; pdb.set_trace()
 
+
+        # if val['qt_total'] > self.higher_values['qt_total']:self.higher_values['qt_total']  = Decimal(val['qt_total'])
+        # if val['avg_price'] > self.higher_values['avg_price']: self.higher_values['avg_price'] = val['avg_price']
+        # if val['value'] > self.higher_values['value']: self.higher_values['value'] = val['value']
+        # if val['loss'] > self.higher_values['loss']: self.higher_values['loss'] = val['loss']
+        # if val['profit'] > self.higher_values['profit']: self.higher_values['profit'] = val['profit']
 
     def normalize_chart_values(self):
         """ Calculate and create a dict to normalize data at chart.  """
         self.normalized_chart_values = defaultdict(Decimal)
+        if self.higher_values['profit'] > self.higher_values['loss']:
+            self.higher_values['loss'] = self.higher_values['profit']
+        else:
+            self.higher_values['profit'] = self.higher_values['loss']
         max_key = max(self.higher_values, key=self.higher_values.get)
         for key, val in self.higher_values.items():
+            if key in self.ignore_normalizing:
+                self.normalized_chart_values[key] = 1
+                continue
             if self.higher_values[key] <= 0:
                  continue
             self.normalized_chart_values[key] = str(round(self.higher_values[max_key]/self.higher_values[key], 2))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        self.for_chart_values = ['qt_total', 'avg_price', 'value', 'loss', 'profit', 'my_position', 'mkt_position']
+        self.ignore_normalizing = ['my_position', 'mkt_position']
+
         self.higher_values = defaultdict(Decimal)
         bar_chart_data = defaultdict(deque)
+        # Months
         for a in self.report.months_build_data()[1]:
+            # One Month
             for b in self.report.months_build_data()[1][a]:
                 operations_list = self.report.months_build_data()[1][a][b]
                 operations_list.reverse()
+                # Operations in month
                 for idx, val in enumerate(  operations_list ):
                     self.get_higher_values(val)
                     # date = "%i%i%i%i" % (val['dt'].year, val['dt'].month, val['dt'].day, idx)
                     date = "%i%i%i" % (val['dt'].year, val['dt'].month, val['dt'].day)
-
-                    bar_chart_data['qt_total'].appendleft(val['qt_total'])
-                    bar_chart_data['avg_price'].appendleft(str(val['avg_price']))
-                    bar_chart_data['value'].appendleft(str(val['value']))
-                    bar_chart_data['loss'].appendleft(str(val['loss']))
-                    bar_chart_data['profit'].appendleft(str(val['profit']))
+                    for fcv in self.for_chart_values:
+                        bar_chart_data[fcv].appendleft(str(val[fcv]))
                     bar_chart_data['dt'].appendleft(date)
-
-        bar_chart_data['qt_total'].appendleft('qt_total')
-        bar_chart_data['avg_price'].appendleft('avg_price')
-        bar_chart_data['value'].appendleft('value')
-        bar_chart_data['loss'].appendleft('loss')
-        bar_chart_data['profit'].appendleft('profit')
-        # bar_chart_data['dt'].appendleft('dt')
 
 
         for k in bar_chart_data:
-            bar_chart_data[k] = list(bar_chart_data[k])
+            if k == 'dt':
+                bar_chart_data[k] = list(bar_chart_data[k])
+            else:
+                bar_chart_data[k] = [k] + list(bar_chart_data[k])
 
         self.normalize_chart_values()
-
+        # print(self.normalized_chart_values)
         # import pdb; pdb.set_trace()
 
-        context['bar_chart_data'] = bar_chart_data
+        context['bar_chart_data'] = dict(bar_chart_data)
         context['normalized_chart_values'] = dict(self.normalized_chart_values)
         context['months'] = self.report.months_build_data()[0]
         context['months_operations'] = self.report.months_build_data()[1]

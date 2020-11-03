@@ -150,7 +150,7 @@ class HistoryDetailView(ProxyView, TemplateView):
     template_name = "report/history.html"
 
     def dispatch(self, request, *args, **kwargs):
-        self.stock_detail = kwargs['stock']
+        self.stock_detail = kwargs['stock'].upper()
         return super(HistoryDetailView, self).dispatch(request, *args, **kwargs)
 
 
@@ -189,12 +189,13 @@ class HistoryDetailView(ProxyView, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        self.for_chart_values = ['qt_total', 'avg_price', 'value', 'loss', 'profit', 'my_position', 'mkt_position']
+        self.for_chart_values = ['qt_total', 'avg_price', 'value', 'loss', 'profit', 'my_position', 'mkt_position', 'unit_price']
         self.ignore_normalizing = ['my_position', 'mkt_position']
 
         self.higher_values = defaultdict(Decimal)
         bar_chart_data = defaultdict(deque)
         # Months
+        # import pdb; pdb.set_trace()
         for a in self.report.months_build_data()[1]:
             # One Month
             for b in self.report.months_build_data()[1][a]:
@@ -202,12 +203,13 @@ class HistoryDetailView(ProxyView, TemplateView):
                 operations_list.reverse()
                 # Operations in month
                 for idx, val in enumerate(  operations_list ):
+                    # import pdb; pdb.set_trace()
                     self.get_higher_values(val)
                     # date = "%i%i%i%i" % (val['dt'].year, val['dt'].month, val['dt'].day, idx)
-                    date = "%i%i%i" % (val['dt'].year, val['dt'].month, val['dt'].day)
+                    dt = "%i%i%i" % (val['dt'].year, val['dt'].month, val['dt'].day)
                     for fcv in self.for_chart_values:
                         bar_chart_data[fcv].appendleft(str(val[fcv]))
-                    bar_chart_data['dt'].appendleft(date)
+                    bar_chart_data['dt'].appendleft(dt)
 
 
         for k in bar_chart_data:
@@ -216,16 +218,49 @@ class HistoryDetailView(ProxyView, TemplateView):
             else:
                 bar_chart_data[k] = [k] + list(bar_chart_data[k])
 
-        self.normalize_chart_values()
-        # print(self.normalized_chart_values)
+
+        # Refazer toda essa sujeira daqui para baixo em uma funcao, e se for o caso,
+        # implementar no b3_ir_calc.
+        # Add today data to forecast real postion or last sold position.
+        # Dupĺicate last elements
+        # bar_chart_data[k].append(bar_chart_data[k][-1])
+
+        # Update last elements
+        today = "%i%i%i" % (date.today().year, date.today().month, date.today().day)
+        today_price = StockPrice.objects.get(stock=self.stock_detail).price
+        if int(bar_chart_data['qt_total'][-1]) == 0:
+            qt_total = int(bar_chart_data['qt_total'][-2])
+        else:
+            qt_total = int(bar_chart_data['qt_total'][-1])
+            # import pdb; pdb.set_trace()
+
         # import pdb; pdb.set_trace()
+        my_position =  qt_total * Decimal(bar_chart_data['avg_price'][-1])
+        mkt_position = qt_total * today_price
+        bar_chart_data['dt'].append(today)
+        bar_chart_data['qt_total'].append(qt_total)
+        bar_chart_data['unit_price'].append(str(today_price))
+
+        bar_chart_data['my_position'].append(str(my_position))
+        bar_chart_data['mkt_position'].append(str(mkt_position))
+        profit_loss = mkt_position - my_position
+        if profit_loss > 0:
+            bar_chart_data['profit'].append(str(profit_loss))
+            bar_chart_data['loss'].append(0)
+        else:
+            bar_chart_data['loss'].append(str(profit_loss * -1))
+            bar_chart_data['profit'].append(0)
+        bar_chart_data['value'].append(0)
+        bar_chart_data['avg_price'].append(0)
+
+
+        self.normalize_chart_values()
 
         context['bar_chart_data'] = dict(bar_chart_data)
         context['normalized_chart_values'] = dict(self.normalized_chart_values)
         context['months'] = self.report.months_build_data()[0]
         context['months_operations'] = self.report.months_build_data()[1]
-
-        # import pdb; pdb.set_trace()
+        context['stock_detail'] = self.stock_detail
         return context
 
 class StockPriceView(TemplateView):

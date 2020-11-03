@@ -30,7 +30,9 @@
         <!-- Page title start -->
         <div class="page-title clearfix">
           <h2>
-            History
+            History {% if stock_detail %} detail - <a target="_blank" href="https://br.tradingview.com/chart?symbol=BMFBOVESPA%3A{{ stock_detail  }}">{{ stock_detail  }}</a> {% endif %}
+
+
             <small>
               <ul>
                 <li>Home</li>

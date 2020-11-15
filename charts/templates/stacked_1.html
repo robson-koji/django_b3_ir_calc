@@ -24,23 +24,27 @@
 
 <div id="chart"></div>
 
-
-Incluir!!!
+Incluir!!! - Linha de lucro/preju
+<!--
 Grafico de preco e posicao teorica atual.
 my postion, mkt postion to my price, mkt price
+Acertar apresentacao de datas. Mostrar valores reais.
+Acertar cores, excluir alguns labels dos tooltips
+-->
 
 
 <script type="text/javascript">
 	// Vars bar chart
 {% for key, value in bar_chart_data.items %}
 	var {{ key }} = {{ value|safe }}
+	var {{ key }}_orig = {{ value|safe }}
 {% endfor %}
 
 	var normalized_chart_values = {{ normalized_chart_values|safe }}
 
 
 	// Normalise
-	columns = [ qt_total, loss, profit, my_position, mkt_position, unit_price ]
+	columns = [ loss, profit, my_position, mkt_position, unit_price, qt_total, balance ]
 	var scount = columns[0].length;
 	// debugger;
 	for (var m = 0; m < columns.length; m++) {
@@ -50,33 +54,59 @@ my postion, mkt postion to my price, mkt price
 		}
 	}
 
+	// debugger;
 
 		var chart = c3.generate({
 	    data: {
 					// x: 'dt',
 					columns: columns,
-	        // type: 'bar',
+					names: {
+							loss: 'Loss',
+							profit: 'Profit',
+							my_position: 'My cost',
+							mkt_position: 'Mkt Price',
+							unit_price: 'Unit Price',
+							qt_total:'Qt',
+							balance:'Balance'
+					},
+
 					type: 'spline',
 					types: {
-	            // value_line: 'line',
-							// qt_total: 'line',
-							// avg_price_line: 'line',
 							loss: 'bar',
 							profit: 'bar'
 	        },
 					colors: {
+							unit_price:'#cc99ff',
+							qt_total:'#ccc9cf',
 	            loss: '#ff0000',
 	            profit: '#009900',
 							avg_price: '#999999',
-							value: '#FFCC00'
+							value: '#FFCC00',
+							my_position: '#ff6600',
+							mkt_position: '#0066ff',
+							'balance': '#99ff99'
 	        },
-					"onmouseover": customOver,
+					// "onmouseover": customOver,
 
 					labels: {
-	//            format: function (v, id, i, j) { return "Default Format"; },
+	           // format: function (v, id, i, j) {
+							//  	return "Default Format";
+							// },
 	            format: {
-	                data1: d3.format('$'),
-	//                data1: function (v, id, i, j) { return "Format for data1"; },
+	                // qt_total: d3.format(','),
+									qt_total: function (v, id, i, j) {
+										var format =  d3.format(',');
+										value = eval(id+'_orig')[i+1]
+		                return format(value);
+									},
+
+									unit_price: d3.format('$'),
+									unit_price: function (v, id, i, j) {
+										var format =  d3.format('$');
+										value = eval(id+'_orig')[i+1]
+		                return format(value);
+									},
+
 	            }
 	        }
 	        // groups: [
@@ -94,36 +124,78 @@ my postion, mkt postion to my price, mkt price
 						type: 'category',
          categories: dt,
          label: {
-           text: 'open cases',
+           // text: 'open cases',
            position: 'outer-middle'
          }
 	        }
+	    },
+
+			tooltip: {
+	        format: {
+		            title: function (d) { return 'Data ' + d; },
+		            value: function (value, ratio, id, d) {
+										// Mostra o valor original, desnormalizados, nos tooltips.
+		                var format = id === 'qt_total' ? d3.format(',') : d3.format('$');
+										value = eval(id+'_orig')[d+1]
+		                return format(value);
+										console.log(value)
+		            }
+		        },
+					  contents: function (d, defaultTitleFormat, defaultValueFormat, color) {
+								// {x: 7, value: 475.89, id: "loss", index: 7, name: "Loss"}
+
+								var exclude = []
+								for (i = 0; i < d.length; i++) {
+									// if ( d[i].id !== 'my_position' && d[i].id !== 'mkt_position'){
+									// 	delete d[i]
+									// }
+									if (typeof d[i] !== 'undefined' && d[i].id == 'qt_total' ){
+										delete d[i]
+									}
+									if (typeof d[i] !== 'undefined' &&  d[i].id == 'unit_price' ){
+										delete d[i]
+									}
+									if (typeof d[i] !== 'undefined' && ( d[i].id == 'profit' && d[i].value == 0)){
+										delete d[i]
+									}
+									if (typeof d[i] !== 'undefined' && ( d[i].id == 'loss' && d[i].value == 0)){
+										delete d[i]
+									}
+
+								}
+
+
+				        // Use default rendering
+								return this.getTooltipContent(d, defaultTitleFormat, defaultValueFormat, color);
+							// debugger;
+					    // return ... // formatted html as you want
+					  }
 	    }
+
 		});
-
-
-		function customOver(d,i){
-			// Tentar engrossar a linha on hover
-			// debugger;
-			}
-		/*
-		setTimeout(function () {
-		    chart.groups([['data1', 'data2', 'data3']])
-		}, 1000);
-		setTimeout(function () {
-		    chart.load({
-		        columns: [['data4', 100, -50, 150, 200, -300, -100]]
-		    });
-		}, 1500);
-		setTimeout(function () {
-		    chart.groups([['data1', 'data2', 'data3', 'data4']])
-		}, 2000);
-		*/
-
 	</script>
 
 	<style media="screen">
-		/* .c3-line {
-				stroke-width: 2px;
+		/* // qt total line label color */
+		/* .c3-texts-qt_total text{
+			fill: rgb(0,0,0) !important
 		} */
+
+		.c3-line.c3-line-my_position{
+		    stroke-width: 2px;
+		}
+		.c3-line.c3-line-mkt_position{
+		    stroke-width: 2px;
+		}
+
 	</style>
+
+<!--
+<script type="text/javascript">
+		$(document).ready(function(){
+		debugger;
+		$('c3-texts c3-texts-qt_total').attr('fill', 'black')
+	})
+
+
+</script> -->

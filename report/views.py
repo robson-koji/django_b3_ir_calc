@@ -187,10 +187,12 @@ class HistoryDetailView(ProxyView, TemplateView):
                  continue
             self.normalized_chart_values[key] = str(round(self.higher_values[max_key]/self.higher_values[key], 2))
 
+        # import pdb; pdb.set_trace()
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        self.for_chart_values = ['qt_total', 'avg_price', 'value', 'loss', 'profit', 'my_position', 'mkt_position', 'unit_price']
-        self.ignore_normalizing = ['my_position', 'mkt_position']
+        self.for_chart_values = ['qt_total', 'avg_price', 'value', 'loss', 'profit', 'my_position', 'mkt_position', 'unit_price', 'balance']
+        self.ignore_normalizing = ['my_position', 'mkt_position', 'balance']
 
         self.higher_values = defaultdict(Decimal)
         bar_chart_data = defaultdict(deque)
@@ -203,14 +205,23 @@ class HistoryDetailView(ProxyView, TemplateView):
                 operations_list.reverse()
                 # Operations in month
                 for idx, val in enumerate(  operations_list ):
+
+                    # date = "%i%i%i%i" % (val['dt'].year, val['dt'].month, val['dt'].day, idx)
+                    #dt = "%i%i%i" % (val['dt'].year, val['dt'].month, val['dt'].day)
+                    dt = "%i/%s" % (val['dt'].day, val['dt'].strftime('%b'))
+                    # balance = 0
+                    for fcv in self.for_chart_values:
+                        try:
+                            bar_chart_data[fcv].appendleft(str(val[fcv]))
+                            balance = val['mkt_position'] - val['my_position']
+                        except:
+                            continue
+
+                    bar_chart_data['dt'].appendleft(dt)
+                    bar_chart_data['balance'].appendleft(str(balance))
+                    val['balance'] = balance
                     # import pdb; pdb.set_trace()
                     self.get_higher_values(val)
-                    # date = "%i%i%i%i" % (val['dt'].year, val['dt'].month, val['dt'].day, idx)
-                    dt = "%i%i%i" % (val['dt'].year, val['dt'].month, val['dt'].day)
-                    for fcv in self.for_chart_values:
-                        bar_chart_data[fcv].appendleft(str(val[fcv]))
-                    bar_chart_data['dt'].appendleft(dt)
-
 
         for k in bar_chart_data:
             if k == 'dt':
@@ -226,7 +237,8 @@ class HistoryDetailView(ProxyView, TemplateView):
         # bar_chart_data[k].append(bar_chart_data[k][-1])
 
         # Update last elements
-        today = "%i%i%i" % (date.today().year, date.today().month, date.today().day)
+        #today = "%i%i%i" % (date.today().year, date.today().month, date.today().day)
+        today = "%i/%s - %s" % (date.today().day, date.today().strftime('%b'), 'Projection')
         today_price = StockPrice.objects.get(stock=self.stock_detail).price
         if int(bar_chart_data['qt_total'][-1]) == 0:
             qt_total = int(bar_chart_data['qt_total'][-2])
@@ -252,6 +264,7 @@ class HistoryDetailView(ProxyView, TemplateView):
             bar_chart_data['profit'].append(0)
         bar_chart_data['value'].append(0)
         bar_chart_data['avg_price'].append(0)
+        bar_chart_data['balance'].append(str(profit_loss))
 
 
         self.normalize_chart_values()

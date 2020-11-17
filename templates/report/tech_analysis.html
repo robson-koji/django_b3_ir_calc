@@ -120,7 +120,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                      {% for row in data%}
+                      {% for key,row in data.items%}
                       <tr class="gradeX" id="{{row.1}}" style="display:None">
                           <td><b>{{ row.0 }}</b></td>
                           <td class="text-center">
@@ -241,6 +241,18 @@
         // $('#wendors').empty()
         // $('#wnendors').empty()
 
+        for (let key in papeis) {
+          var up_down = Number(papeis[key][9])
+          if (papeis[key][0] && papeis[key][11]){ my_stocks_endorsed.push(papeis[key]); continue }
+          if (papeis[key][0] == ''){ my_stocks_nendorsed.push(papeis[key]); continue }
+
+          if ( papeis[key][5] != 'COMPRA'){ continue }
+          if ( isNaN(up_down)){ continue }
+          if ( up_down < min || up_down > max){ continue }
+          stocks_endorsed.push(papeis[key])
+        }
+
+        /*
         for (i = 0; i < papeis.length; i++) {
           var up_down = Number(papeis[i][9])
           if (papeis[i][0] && papeis[i][11]){ my_stocks_endorsed.push(papeis[i]); continue }
@@ -251,6 +263,7 @@
           if ( up_down < min || up_down > max){ continue }
           stocks_endorsed.push(papeis[i])
         }
+        */
         all_stocks = stocks_endorsed.concat(my_stocks_endorsed, my_stocks_nendorsed);
         $('#next_id').text(all_stocks[0][1])
 

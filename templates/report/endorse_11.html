@@ -22,7 +22,10 @@
     height:2px;
     position:absolute;
     background:#4264ab;
+}
 
+tr[role=row]{
+  background-color:#FFFFFF;
 }
 </style>
 
@@ -95,12 +98,12 @@
                       </tr>
                     </thead>
                     <tbody>
-                      {% for row in data%}
+                      {% for key,row in data.items%}
                       <tr class="gradeX">
                           <td><b>{{ row.0 }}</b></td>
                           <td class="text-center"><a target="_blank" href="https://br.tradingview.com/chart?symbol=BMFBOVESPA%3A{{ row.1 }}">{{ row.1 }}</a></td>
                           <td class="text-center">{{ row.21 }}</td>
-                          <td class="text-center">{{ row.22 }}</td>                          
+                          <td class="text-center">{{ row.22 }}</td>
                           <td class="text-center"><a target="_blank" href="https://investmax.com.br/iM/content.asp?contentid=959&acao={{ row.1 }}">{{ row.18|floatformat:"2" }}</a></td>
                           <td class="text-center">{{ row.19|floatformat:"2" }}</td>
                           <td class="text-center">{{ row.20|floatformat:"2" }}</td>

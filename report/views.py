@@ -164,13 +164,6 @@ class HistoryDetailView(ProxyView, TemplateView):
             except Exception as e:
                 import pdb; pdb.set_trace()
 
-
-        # if val['qt_total'] > self.higher_values['qt_total']:self.higher_values['qt_total']  = Decimal(val['qt_total'])
-        # if val['avg_price'] > self.higher_values['avg_price']: self.higher_values['avg_price'] = val['avg_price']
-        # if val['value'] > self.higher_values['value']: self.higher_values['value'] = val['value']
-        # if val['loss'] > self.higher_values['loss']: self.higher_values['loss'] = val['loss']
-        # if val['profit'] > self.higher_values['profit']: self.higher_values['profit'] = val['profit']
-
     def normalize_chart_values(self):
         """ Calculate and create a dict to normalize data at chart.  """
         self.normalized_chart_values = defaultdict(Decimal)
@@ -178,6 +171,7 @@ class HistoryDetailView(ProxyView, TemplateView):
             self.higher_values['loss'] = self.higher_values['profit']
         else:
             self.higher_values['profit'] = self.higher_values['loss']
+
         max_key = max(self.higher_values, key=self.higher_values.get)
         for key, val in self.higher_values.items():
             if key in self.ignore_normalizing:
@@ -187,7 +181,49 @@ class HistoryDetailView(ProxyView, TemplateView):
                  continue
             self.normalized_chart_values[key] = str(round(self.higher_values[max_key]/self.higher_values[key], 2))
 
-        # import pdb; pdb.set_trace()
+    def today_position(self, bar_chart_data):
+        # Se for o caso, implementar essa def no b3_ir_calc.
+        # Add today data to forecast real postion or last sold position.
+        # Dupĺicate last elements
+        # bar_chart_data[k].append(bar_chart_data[k][-1])
+        # Update last elements
+        today = "%i/%s - %s" % (date.today().day, date.today().strftime('%b'), 'Projection')
+        today_price = StockPrice.objects.get(stock=self.stock_detail).price
+        if int(bar_chart_data['qt_total'][-1]) == 0:
+            qt_total = int(bar_chart_data['qt_total'][-2])
+        else:
+            qt_total = int(bar_chart_data['qt_total'][-1])
+        my_position =  qt_total * Decimal(bar_chart_data['avg_price'][-1])
+        mkt_position = qt_total * today_price
+
+        chk_higher_values = {'dt':today, 'qt_total':qt_total,'unit_price':today_price,
+                            'my_position':my_position, 'mkt_position':mkt_position,
+                            'value':0, 'avg_price':0}
+
+        bar_chart_data['dt'].append(today)
+        bar_chart_data['qt_total'].append(qt_total)
+        bar_chart_data['unit_price'].append(str(today_price))
+        bar_chart_data['my_position'].append(str(my_position))
+        bar_chart_data['mkt_position'].append(str(mkt_position))
+        profit_loss = mkt_position - my_position
+        if profit_loss > 0:
+            bar_chart_data['profit'].append(str(profit_loss))
+            bar_chart_data['loss'].append(0)
+            chk_higher_values['profit'] = profit_loss
+            chk_higher_values['loss'] = 0
+        else:
+            bar_chart_data['loss'].append(str(profit_loss * -1))
+            bar_chart_data['profit'].append(0)
+            chk_higher_values['loss'] = profit_loss
+            chk_higher_values['profit'] = 0
+        bar_chart_data['value'].append(0)
+        bar_chart_data['avg_price'].append(0)
+        bar_chart_data['balance'].append(str(profit_loss))
+        chk_higher_values['balance'] = profit_loss
+
+        self.get_higher_values(chk_higher_values)
+
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -197,7 +233,6 @@ class HistoryDetailView(ProxyView, TemplateView):
         self.higher_values = defaultdict(Decimal)
         bar_chart_data = defaultdict(deque)
         # Months
-        # import pdb; pdb.set_trace()
         for a in self.report.months_build_data()[1]:
             # One Month
             for b in self.report.months_build_data()[1][a]:
@@ -206,10 +241,7 @@ class HistoryDetailView(ProxyView, TemplateView):
                 # Operations in month
                 for idx, val in enumerate(  operations_list ):
 
-                    # date = "%i%i%i%i" % (val['dt'].year, val['dt'].month, val['dt'].day, idx)
-                    #dt = "%i%i%i" % (val['dt'].year, val['dt'].month, val['dt'].day)
                     dt = "%i/%s" % (val['dt'].day, val['dt'].strftime('%b'))
-                    # balance = 0
                     for fcv in self.for_chart_values:
                         try:
                             bar_chart_data[fcv].appendleft(str(val[fcv]))
@@ -220,7 +252,6 @@ class HistoryDetailView(ProxyView, TemplateView):
                     bar_chart_data['dt'].appendleft(dt)
                     bar_chart_data['balance'].appendleft(str(balance))
                     val['balance'] = balance
-                    # import pdb; pdb.set_trace()
                     self.get_higher_values(val)
 
         for k in bar_chart_data:
@@ -229,44 +260,7 @@ class HistoryDetailView(ProxyView, TemplateView):
             else:
                 bar_chart_data[k] = [k] + list(bar_chart_data[k])
 
-
-        # Refazer toda essa sujeira daqui para baixo em uma funcao, e se for o caso,
-        # implementar no b3_ir_calc.
-        # Add today data to forecast real postion or last sold position.
-        # Dupĺicate last elements
-        # bar_chart_data[k].append(bar_chart_data[k][-1])
-
-        # Update last elements
-        #today = "%i%i%i" % (date.today().year, date.today().month, date.today().day)
-        today = "%i/%s - %s" % (date.today().day, date.today().strftime('%b'), 'Projection')
-        today_price = StockPrice.objects.get(stock=self.stock_detail).price
-        if int(bar_chart_data['qt_total'][-1]) == 0:
-            qt_total = int(bar_chart_data['qt_total'][-2])
-        else:
-            qt_total = int(bar_chart_data['qt_total'][-1])
-            # import pdb; pdb.set_trace()
-
-        # import pdb; pdb.set_trace()
-        my_position =  qt_total * Decimal(bar_chart_data['avg_price'][-1])
-        mkt_position = qt_total * today_price
-        bar_chart_data['dt'].append(today)
-        bar_chart_data['qt_total'].append(qt_total)
-        bar_chart_data['unit_price'].append(str(today_price))
-
-        bar_chart_data['my_position'].append(str(my_position))
-        bar_chart_data['mkt_position'].append(str(mkt_position))
-        profit_loss = mkt_position - my_position
-        if profit_loss > 0:
-            bar_chart_data['profit'].append(str(profit_loss))
-            bar_chart_data['loss'].append(0)
-        else:
-            bar_chart_data['loss'].append(str(profit_loss * -1))
-            bar_chart_data['profit'].append(0)
-        bar_chart_data['value'].append(0)
-        bar_chart_data['avg_price'].append(0)
-        bar_chart_data['balance'].append(str(profit_loss))
-
-
+        self.today_position(bar_chart_data)
         self.normalize_chart_values()
 
         context['bar_chart_data'] = dict(bar_chart_data)

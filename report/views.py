@@ -201,7 +201,7 @@ class HistoryDetailView(ProxyView, TemplateView):
                             'value':0, 'avg_price':0}
 
         bar_chart_data['dt'].append(today)
-        bar_chart_data['qt_total'].append(qt_total)
+        bar_chart_data['qt_total'].append(bar_chart_data['qt_total'][-1])
         bar_chart_data['unit_price'].append(str(today_price))
         bar_chart_data['my_position'].append(str(my_position))
         bar_chart_data['mkt_position'].append(str(mkt_position))

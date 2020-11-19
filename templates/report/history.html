@@ -45,9 +45,12 @@
           </h2>
         </div>
         <!-- Page title end -->
+        <button data-toggle="collapse" data-target=".account_balance">Collapse all Account Balance</button>
 
 
-        {% include "stacked_1.html" %}
+        {% if stock_detail %}
+          {% include "stacked_1.html" %}
+        {% endif %}
 
 
 
@@ -57,7 +60,9 @@
         <div class="row">
           <div class="col-md-12">
 
-          <h3>{{ value.dt|date:"F Y" }}</h3>
+          <h3 style="display: inline-block">{{ value.dt|date:"F Y" }} {{key|safe}}</h3>
+          <button data-toggle="collapse" data-target="#ab_{{ key|safe }}" style="float: right;">Account Balance</button>
+
           </div>
 
           <div class="col-md-4">
@@ -139,7 +144,7 @@
           <!-- Span4 end -->
 
 
-          <div class="col-md-12">
+          <div id="ab_{{ key|safe }}" class="col-md-12 collapse account_balance">
             <div class="widget">
               <div class="widget-header">
                 <div class="title">

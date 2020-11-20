@@ -44,7 +44,7 @@ $(document).ready(function() {
     /* Endorsement page */
     // Initialization
     $('#data-table-endorse').DataTable( {
-        "order": [[ 9, "desc" ], [ 6, "asc" ], [ 5, "asc" ]],
+        "order": [[ 14, "desc" ], [ 11, "asc" ], [ 10, "asc" ]],
         "pageLength": 100,
 
 				/* Show hide columns */
@@ -53,14 +53,14 @@ $(document).ready(function() {
             {
                 extend: 'colvisGroup',
                 text: 'BTC/Termo - Show',
-                show: [ 2,3,4 ],
+                show: [ 2,3,4,5,6 ],
                 hide: [  ]
             },
             {
                 extend: 'colvisGroup',
                 text: 'BTC/Termo - Hide',
                 show: [ ],
-                hide: [ 2, 3, 4]
+                hide: [ 2, 3, 4,5,6]
             },
             {
                 extend: 'colvisGroup',
@@ -74,7 +74,7 @@ $(document).ready(function() {
     // Radio button change sort order
     $('input[type=radio][name=sort_endorse]').change(function() {
         if (this.value == 'sort_endorse_default') {
-          var order = [[ 9, "desc" ], [ 6, "asc" ], [ 5, "asc" ]];
+          var order = [[ 14, "desc" ], [ 11, "asc" ], [ 10, "asc" ]];
         }
         else if (this.value == 'sort_endorse_1') {
           var order = [[ 9, "asc" ]];

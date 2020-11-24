@@ -14,7 +14,7 @@ from builtins import any as b_any
 from b3_ir_calc.b3_ir_calc.ir_calc import *
 from stock_price.models import StockPrice
 from django_excel_csv.views import GetExcel
-from b3_reference_data.models import Ativos, Setorial
+from b3_reference_data.models import *
 from endorsement.views import DataEleven, DataXp, endorsement_broker
 
 
@@ -69,7 +69,12 @@ class ProxyView(View):
         # import pdb; pdb.set_trace()
         self.months = self.months_reconcile(b3_tax_obj)
         self.report = self.generate_reports(self.stock_price_file, b3_tax_obj.stocks_wallet, self.months)
-        # self.get_context_data()
+
+
+        # Pass two functions to ObjectifyData
+        self.broker_taxes = self.get_broker_taxes()
+        self.b3_taxes = self.get_b3_taxes()
+
         return super(ProxyView, self).dispatch(request, *args, **kwargs)
 
     def handle_data(self, path, file):
@@ -79,7 +84,7 @@ class ProxyView(View):
         print( file)
         # import pdb; pdb.set_trace()
         try:
-            b3_tax_obj = ObjectifyData(mkt_type='VIS', path=path, file=file)
+            b3_tax_obj = ObjectifyData(mkt_type='VIS', path=path, file=file, b3_taxes=self.get_b3_taxes())
             return b3_tax_obj
         except FileNotFoundError:
             raise
@@ -96,6 +101,22 @@ class ProxyView(View):
     def generate_reports(self, stock_price_file, stocks_wallet, months):
         report = Report(stock_price_file, stocks_wallet, months)
         return report
+
+    def get_broker_taxes(self):
+        """ return function bellow to b3_ir_calc """
+        """ Get broker from self.file.
+        """
+        pass
+
+    def get_b3_taxes(self):
+        """ return function bellow to b3_ir_calc """
+        def b3_taxes(date):
+            """ Function returned.
+            Multiple operation value against this function to get b3 taxes. """
+            return B3Taxes.get_b3_taxes(date)
+        return b3_taxes
+
+
 
 
 class PositionView(ProxyView, TemplateView):

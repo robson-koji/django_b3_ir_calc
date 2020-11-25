@@ -77,15 +77,15 @@
                   <tbody>
                     <tr>
                       <th style="width:60%">Buy ({{ value.qt_buy }})</th>
-                      <td style="width:40%" class="text-right"><span class="label label-info label_cp1">{{ value.month_buy }}</span></td>
+                      <td style="width:40%" class="text-right"><span class="label label-primary label_cp1">{{ value.month_buy }}</span></td>
                     </tr>
                     <tr>
                       <th>Sell ({{ value.qt_sell }})</th>
-                      <td class="text-right"><span class="label label-info label_cp1">{{ value.month_sell }}</span></td>
+                      <td class="text-right"><span class="label label-primary label_cp1">{{ value.month_sell }}</span></td>
                     </tr>
                     <tr>
                       <th>Total ({{  value.qt_buy | addition:value.qt_sell }})</th>
-                      <td class="text-right"><span class="label label-info label_cp1">{{  value.month_buy | addition:value.month_sell }}</span></td>
+                      <td class="text-right"><span class="label label-primary label_cp1">{{  value.month_buy | addition:value.month_sell }}</span></td>
                     </tr>
                   </tbody>
                 </table>
@@ -106,19 +106,19 @@
                   <tbody>
                     <tr>
                       <th style="width:60%">B3 Taxes</th>
-                      <td style="width:40%" class="text-right"><span class="label label-warning label_cp1">{{ value.b3_taxes }}</span></td>
+                      <td style="width:40%" class="text-right"><span class="label label-default label_cp1">{{ value.b3_taxes }}</span></td>
                     </tr>
                     <tr>
                       <th>Broker Fees</th>
-                      <td class="text-right"><span class="label label-warning label_cp1">{{ value.broker_taxes }}</span></td>
+                      <td class="text-right"><span class="label label-default label_cp1">{{ value.broker_taxes }}</span></td>
                     </tr>
                     <tr>
                       <th>IRPF Withholding</th>
-                      <td class="text-right"><span class="label label-warning label_cp1">{{ value.irpf_withholding }}</span></td>
+                      <td class="text-right"><span class="label label-default label_cp1">{{ value.irpf_withholding }}</span></td>
                     </tr>
                     <tr>
                       <th>Sum Taxes</th>
-                      <td class="text-right"><span class="label label-warning label_cp1">{{ value.sum_taxes }}</span></td>
+                      <td class="text-right"><span class="label label-default label_cp1">{{ value.sum_taxes }}</span></td>
                     </tr>
 
 
@@ -208,11 +208,11 @@
                   <tbody>
                     <tr>
                       <th style="width:60%">Month Net Gain</th>
-                      <td style="width:40%" class="text-right"><span class="label label-success label_cp1">{{ value.cumulate_gain|floatformat:"2" }}</span></td>
+                      <td style="width:40%" class="text-right"><span class="label label-warning label_cp1">{{ value.cumulate_gain|floatformat:"2" }}</span></td>
                     </tr>
                     <tr>
                       <th>Month Sales</th>
-                      <td class="text-right"><span class="label label-danger label_cp1">{{ value.month_sell }}</span></td>
+                      <td class="text-right"><span class="label label-warning label_cp1">{{ value.month_sell }}</span></td>
                     </tr>
                     <tr class="bg-warning">
                     {% if value.cumulate_gain > 0 and  value.month_sell > 20000  %}

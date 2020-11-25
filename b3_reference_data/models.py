@@ -69,6 +69,7 @@ class Broker(models.Model):
     code = models.SmallIntegerField(null=True, blank=True)
     broker = models.CharField(max_length=64, null=True, blank=True)
     def get_broker_taxes(self, date, type='order'):
+        # import pdb; pdb.set_trace()
         try:
             bt = self.brokertaxes_set.filter(type=type).get(date_from__lte=date, date_to__isnull=True)
         except:

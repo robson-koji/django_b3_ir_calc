@@ -76,12 +76,16 @@
                 <table class="table table-condensed table-bordered table-hover no-margin">
                   <tbody>
                     <tr>
-                      <th style="width:60%">Buy</th>
+                      <th style="width:60%">Buy ({{ value.qt_buy }})</th>
                       <td style="width:40%" class="text-right"><span class="label label-info label_cp1">{{ value.month_buy }}</span></td>
                     </tr>
                     <tr>
-                      <th>Sell</th>
-                      <td class="text-right"><span class="label label-warning label_cp1">{{ value.month_sell }}</span></td>
+                      <th>Sell ({{ value.qt_sell }})</th>
+                      <td class="text-right"><span class="label label-info label_cp1">{{ value.month_sell }}</span></td>
+                    </tr>
+                    <tr>
+                      <th>Total ({{  value.qt_buy | addition:value.qt_sell }})</th>
+                      <td class="text-right"><span class="label label-info label_cp1">{{  value.month_buy | addition:value.month_sell }}</span></td>
                     </tr>
                   </tbody>
                 </table>
@@ -102,12 +106,22 @@
                   <tbody>
                     <tr>
                       <th style="width:60%">B3 Taxes</th>
-                      <td style="width:40%" class="text-right"><span class="label label-info label_cp1">{{ value.b3_taxes }}</span></td>
+                      <td style="width:40%" class="text-right"><span class="label label-warning label_cp1">{{ value.b3_taxes }}</span></td>
                     </tr>
                     <tr>
                       <th>Broker Fees</th>
-                      <td class="text-right"><span class="label label-warning label_cp1">{{ value.month_sell }}</span></td>
+                      <td class="text-right"><span class="label label-warning label_cp1">{{ value.broker_taxes }}</span></td>
                     </tr>
+                    <tr>
+                      <th>IRPF Withholding</th>
+                      <td class="text-right"><span class="label label-warning label_cp1">{{ value.irpf_withholding }}</span></td>
+                    </tr>
+                    <tr>
+                      <th>Sum Taxes</th>
+                      <td class="text-right"><span class="label label-warning label_cp1">{{ value.sum_taxes }}</span></td>
+                    </tr>
+
+
                   </tbody>
                 </table>
               </div>
@@ -127,15 +141,53 @@
               <div class="widget-body">
                 <table class="table table-condensed table-bordered table-hover no-margin">
                   <tbody>
+                    {% if value.month_gain == 0 and value.month_loss == 0 %}
                     <tr>
-                      <th style="width:60%">Gain</th>
+                      <th style="width:60%">Month</th>
+                      <td style="width:40%" class="text-right"><span class="label label-default label_cp1">0.00</span></td>
+                    </tr>
+                    <tr>
+                      <th>Month Net Loss</th>
+                      <td class="text-right"><span class="label label-danger label_cp1">{{ value.month_net_loss|floatformat:"2" }}</span>
+                      </td>
+                    </tr>
+                    {% elif value.month_gain > 0 %}
+                    <tr>
+                      <th style="width:60%">Month Gain</th>
                       <td style="width:40%" class="text-right"><span class="label label-success label_cp1">{{ value.month_gain|floatformat:"2" }}</span></td>
                     </tr>
                     <tr>
-                      <th>Loss</th>
+                      <th>Month Net Gain</th>
+                      <td class="text-right"><span class="label label-success label_cp1">{{ value.month_net_gain|floatformat:"2" }}</span>
+                      </td>
+                    </tr>
+                    {% elif value.month_loss < 0 %}
+                    <tr>
+                      <th>Month Loss</th>
                       <td class="text-right"><span class="label label-danger label_cp1">{{ value.month_loss|floatformat:"2" }}</span>
                       </td>
                     </tr>
+                    <tr>
+                      <th>Month Net Loss</th>
+                      <td class="text-right"><span class="label label-danger label_cp1">{{ value.month_net_loss|floatformat:"2" }}</span>
+                      </td>
+                    </tr>
+                    {% endif %}
+                    <tr>
+                      <th>Prev. Accum. Loss</th>
+                      <td class="text-right"><span class="label label-danger label_cp1">{{ value.prev_month_cumulate_loss|floatformat:"2" }}</span></td>
+                    </tr>
+                    {% if value.cumulate_gain > 0 %}
+                    <tr>
+                      <th style="width:60%">This Month Gain</th>
+                      <td style="width:40%" class="text-right"><span class="label label-success label_cp1">{{ value.cumulate_gain|floatformat:"2" }}</span></td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                      <th>This Accum. Loss</th>
+                      <td class="text-right"><span class="label label-danger label_cp1">{{ value.cumulate_loss|floatformat:"2" }}</span></td>
+                    </tr>
+                    {% endif %}
                   </tbody>
                 </table>
               </div>
@@ -148,29 +200,38 @@
             <div class="widget">
               <div class="widget-header">
                 <div class="title">
-                  <span class="fs1" aria-hidden="true" data-icon=""></span> Accumulated
+                  <span class="fs1" aria-hidden="true" data-icon=""></span> Due IRPF
                 </div>
               </div>
               <div class="widget-body">
                 <table class="table table-condensed table-bordered table-hover no-margin">
                   <tbody>
                     <tr>
-                      <th style="width:60%">Gain</th>
+                      <th style="width:60%">Month Net Gain</th>
                       <td style="width:40%" class="text-right"><span class="label label-success label_cp1">{{ value.cumulate_gain|floatformat:"2" }}</span></td>
                     </tr>
                     <tr>
-                      <th>Loss</th>
-                      <td class="text-right"><span class="label label-danger label_cp1">{{ value.cumulate_loss|floatformat:"2" }}</span></td>
+                      <th>Month Sales</th>
+                      <td class="text-right"><span class="label label-danger label_cp1">{{ value.month_sell }}</span></td>
                     </tr>
+                    <tr class="bg-warning">
+                    {% if value.cumulate_gain > 0 and  value.month_sell > 20000  %}
+                      <th colspan="2" scope="row" class="text-center"><a href="https://sicalc.receita.economia.gov.br/sicalc/rapido/contribuinte" target="_blank">Pay {{ value.tax.tax_amount|floatformat:"2" }}</a></th>
+                    {% else %}
+                      <th colspan="2" class="text-center">No tax due</th>
+                    {% endif %}
+                  </tr>
                   </tbody>
                 </table>
               </div>
+
+
             </div>
           </div>
           <!-- Span4 end -->
 
 
-          <div id="ab_{{ key|safe }}" class="col-md-12 collapse account_balance">
+          <div id="ab_{{ key|safe }}" class="col-md-12 collapse account_balance" data-toggle="false">
             <div class="widget">
               <div class="widget-header">
                 <div class="title">

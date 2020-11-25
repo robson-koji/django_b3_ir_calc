@@ -27,6 +27,7 @@ class ProxyView(View):
     # file = 'mirae.csv'
     stock_price_file = None
     stock_detail = None
+    broker = None
 
     def dispatch(self, request, *args, **kwargs):
         self.ativos = Ativos.objects.all()
@@ -53,6 +54,7 @@ class ProxyView(View):
         self.path = "%s%s/" % (settings.MEDIA_ROOT, request.session['path'])
         self.file = request.session['file']
 
+        self.get_broker()
 
         try:
             b3_tax_obj = self.handle_data(self.path, self.file)
@@ -72,8 +74,8 @@ class ProxyView(View):
 
 
         # Pass two functions to ObjectifyData
-        self.broker_taxes = self.get_broker_taxes()
-        self.b3_taxes = self.get_b3_taxes()
+        # self.broker_taxes = self.get_broker_taxes()
+        # self.b3_taxes = self.get_b3_taxes()
 
         return super(ProxyView, self).dispatch(request, *args, **kwargs)
 
@@ -84,7 +86,7 @@ class ProxyView(View):
         print( file)
         # import pdb; pdb.set_trace()
         try:
-            b3_tax_obj = ObjectifyData(mkt_type='VIS', path=path, file=file, b3_taxes=self.get_b3_taxes())
+            b3_tax_obj = ObjectifyData(mkt_type='VIS', path=path, file=file, broker_taxes=self.get_broker_taxes(), b3_taxes=self.get_b3_taxes())
             return b3_tax_obj
         except FileNotFoundError:
             raise
@@ -102,11 +104,17 @@ class ProxyView(View):
         report = Report(stock_price_file, stocks_wallet, months)
         return report
 
+    def get_broker(self):
+        """ Get broker from self.file """
+        self.broker = Broker.objects.get(id=1)
+
     def get_broker_taxes(self):
         """ return function bellow to b3_ir_calc """
-        """ Get broker from self.file.
-        """
-        pass
+        def broker_taxes(date):
+            """ Function returned.
+            Multiple operation value against this function to get b3 taxes. """
+            return self.broker.get_broker_taxes(date)
+        return broker_taxes
 
     def get_b3_taxes(self):
         """ return function bellow to b3_ir_calc """

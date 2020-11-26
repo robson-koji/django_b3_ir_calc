@@ -14,9 +14,9 @@ from builtins import any as b_any
 from b3_ir_calc.b3_ir_calc.ir_calc import *
 from stock_price.models import StockPrice
 from django_excel_csv.views import GetExcel
-from b3_reference_data.models import *
+from reference_data.models import *
 from endorsement.views import DataEleven, DataXp, endorsement_broker
-
+from corporate_events.views import CorporateEventView
 
 
 class ProxyView(View):
@@ -86,7 +86,10 @@ class ProxyView(View):
         print( file)
         # import pdb; pdb.set_trace()
         try:
-            b3_tax_obj = ObjectifyData(mkt_type='VIS', path=path, file=file, broker_taxes=self.get_broker_taxes(), b3_taxes=self.get_b3_taxes())
+            b3_tax_obj = ObjectifyData(mkt_type='VIS', path=path, file=file, \
+                                        broker_taxes=self.get_broker_taxes(), \
+                                        b3_taxes=self.get_b3_taxes(), \
+                                        corporate_events=CorporateEventView)
             return b3_tax_obj
         except FileNotFoundError:
             raise

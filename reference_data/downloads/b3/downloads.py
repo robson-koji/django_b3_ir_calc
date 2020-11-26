@@ -13,7 +13,7 @@ from decimal import Decimal
 import requests, re, sys, string
 import pandas as pd
 
-from b3_reference_data.models import *
+from reference_data.models import *
 
 class downloadMain():
     def __init__(self):
@@ -21,7 +21,7 @@ class downloadMain():
         # Find download_url by id or text. Depends on page layout.
         self.link_text_to_find = ''
         self.link_id = ''
-        self.files_dir_path = 'b3_reference_data/downloads/b3/files/'
+        self.files_dir_path = 'reference_data/downloads/b3/files/'
         self.b3_domain = 'http://b3.com.br/'
 
     def get_download_url(self):
@@ -83,7 +83,7 @@ class classifSetorial(downloadMain):
         self.unzip_file(zipped_archive)
 
     def read_csv(self):
-        #self.file = 'b3_reference_data/downloads/b3/files/Setorial B3 05-10-2020 (português).xlsx'
+        #self.file = 'reference_data/downloads/b3/files/Setorial B3 05-10-2020 (português).xlsx'
         df = pd.read_excel(self.file, sheet_name=0)
         setores = defaultdict(lambda: defaultdict(dict))
         setor = subsetor = segmento = ''
@@ -151,7 +151,7 @@ class valorMercado(downloadMain):
         open(self.file, 'wb').write(self.response.content)
 
     def read_csv_store_valor_mercado(self):
-        #self.file = 'b3_reference_data/downloads/b3/files/VMDiadet%20-%202020-10-08.xlsx'
+        #self.file = 'reference_data/downloads/b3/files/VMDiadet%20-%202020-10-08.xlsx'
         df = pd.read_excel(self.file, sheet_name=0, dtype={'Unnamed: 4': str})
 
         for index, row in df.iterrows():

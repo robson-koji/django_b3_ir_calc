@@ -54,9 +54,9 @@ INSTALLED_APPS = [
     'report',
     'endorsement',
     'django_excel_csv',
-    'b3_reference_data',
+    'reference_data',
     'charts',
-
+    'corporate_events',
 
 # The following apps are required by allauth:
     'django.contrib.sites',

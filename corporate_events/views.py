@@ -8,12 +8,12 @@ class CorporateEventView():
     dict_deconversion_events = {}
 
     def __init__(self):
-        corporate_events = CorporateEvent.objects.all()
+        self.corporate_events = CorporateEvent.objects.all()
         conversion_events = CorporateEvent.objects.filter(asset_code_new__isnull=False).values_list('asset_code_old', 'asset_code_new')
         self.dict_conversion_events = {ce[0]:ce[1] for ce in conversion_events}
         self.dict_deconversion_events = {ce[1]:ce[0] for ce in conversion_events}
 
-        for ce in corporate_events:
+        for ce in self.corporate_events:
             self.dict_ce[ce.date_ex].append( {'stock': str(ce.asset), 'event': ce.event,
                                 'date_ex':  ce.date_ex,'group_valid': ce.group_valid,
                                 'operator': ce.operator,

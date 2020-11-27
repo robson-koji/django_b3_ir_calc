@@ -55,6 +55,7 @@ class ProxyView(View):
         self.file = request.session['file']
 
         self.get_broker()
+        self.get_corporate_events()
 
         try:
             b3_tax_obj = self.handle_data(self.path, self.file)
@@ -127,6 +128,9 @@ class ProxyView(View):
             return B3Taxes.get_b3_taxes(date)
         return b3_taxes
 
+    def get_corporate_events(self):
+        cev = CorporateEventView()
+        self.cev = cev.corporate_events
 
 
 
@@ -295,11 +299,22 @@ class HistoryDetailView(ProxyView, TemplateView):
         self.today_position(bar_chart_data)
         self.normalize_chart_values()
 
+        context['show_chart'] = True
+
+        corporate_events = self.cev.values_list('asset__ativo', flat=True)
+        if re.sub('\d', '', self.stock_detail) in corporate_events:
+            months_keys = list(self.report.months_build_data()[1].keys())
+            # import pdb; pdb.set_trace()
+            if len(months_keys) == 1 and \
+                len(self.report.months_build_data()[1][months_keys[0]][self.stock_detail])==1 :
+                    context['show_chart'] = False
+
         context['bar_chart_data'] = dict(bar_chart_data)
         context['normalized_chart_values'] = dict(self.normalized_chart_values)
         context['months'] = self.report.months_build_data()[0]
         context['months_operations'] = self.report.months_build_data()[1]
         context['stock_detail'] = self.stock_detail
+        # import pdb; pdb.set_trace()
         return context
 
 class StockPriceView(TemplateView):

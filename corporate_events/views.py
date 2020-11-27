@@ -3,11 +3,11 @@ from .models import CorporateEvent
 from collections import defaultdict
 
 class CorporateEventView():
-    dict_ce = defaultdict(list)
     dict_conversion_events = {}
     dict_deconversion_events = {}
 
     def __init__(self):
+        self.dict_ce = defaultdict(list)
         self.corporate_events = CorporateEvent.objects.all()
         conversion_events = CorporateEvent.objects.filter(asset_code_new__isnull=False).values_list('asset_code_old', 'asset_code_new')
         self.dict_conversion_events = {ce[0]:ce[1] for ce in conversion_events}

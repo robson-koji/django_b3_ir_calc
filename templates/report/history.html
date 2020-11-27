@@ -45,11 +45,27 @@
           </h2>
         </div>
         <!-- Page title end -->
-        <button data-toggle="collapse" data-target=".account_balance">Collapse all Account Balance</button>
-
-
-        {% if stock_detail %}
+        {% if not stock_detail %}
+          <button data-toggle="collapse" data-target=".account_balance">Collapse all Account Balance</button>
+        {% elif stock_detail and show_chart %}
+          <button data-toggle="collapse" data-target=".account_balance">Collapse all Account Balance</button>        
           {% include "stacked_1.html" %}
+        {% elif stock_detail and not show_chart %}
+
+        <div class="row">
+          <div>
+            <div class="panel panel-yellow">
+              <div class="panel-heading">
+                <h3 class="panel-title">Chart not available</h3>
+              </div>
+              <div class="panel-body">
+                Not enough data to display chart, due to Corporate Events.
+              </div>
+            </div>
+          </div>
+        </div>
+
+
         {% endif %}
 
 

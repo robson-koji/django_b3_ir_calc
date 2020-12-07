@@ -26,6 +26,7 @@ class Ativos(models.Model):
     setorial = models.ForeignKey('Setorial', on_delete=models.CASCADE)
     btc = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True, help_text=u"Soma btc de preferenciais e ordinarias")
     termo = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True, help_text=u"Soma termo de preferenciais e ordinarias")
+    indice = models.ManyToManyField('Indice')
 
     def get_pct_sum_btc_termo_vm(self):
         if not self.valor_mercado or not self.btc or not self.termo:
@@ -97,3 +98,19 @@ class BrokerTaxes(models.Model):
 
     options_trade_brokerage = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
     options_trade_iss = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
+
+
+IDX_CHOICES = (
+    ('ICON', 'Consumo'),
+    ('IEEX', 'Energia'),
+    ('IFNC','Financeiro'),
+    ('IMOB', 'Imobiliário'),
+    ('IMAT', 'Materiais Básicos'),
+    ('SMLL', 'Small'),
+    ('UTIL', 'Utilities'),
+)
+
+class Indice(models.Model):
+    indice = models.CharField(max_length=12, choices=IDX_CHOICES, default='order')
+    def __str__(self):
+            return self.indice

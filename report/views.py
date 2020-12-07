@@ -408,13 +408,18 @@ class Endorse11View(PositionView):
 
         try:
             ativo = self.ativos.get(ativo=papel)
+            # import pdb; pdb.set_trace()
             setorial = ativo.setorial.get_arvore_setorial()
-            return (str(ativo.get_pct_sum_btc_termo_vm()),
+            # import pdb; pdb.set_trace()
+            indices = '  '.join([str(i) for i in ativo.indice.all()])
+            # import pdb; pdb.set_trace()
+            return (indices,
+                    str(ativo.get_pct_sum_btc_termo_vm()),
                     str(ativo.get_pct_btc_vm()),
                     str(ativo.get_pct_termo_vm()),
                     setorial)
         except:
-            return ('','','','')
+            return ('','','','','')
 
     def check_exists_in_list_get_index(self, segmento):
         if self.recomenda_xp is None:
@@ -439,14 +444,14 @@ class Endorse11View(PositionView):
         #     """ Check endorsed stocks against wallet stocks """
         tem_recomenda = 0
         for cp in self.current_position:
-            (btc_termo_vm, btc_vm, termo_vm, setorial) = self.get_btc_termo_setorial(cp['stock'])
+            (indices, btc_termo_vm, btc_vm, termo_vm, setorial) = self.get_btc_termo_setorial(cp['stock'])
 
             segmento = setorial.split('|')[-1].lower()
             xp_top_20 = self.check_exists_in_list_get_index(segmento)
 
             cp_data = [ str(cp['qt']),  str(cp['buy_avg']), str(cp['curr_price']),
                         str(cp['buy_total']), str(cp['cur_total']), str(cp['balance']),
-                        str(cp['balance_pct']), btc_termo_vm, btc_vm, termo_vm, setorial, str(xp_top_20) ]
+                        str(cp['balance_pct']), btc_termo_vm, btc_vm, termo_vm, setorial, indices ]
             if cp['stock'] in self.recomenda_11:
                 cp_endorsed.append( cp['stock'] )
                 self.recomenda_11[cp['stock']] += cp_data
@@ -458,15 +463,15 @@ class Endorse11View(PositionView):
                                             str(cp['qt']),  str(cp['buy_avg']), str(cp['curr_price']),
                                                         str(cp['buy_total']), str(cp['cur_total']),
                                                         str(cp['balance']), str(cp['balance_pct']),
-                                                        btc_termo_vm, btc_vm, termo_vm, setorial]
+                                                        btc_termo_vm, btc_vm, termo_vm, setorial, indices]
 
         for recomenda in self.recomenda_11:
             if not recomenda in cp_endorsed:
-                (btc_termo_vm, btc_vm, termo_vm, setorial) = self.get_btc_termo_setorial(recomenda)
+                (indices, btc_termo_vm, btc_vm, termo_vm, setorial) = self.get_btc_termo_setorial(recomenda)
                 segmento = setorial.split('|')[-1]
                 xp_top_20 = self.check_exists_in_list_get_index(segmento)
                 self.recomenda_11[recomenda] += [ '', '', '', '', '', '', '',
-                                btc_termo_vm, btc_vm, termo_vm, setorial, str(xp_top_20) ]
+                                btc_termo_vm, btc_vm, termo_vm, setorial, indices ]
 
 
     def clean_data(self):

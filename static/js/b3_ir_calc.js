@@ -41,9 +41,36 @@ $(document).ready(function() {
 
 
 $(document).ready(function() {
-    /* Endorsement page */
-    // Initialization
-    $('#data-table-endorse').DataTable( {
+	/* Endorsement page */
+	// Initialization
+	$('#data-table-endorse').DataTable( {
+
+		// Filter column - Just add column bellow to add filter.
+		initComplete: function () {
+				this.api().columns([3,10]).every( function () {
+				// this.api().columns().every( function () {
+						var column = this;
+						var select = $('<select><option value=""></option></select>')
+								.appendTo( $(column.header()).empty() )
+								.on( 'change', function () {
+										var val = $.fn.dataTable.util.escapeRegex(
+												$(this).val()
+										);
+
+										column
+												// .search( val ? '^'+val+'$' : '', true, false )
+												.search( val ? val : '', true, false )
+												.draw();
+								} );
+
+						column.data().unique().sort().each( function ( d, j ) {
+								// Coluna indice, qdo tem mais de um indice, pula.
+								if (column[0]==3 && /\s/g.test(d)){ return }
+								select.append( '<option value="'+d+'">'+d+'</option>' )
+						} );
+				} );
+		},
+
         "order": [[ 14, "desc" ], [ 11, "asc" ], [ 10, "asc" ]],
         "pageLength": 100,
 
@@ -53,14 +80,14 @@ $(document).ready(function() {
             {
                 extend: 'colvisGroup',
                 text: 'BTC/Termo - Show',
-                show: [ 2,3,4,5,6 ],
+                show: [ 4,5,6 ],
                 hide: [  ]
             },
             {
                 extend: 'colvisGroup',
                 text: 'BTC/Termo - Hide',
                 show: [ ],
-                hide: [ 2, 3, 4,5,6]
+                hide: [ 4,5,6]
             },
             {
                 extend: 'colvisGroup',
@@ -92,7 +119,5 @@ $(document).ready(function() {
             "rowCallback": rowCallback
         } );
     });
-
-
 
 } );

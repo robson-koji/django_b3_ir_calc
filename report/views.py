@@ -169,6 +169,44 @@ class PositionView(ProxyView, TemplateView):
         return context
 
 
+class LastZeroedStocks(ProxyView, TemplateView):
+    """ History of operations """
+
+    template_name = "report/last_zeroed.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # context['months'] = self.report.months_build_data()[0]
+        #context['months_operations'] = self.report.months_build_data()[1]
+
+        zeroed_stocks = defaultdict(bool)
+        months_operations = self.report.months_build_data()[1]
+
+        last_months = list(months_operations.keys())[0:3]
+        dt_end =  date.today() - timedelta(days=5)
+        dt_start =  date.today() - timedelta(days=45)
+
+        for month in last_months:
+            # print(month)
+            for idx, asset in months_operations[month].items():
+                for oper in asset:
+                    if oper['dt'] > dt_start and oper['dt'] < dt_end:
+                        if oper['qt_total'] == 0 :
+                            zeroed_stocks[oper['name']] = True
+                        else:
+                            zeroed_stocks[oper['name']] = False
+                        # import pdb; pdb.set_trace()
+
+            # print(zeroed_stocks)
+            # import pdb; pdb.set_trace()
+
+        context['zeroed_stocks'] = dict(zeroed_stocks)
+
+
+
+        # import pdb; pdb.set_trace()
+        return context
+
 class HistoryView(ProxyView, TemplateView):
     """ History of operations """
 

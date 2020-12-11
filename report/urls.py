@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from django.urls import path
 
-from report.views import HistoryView, HistoryDetailView, PositionView, Endorse11Download, Endorse11View
+from report.views import *
 from django.views.generic import TemplateView
 
 
@@ -12,5 +12,8 @@ urlpatterns = [
     url(r'^endorse_download/$', Endorse11Download.as_view(), name='endorse_dwl'),
     url(r'^endorse/$', Endorse11View.as_view(), name='endorse'),
     url(r'^tech_analysis/$', Endorse11View.as_view(), name='tech_analysis'),
+    url(r'^last_zeroed/$', LastZeroedStocks.as_view(), name='last_zeroed'),
+
+
     # path('indices/', TemplateView.as_view(template_name='report/indices.html')),
 ]

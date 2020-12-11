@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+<!-- Dashboard wrapper start -->
+<div class="dashboard-wrapper">
+
+  <!-- Page title start -->
+  <div class="page-title clearfix">
+    <h2>
+      Indexes
+      <small>
+        <ul>
+          <li>Home</li>
+          <li>/</li>
+          <li>Dashboard</li>
+          <li>/</li>
+          <li>Tables</li>
+        </ul>
+      </small>
+    </h2>
+
+  </div>
+  <!-- Page title end -->
+
+  <!-- Row start -->
+  <div class="row">
+    <div class="col-md-12">
+      <h3>Investing</h3>
+      <div class="widget">
+        <div class="widget-body">
+          <div id="dt_example" class="example_alt_pagination">
+            <table class="table table-condensed table-striped">
+              <tr>
+                <th>Indice</th>
+                <th>Componentes</th>
+                <th>Candlestick Pattern</th>
+              </tr>
+
+              <tr>
+                <td>ICON</td>
+                <td><a href="https://www.investing.com/indices/consumption-components#marketInnerContent" target="_blank">Componentes</a></td>
+                <td><a href="https://www.investing.com/indices/consumption-candlestick#js_instrument_chart_wrapper" target="_blank">Candlestick Pattern</a></td>
+              </tr>
+              <tr>
+                <td>IMOB</td>
+                <td><a href="https://www.investing.com/indices/real-estate-components#marketInnerContent" target="_blank">Componentes</a></td>
+                <td><a href="https://www.investing.com/indices/real-estate-candlestick#js_instrument_chart_wrapper" target="_blank">Candlestick Pattern</a></td>
+              </tr>
+              <tr>
+                <td>IMAT</td>
+                <td><a href="https://www.investing.com/indices/basic-materials-components#marketInnerContent" target="_blank">Componentes</a></td>
+                <td><a href="https://www.investing.com/indices/basic-materials-candlestick#js_instrument_chart_wrapper" target="_blank">Candlestick Pattern</a></td>
+              </tr>
+              <tr>
+                <td>SMLL</td>
+                <td><a href="https://www.investing.com/indices/small-cap-index-components#marketInnerContent" target="_blank">Componentes</a></td>
+                <td><a href="https://www.investing.com/indices/small-cap-index-candlestick#js_instrument_chart_wrapper" target="_blank">Candlestick Pattern</a></td>
+              </tr>
+              <tr>
+                <td>UTIL</td>
+                <td><a href="https://www.investing.com/indices/public-utilities-components#marketInnerContent" target="_blank">Componentes</a></td>
+                <td><a href="https://www.investing.com/indices/public-utilities-candlestick#js_instrument_chart_wrapper" target="_blank">Candlestick Pattern</a></td>
+              </tr>
+              <tr>
+                <td>INDX</td>
+                <td><a href="https://www.investing.com/indices/industrial-sector-components#marketInnerContent" target="_blank">Componentes</a></td>
+                <td><a href="https://www.investing.com/indices/industrial-sector-candlestick#js_instrument_chart_wrapper" target="_blank">Candlestick Pattern</a></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <!-- Row end -->
+</div>
+
+{% endblock %}

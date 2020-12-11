@@ -16,6 +16,7 @@ indices = {
     'IMAT': 'https://www.infomoney.com.br/cotacoes/imat/' ,
     'SMLL': 'https://www.infomoney.com.br/cotacoes/smll/' ,
     'UTIL': 'https://www.infomoney.com.br/cotacoes/util/',
+    'INDX': 'https://www.infomoney.com.br/cotacoes/indx/',    
     }
 
 

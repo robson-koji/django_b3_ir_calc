@@ -39,7 +39,7 @@ urlpatterns = [
     url(r'^accounts/', include('allauth.urls')),
 
 
-    # path('foo/', TemplateView.as_view(template_name='stacked_1.html')),
+    path('reference_data/indexes/', TemplateView.as_view(template_name='reference_data/indexes.html')),
 ]
 
 

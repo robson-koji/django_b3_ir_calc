@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'reference_data',
     'charts',
     'corporate_events',
+    'django_b3_ir_calc',
 
 # The following apps are required by allauth:
     'django.contrib.sites',

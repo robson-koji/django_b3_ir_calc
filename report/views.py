@@ -185,7 +185,7 @@ class LastZeroedStocks(ProxyView, TemplateView):
         last_months = list(months_operations.keys())[0:3]
         dt_end =  date.today() - timedelta(days=5)
         dt_start =  date.today() - timedelta(days=45)
-
+        last_months.reverse()
         for month in last_months:
             # print(month)
             for idx, asset in months_operations[month].items():

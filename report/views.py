@@ -291,10 +291,11 @@ class HistoryDetailView(ProxyView, TemplateView):
             chk_higher_values['loss'] = profit_loss
             chk_higher_values['profit'] = 0
         bar_chart_data['value'].append(0)
-        bar_chart_data['avg_price'].append(0)
+        bar_chart_data['avg_price'].append(bar_chart_data['avg_price'][-1])
         bar_chart_data['balance'].append(str(profit_loss))
         chk_higher_values['balance'] = profit_loss
 
+        # bar_chart_data['avg_price'].append(bar_chart_data['avg_price'][-1])
         self.get_higher_values(chk_higher_values)
 
 

@@ -44,7 +44,7 @@ Acertar cores, excluir alguns labels dos tooltips
 
 
 	// Normalise
-	columns = [ loss, profit, my_position, mkt_position, unit_price, qt_total, balance ]
+	columns = [ loss, profit, my_position, mkt_position, unit_price, qt_total, balance, avg_price ]
 	var scount = columns[0].length;
 	// debugger;
 	for (var m = 0; m < columns.length; m++) {
@@ -61,6 +61,7 @@ Acertar cores, excluir alguns labels dos tooltips
 					// x: 'dt',
 					columns: columns,
 					names: {
+							avg_price: 'Avg Price',
 							loss: 'Loss',
 							profit: 'Profit',
 							my_position: 'My cost',

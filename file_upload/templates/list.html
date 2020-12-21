@@ -82,6 +82,32 @@
                             </div>
                           </li>
 
+
+                          <li class="media">
+                            <a class="pull-left" href="#" data-original-title="" title="">
+                              <img class="media-object" alt="64x64" style="width: 64px; height: 64px;" src="/static/imagens/cei.png">
+                            </a>
+                            <div class="media-body">
+                              <h4 class="media-heading">Upload your B3 CEI file</h4>
+                              <p>You can upload as many as you want, to compare then</p>
+                              <!-- Upload form. Note enctype attribute! -->
+                              <form action="{% url "documents_home" %}" method="post" enctype="multipart/form-data">
+                                  {% csrf_token %}
+                                  {{ message }}
+                                  <p>{{ form.non_field_errors }}</p>
+
+                                  <!-- <p>{{ form.docfile.label_tag }} {{ form.docfile.help_text }}</p> -->
+                                  <p>
+                                      {{ form.docfile.errors }}
+                                      {{ form.docfile }}
+                                  </p>
+
+                                  <p><input type="submit" value="Upload"/></p>
+                              </form>
+
+                            </div>
+                          </li>
+
                           {% if documents %}
                           <li class="media">
                             <a class="pull-left" href="#" data-original-title="" title="">
@@ -124,30 +150,6 @@
                           </li>
                           {% endif %}
 
-                          <li class="media">
-                            <a class="pull-left" href="#" data-original-title="" title="">
-                              <img class="media-object" alt="64x64" style="width: 64px; height: 64px;" src="/static/imagens/cei.png">
-                            </a>
-                            <div class="media-body">
-                              <h4 class="media-heading">Upload your B3 CEI file</h4>
-                              <p>You can upload as many as you want, to compare then</p>
-                              <!-- Upload form. Note enctype attribute! -->
-                              <form action="{% url "documents_home" %}" method="post" enctype="multipart/form-data">
-                                  {% csrf_token %}
-                                  {{ message }}
-                                  <p>{{ form.non_field_errors }}</p>
-
-                                  <!-- <p>{{ form.docfile.label_tag }} {{ form.docfile.help_text }}</p> -->
-                                  <p>
-                                      {{ form.docfile.errors }}
-                                      {{ form.docfile }}
-                                  </p>
-
-                                  <p><input type="submit" value="Upload"/></p>
-                              </form>
-
-                            </div>
-                          </li>
                         </ul>
                       </div>
                     </div>

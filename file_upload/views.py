@@ -109,9 +109,9 @@ def documents_home(request):
 
 
     if request.user.is_anonymous:
-        documents = Document.objects.filter(session_key=request.session.session_key)
+        documents = Document.objects.filter(session_key=request.session.session_key).order_by('-id')
     else:
-        documents = Document.objects.filter(Q(session_key=request.session.session_key) | Q(user=request.user) )
+        documents = Document.objects.filter(Q(session_key=request.session.session_key) | Q(user=request.user) ).order_by('-id')
 
 
 
@@ -126,7 +126,6 @@ def documents_home(request):
         doc.docfile.csv_url = doc.docfile.url.replace('.xls', '.csv')
 
     # Render list page with the documents and the form
-    #import pdb; pdb.set_trace()
     context = {'documents': documents, 'form': form, 'message': message}
     return render(request, 'list.html', context)
 

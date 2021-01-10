@@ -230,12 +230,17 @@ class HistoryDetailView(ProxyView, TemplateView):
 
     def get_higher_values(self, val):
         """ Calculate and get the higher values of each chart element """
-        for key in val:
+        # import pdb; pdb.set_trace()
+
+        for key in dir(val):
+
+        # for key in val:
             if key not in self.for_chart_values:
                 continue
             try:
-                if val[key] > self.higher_values[key]: self.higher_values[key] = val[key]
+                if getattr(val, key) > self.higher_values[key]: self.higher_values[key] = getattr(val, key)
             except Exception as e:
+                print (e)
                 import pdb; pdb.set_trace()
 
     def normalize_chart_values(self):
@@ -316,17 +321,19 @@ class HistoryDetailView(ProxyView, TemplateView):
                 # Operations in month
                 for idx, val in enumerate(  operations_list ):
 
-                    dt = "%i/%s" % (val['dt'].day, val['dt'].strftime('%b'))
+                    dt = "%i/%s" % (val.dt.day, val.dt.strftime('%b'))
                     for fcv in self.for_chart_values:
                         try:
-                            bar_chart_data[fcv].appendleft(str(val[fcv]))
-                            balance = val['mkt_position'] - val['my_position']
+                            #bar_chart_data[fcv].appendleft(str(val[fcv]))
+                            bar_chart_data[fcv].appendleft(str(getattr(val, fcv)))
+                            balance = val.mkt_position - val.my_position
                         except:
+                            # import pdb; pdb.set_trace()
                             continue
 
                     bar_chart_data['dt'].appendleft(dt)
                     bar_chart_data['balance'].appendleft(str(balance))
-                    val['balance'] = balance
+                    val.balance = balance
                     self.get_higher_values(val)
 
         for k in bar_chart_data:

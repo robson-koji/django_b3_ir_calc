@@ -50,21 +50,30 @@ class Ativos(models.Model):
     def __str__(self):
             return self.ativo
 
+# Broker Brokerage Type
+B3MKT_CHOICES = (
+    ('regular','Regular Trade'),
+    ('daytrade', 'Day Trade'),
+)
 
 class B3Taxes(models.Model):
+    type =  models.CharField(max_length=12, choices=B3MKT_CHOICES, default='regular')
+
     date_from = models.DateField(null=True, blank=True)
     date_to = models.DateField(null=True, blank=True)
     b3_brokering = models.DecimalField(max_digits=9, decimal_places=8, null=True, blank=True, default=0.0)
     b3_settlement = models.DecimalField(max_digits=9, decimal_places=8, null=True, blank=True, default=0.0)
     b3_registration = models.DecimalField(max_digits=9, decimal_places=8, null=True, blank=True, default=0.0)
     @classmethod
-    def get_b3_taxes(cls, date):
+    def get_b3_taxes(cls, type, date):
         try:
-            b3_taxes = cls.objects.get(date_from__lte=date, date_to__isnull=True)
+            b3_taxes = cls.objects.get(type=type, date_from__lte=date, date_to__isnull=True)
         except:
-            b3_taxes = cls.objects.get(date_from__lte=date, date_to__gte=date)
+            b3_taxes = cls.objects.get(type=type, date_from__lte=date, date_to__gte=date)
         return (b3_taxes.b3_brokering + b3_taxes.b3_settlement + b3_taxes.b3_registration)/100
 
+    def __str__(self):
+        return "%s até: %s" % (self.type, (self.date_to))
 
 class Broker(models.Model):
     code = models.SmallIntegerField(null=True, blank=True)

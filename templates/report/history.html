@@ -48,7 +48,7 @@
         {% if not stock_detail %}
           <button data-toggle="collapse" data-target=".account_balance">Collapse all Account Balance</button>
         {% elif stock_detail and show_chart %}
-          <button data-toggle="collapse" data-target=".account_balance">Collapse all Account Balance</button>        
+          <button data-toggle="collapse" data-target=".account_balance">Collapse all Account Balance</button>
           {% include "stacked_1.html" %}
         {% elif stock_detail and not show_chart %}
 
@@ -72,6 +72,64 @@
 
 
         {% for key, value in months.items %}
+
+
+
+        cagation nesse loop
+        {% if value.dayt %}
+            {% for day in value.dayt  %}
+              {{ day }}
+              {% with value.dayt|get_item:day as stock_dict %}
+                  <!-- {{ stock }} -->
+                  {% for stock, values in stock_dict.items %}
+                    <h3>{{ day }} - {{ stock }}</h3>
+
+                    {% with stock_dict|get_item:stock as stock_dict %}
+                      {% comment %}
+                        {% for keys in stock %}
+                          {{ keys }}
+                          qt_total_sold_dayt qt_total_bought_dayt
+                          total_amount_sold_dayt total_amount_bought_dayt
+                          reconciled_dayt_operations
+                          operation_result
+                          avg_price_bought
+                          avg_price_sold
+                        {% endfor %}
+                      {% endcomment %}
+                      {{ stock_dict }}
+
+                      <p>qt_total_dayt:{{ stock_dict.qt_total_dayt }}<br>
+                      total_amount_sold_dayt:{{ stock_dict.total_amount_sold_dayt }}<br>
+                      total_amount_bought_dayt:{{ stock_dict.total_amount_bought_dayt }}<br>
+                      operation_result:{{ stock_dict.operation_result }}<br>
+                      avg_price_bought:{{ stock_dict.avg_price_bought }}<br>
+                      avg_price_sold:{{ stock_dict.avg_price_sold }}</p>
+
+
+
+
+                      <p>reconciled_bought_operations:{{ stock_dict.reconciled_bought_operations }}<br>
+                      <p>reconciled_sold_operations:{{ stock_dict.reconciled_sold_operations }}<br>
+
+                      <p>qt_initial_operations:{{ stock_dict.qt_initial_operations }}<br>
+
+                      <p>qt_remaining_operations:{{ stock_dict.qt_remaining_operations }}<br>
+                      <p>qt_real_dt_operations:{{ stock_dict.qt_real_dt_operations }}<br>
+
+
+
+
+                    {% endwith %}
+
+                  {% endfor %}
+              {% endwith %}
+            {% endfor %}
+        {% endif %}
+
+
+
+
+
         <!-- Row start -->
         <div class="row">
           <div class="col-md-12">

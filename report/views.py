@@ -122,10 +122,10 @@ class ProxyView(View):
 
     def get_b3_taxes(self):
         """ return function bellow to b3_ir_calc """
-        def b3_taxes(date):
+        def b3_taxes(type, date):
             """ Function returned.
             Multiple operation value against this function to get b3 taxes. """
-            return B3Taxes.get_b3_taxes(date)
+            return B3Taxes.get_b3_taxes(type, date)
         return b3_taxes
 
     def get_corporate_events(self):

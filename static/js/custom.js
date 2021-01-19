@@ -50,3 +50,16 @@ $(document).ready(function () {
     profile_progress();
   });
 });
+
+
+// Radio buttons to select trade type
+$('input[type=radio][name=trade_type]').change(function() {
+    if (this.value == 'regular_trade') {
+       $(".li_tab_daytrade").removeClass("active in");
+       $(".li_tab_regular").addClass("active in");
+    }
+    else if (this.value == 'day_trade') {
+      $(".li_tab_regular").removeClass("active in");
+      $(".li_tab_daytrade").addClass("active in");
+    }
+});

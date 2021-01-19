@@ -44,11 +44,25 @@
             </small>
           </h2>
         </div>
+
+
+        <div class="widget">
+          <div class="widget-body">
+            <label class="radio-inline">
+              <input type="radio" name="trade_type" id="regular_trade" value="regular_trade" checked=""> Regular Trade
+            </label>
+            <label class="radio-inline">
+              <input type="radio" name="trade_type" id="day_trade" value="day_trade">Day Trade
+            </label>
+          </div>
+        </div>
+
+
         <!-- Page title end -->
         {% if not stock_detail %}
-          <button data-toggle="collapse" data-target=".account_balance">Collapse all Account Balance</button>
+          <button data-toggle="collapse" data-target=".account_balance" style="margin-bottom:20px">Toggle all Account Balance</button>
         {% elif stock_detail and show_chart %}
-          <button data-toggle="collapse" data-target=".account_balance">Collapse all Account Balance</button>
+          <button data-toggle="collapse" data-target=".account_balance" style="margin-bottom:20px">Toggle all Account Balance</button>
           {% include "stacked_1.html" %}
         {% elif stock_detail and not show_chart %}
 
@@ -75,56 +89,8 @@
 
 
 
-        cagation nesse loop
-        {% if value.dayt %}
-            {% for day in value.dayt  %}
-              {{ day }}
-              {% with value.dayt|get_item:day as stock_dict %}
-                  <!-- {{ stock }} -->
-                  {% for stock, values in stock_dict.items %}
-                    <h3>{{ day }} - {{ stock }}</h3>
-
-                    {% with stock_dict|get_item:stock as stock_dict %}
-                      {% comment %}
-                        {% for keys in stock %}
-                          {{ keys }}
-                          qt_total_sold_dayt qt_total_bought_dayt
-                          total_amount_sold_dayt total_amount_bought_dayt
-                          reconciled_dayt_operations
-                          operation_result
-                          avg_price_bought
-                          avg_price_sold
-                        {% endfor %}
-                      {% endcomment %}
-                      {{ stock_dict }}
-
-                      <p>qt_total_dayt:{{ stock_dict.qt_total_dayt }}<br>
-                      total_amount_sold_dayt:{{ stock_dict.total_amount_sold_dayt }}<br>
-                      total_amount_bought_dayt:{{ stock_dict.total_amount_bought_dayt }}<br>
-                      operation_result:{{ stock_dict.operation_result }}<br>
-                      avg_price_bought:{{ stock_dict.avg_price_bought }}<br>
-                      avg_price_sold:{{ stock_dict.avg_price_sold }}</p>
 
 
-
-
-                      <p>reconciled_bought_operations:{{ stock_dict.reconciled_bought_operations }}<br>
-                      <p>reconciled_sold_operations:{{ stock_dict.reconciled_sold_operations }}<br>
-
-                      <p>qt_initial_operations:{{ stock_dict.qt_initial_operations }}<br>
-
-                      <p>qt_remaining_operations:{{ stock_dict.qt_remaining_operations }}<br>
-                      <p>qt_real_dt_operations:{{ stock_dict.qt_real_dt_operations }}<br>
-
-
-
-
-                    {% endwith %}
-
-                  {% endfor %}
-              {% endwith %}
-            {% endfor %}
-        {% endif %}
 
 
 
@@ -134,236 +100,786 @@
         <div class="row">
           <div class="col-md-12">
 
-          <h3 style="display: inline-block">{{ value.dt|date:"F Y" }} </h3>
-          <button data-toggle="collapse" data-target="#ab_{{ key|safe }}" style="float: right;">Account Balance</button>
 
-          </div>
-
-          <div class="col-md-3">
             <div class="widget">
-              <div class="widget-header">
-                <div class="title">
-                  <span class="fs1" aria-hidden="true" data-icon=""></span> Transactions
-                </div>
-              </div>
-              <div class="widget-body">
-                <table class="table table-condensed table-bordered table-hover no-margin">
-                  <tbody>
-                    <tr>
-                      <th style="width:60%">Buy ({{ value.qt_buy }})</th>
-                      <td style="width:40%" class="text-right"><span class="label label-primary label_cp1">{{ value.month_buy }}</span></td>
-                    </tr>
-                    <tr>
-                      <th>Sell ({{ value.qt_sell }})</th>
-                      <td class="text-right"><span class="label label-primary label_cp1">{{ value.month_sell }}</span></td>
-                    </tr>
-                    <tr>
-                      <th>Total ({{  value.qt_buy | addition:value.qt_sell }})</th>
-                      <td class="text-right"><span class="label label-primary label_cp1">{{  value.month_buy | addition:value.month_sell }}</span></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
+                          <div class="widget-header">
+                            <div class="title">
+                              <h3 style="display: inline-block; margin-top: 0px">{{ value.dt|date:"F Y" }} </h3>
+                            </div>
+                          </div>
+                          <div class="widget-body">
+                            <ul id="myTab" class="nav nav-tabs">
+                              <li class="li_tab_regular active"><a href="#regular_{{ value.dt|date:"F Y"|cut:" " }}" data-toggle="tab" data-original-title="" title="" aria-expanded="false">Regular Trading</a></li>
+                              <li class="li_tab_daytrade"><a href="#daytrade_{{ value.dt|date:"F Y"|cut:" " }}" data-toggle="tab" data-original-title="" title="" aria-expanded="true">Day Trading</a></li>
+                            </ul>
+                            <br>
+                            <div id="myTabContent" class="tab-content">
+                              <div class="li_tab_regular tab-pane active fade in" id="regular_{{ value.dt|date:"F Y"|cut:" " }}">
+
+
+
+                                <div class="col-md-3">
+                                  <div class="widget">
+                                    <div class="widget-header">
+                                      <div class="title">
+                                        <span class="fs1" aria-hidden="true" data-icon=""></span> Transactions
+                                      </div>
+                                    </div>
+                                    <div class="widget-body">
+                                      <table class="table table-condensed table-bordered table-hover no-margin">
+                                        <tbody>
+                                          <tr>
+                                            <th style="width:60%">Buy ({{ value.qt_buy }})</th>
+                                            <td style="width:40%" class="text-right"><span class="label label-primary label_cp1">{{ value.month_buy }}</span></td>
+                                          </tr>
+                                          <tr>
+                                            <th>Sell ({{ value.qt_sell }})</th>
+                                            <td class="text-right"><span class="label label-primary label_cp1">{{ value.month_sell }}</span></td>
+                                          </tr>
+                                          <tr>
+                                            <th>Total ({{  value.qt_buy | addition:value.qt_sell }})</th>
+                                            <td class="text-right"><span class="label label-primary label_cp1">{{  value.month_buy | addition:value.month_sell }}</span></td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  </div>
+                                </div>
+
+
+                                <div class="col-md-3">
+                                  <div class="widget">
+                                    <div class="widget-header">
+                                      <div class="title">
+                                        <span class="fs1" aria-hidden="true" data-icon=""></span> Taxes
+                                      </div>
+                                    </div>
+                                    <div class="widget-body">
+                                      <table class="table table-condensed table-bordered table-hover no-margin">
+                                        <tbody>
+                                          <tr>
+                                            <th style="width:60%">B3 Taxes</th>
+                                            <td style="width:40%" class="text-right"><span class="label label-default label_cp1">{{ value.b3_taxes }}</span></td>
+                                          </tr>
+                                          <tr>
+                                            <th>Broker Fees</th>
+                                            <td class="text-right"><span class="label label-default label_cp1">{{ value.broker_taxes }}</span></td>
+                                          </tr>
+                                          <tr>
+                                            <th>IRPF Withholding</th>
+                                            <td class="text-right"><span class="label label-default label_cp1">{{ value.irpf_withholding }}</span></td>
+                                          </tr>
+                                          <tr>
+                                            <th>Sum Taxes</th>
+                                            <td class="text-right"><span class="label label-default label_cp1">{{ value.sum_taxes }}</span></td>
+                                          </tr>
+
+
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  </div>
+                                </div>
+
+
+
+                                <!-- Span4 start -->
+                                <div class="col-md-3">
+                                  <div class="widget">
+                                    <div class="widget-header">
+                                      <div class="title">
+                                        <span class="fs1" aria-hidden="true" data-icon=""></span> Outcome
+                                      </div>
+                                    </div>
+                                    <div class="widget-body">
+                                      <table class="table table-condensed table-bordered table-hover no-margin">
+                                        <tbody>
+                                          {% if value.month_gain == 0 and value.month_loss == 0 %}
+                                          <tr>
+                                            <th style="width:60%">Month</th>
+                                            <td style="width:40%" class="text-right"><span class="label label-default label_cp1">0.00</span></td>
+                                          </tr>
+                                          <tr>
+                                            <th>Month Net Loss</th>
+                                            <td class="text-right"><span class="label label-danger label_cp1">{{ value.month_net_loss|floatformat:"2" }}</span>
+                                            </td>
+                                          </tr>
+                                          {% elif value.month_gain > 0 %}
+                                          <tr>
+                                            <th style="width:60%">Month Gain</th>
+                                            <td style="width:40%" class="text-right"><span class="label label-success label_cp1">{{ value.month_gain|floatformat:"2" }}</span></td>
+                                          </tr>
+                                          <tr>
+                                            <th>Month Net Gain</th>
+                                            <td class="text-right"><span class="label label-success label_cp1">{{ value.month_net_gain|floatformat:"2" }}</span>
+                                            </td>
+                                          </tr>
+                                          {% elif value.month_loss < 0 %}
+                                          <tr>
+                                            <th>Month Loss</th>
+                                            <td class="text-right"><span class="label label-danger label_cp1">{{ value.month_loss|floatformat:"2" }}</span>
+                                            </td>
+                                          </tr>
+                                          <tr>
+                                            <th>Month Net Loss</th>
+                                            <td class="text-right"><span class="label label-danger label_cp1">{{ value.month_net_loss|floatformat:"2" }}</span>
+                                            </td>
+                                          </tr>
+                                          {% endif %}
+                                          <tr>
+                                            <th>Prev. Accum. Loss</th>
+                                            <td class="text-right"><span class="label label-danger label_cp1">{{ value.prev_month_cumulate_loss|floatformat:"2" }}</span></td>
+                                          </tr>
+                                          {% if value.cumulate_gain > 0 %}
+                                          <tr>
+                                            <th style="width:60%">This Month Gain</th>
+                                            <td style="width:40%" class="text-right"><span class="label label-success label_cp1">{{ value.cumulate_gain|floatformat:"2" }}</span></td>
+                                          </tr>
+                                          {% else %}
+                                          <tr>
+                                            <th>This Accum. Loss</th>
+                                            <td class="text-right"><span class="label label-danger label_cp1">{{ value.cumulate_loss|floatformat:"2" }}</span></td>
+                                          </tr>
+                                          {% endif %}
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  </div>
+                                </div>
+                                <!-- Span4 end -->
+
+                                <!-- Span4 start -->
+                                <div class="col-md-3">
+                                  <div class="widget">
+                                    <div class="widget-header">
+                                      <div class="title">
+                                        <span class="fs1" aria-hidden="true" data-icon=""></span> Due IRPF
+                                      </div>
+                                    </div>
+                                    <div class="widget-body">
+                                      <table class="table table-condensed table-bordered table-hover no-margin">
+                                        <tbody>
+                                          <tr>
+                                            <th style="width:60%">Month Net Gain</th>
+                                            <td style="width:40%" class="text-right"><span class="label label-warning label_cp1">{{ value.cumulate_gain|floatformat:"2" }}</span></td>
+                                          </tr>
+                                          <tr>
+                                            <th>Month Sales</th>
+                                            <td class="text-right"><span class="label label-warning label_cp1">{{ value.month_sell }}</span></td>
+                                          </tr>
+                                          <tr class="bg-warning">
+                                          {% if value.cumulate_gain > 0 and  value.month_sell > 20000  %}
+                                            <th colspan="2" scope="row" class="text-center"><a href="https://sicalc.receita.economia.gov.br/sicalc/rapido/contribuinte" target="_blank">Pay {{ value.tax.tax_amount|floatformat:"2" }}</a></th>
+                                          {% else %}
+                                            <th colspan="2" class="text-center">No tax due</th>
+                                          {% endif %}
+                                        </tr>
+                                        </tbody>
+                                      </table>
+                                    </div>
+
+                                    <button data-toggle="collapse" data-target="#ab_{{ key|safe }}" style="float: right;">Account Balance</button>
+
+                                  </div>
+                                </div>
+                                <!-- Span4 end -->
+
+
+                                <div id="ab_{{ key|safe }}" class="col-md-12 collapse account_balance" data-toggle="false">
+                                  <div class="widget">
+                                    <div class="widget-header">
+                                      <div class="title">
+                                        <span class="fs1" aria-hidden="true" data-icon=""></span> Account Balance
+                                      </div>
+                                    </div>
+
+                                            {% with months_operations|get_item:key as operations %}
+                                            <table class="table table-condensed table-striped table-hover table-bordered pull-left" id="data-table_{{ value.dt|date:"F Y" }}_2">
+                                              <thead>
+                                                <tr>
+                                                  <th></th>
+                                                  <th colspan='6' class="text-center">Operation</th>
+                                                  <th colspan='4' class="text-center">Position</th>
+                                                </tr>
+                                                <tr>
+                                                  <th></th>
+
+                                                  <th>Oper</th>
+                                                  <th>Dt</th>
+                                                  <th>Qt</th>
+                                                  <th>Value</th>
+                                                  <th>Price</th>
+                                                  <th>Profit</th>
+                                                  <th>Loss</th>
+
+                                                  <th>Qt</th>
+                                                  <th>AvgPrice</th>
+                                                  <th>AvgPricePrev</th>
+                                                </tr>
+                                              </thead>
+                                              <tbody>
+                                              {% for stock, value in operations.items %}
+                                              {% for oper in value %}
+                                                <tr>
+                                                    <td><a href={% url 'history_detail' stock=oper.name %}>{{oper.name}}</a></td>
+                                                    <td>{{oper.buy_sell}}</td>
+                                                    <td>{{oper.dt}}</td>
+                                                    <td>{{oper.qt}}</td>
+                                                    <td>{{oper.value}}</td>
+                                                    <td>{{oper.unit_price}}</td>
+                                                    <td>{{oper.profit|floatformat:"2"}}</td>
+                                                    <td>{{oper.loss|floatformat:"2"}}</td>
+
+                                                    <td>{{oper.qt_total}}</td>
+                                                    <td>{{oper.avg_price|floatformat:"2"}}</td>
+                                                    <td>{{oper.avg_price_prev|floatformat:"2"}}</td>
+                                                </tr>
+                                                {% endfor %}
+                                              {% endfor %}
+                                            </tbody>
+                                            </table>
+                                            {% endwith %}
+                                  </div>
+                                </div>
+                              </div>
+
+
+                              {% if value.dayt_summary.sum_taxes %}
+                              <div class="li_tab_daytrade tab-pane fade in" id="daytrade_{{ value.dt|date:"F Y"|cut:" " }}">
+
+                                {% comment %}
+                                Summary:
+                                {{ value.dayt_summary }}
+                                {% endcomment %}
+
+                                <div class="col-md-3">
+                                  <div class="widget">
+                                    <div class="widget-header">
+                                      <div class="title">
+                                        <span class="fs1" aria-hidden="true" data-icon=""></span> Transactions
+                                      </div>
+                                    </div>
+                                    <div class="widget-body">
+                                      <table class="table table-condensed table-bordered table-hover no-margin">
+                                        <tbody>
+                                          <tr>
+                                            <th style="width:60%">Buy ( - )</th>
+                                            <td style="width:40%" class="text-right"><span class="label label-primary label_cp1">{{ value.dayt_summary.total_amount_bought_dayt }}</span></td>
+                                          </tr>
+                                          <tr>
+                                            <th>Sell ( - )</th>
+                                            <td class="text-right"><span class="label label-primary label_cp1">{{ value.dayt_summary.total_amount_sold_dayt }}</span></td>
+                                          </tr>
+                                          <tr>
+                                            <th>Total ( - )</th>
+                                            <td class="text-right"><span class="label label-primary label_cp1">{{ value.dayt_summary.total_amount_bought_dayt | addition:value.dayt_summary.total_amount_sold_dayt }}</span></td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  </div>
+                                </div>
+
+
+                                <div class="col-md-3">
+                                  <div class="widget">
+                                    <div class="widget-header">
+                                      <div class="title">
+                                        <span class="fs1" aria-hidden="true" data-icon=""></span> Taxes
+                                      </div>
+                                    </div>
+                                    <div class="widget-body">
+                                      <table class="table table-condensed table-bordered table-hover no-margin">
+                                        <tbody>
+                                          <tr>
+                                            <th style="width:60%">B3 Taxes</th>
+                                            <td style="width:40%" class="text-right"><span class="label label-default label_cp1">{{ value.dayt_summary.b3_taxes }}</span></td>
+                                          </tr>
+                                          <tr>
+                                            <th>Broker Fees</th>
+                                            <td class="text-right"><span class="label label-default label_cp1">{{ value.dayt_summary.broker_taxes }}</span></td>
+                                          </tr>
+                                          <tr>
+                                            <th>IRPF Withholding</th>
+                                            <td class="text-right"><span class="label label-default label_cp1">{{ value.dayt_summary.irpf_withholding }}</span></td>
+                                          </tr>
+                                          <tr>
+                                            <th>Sum Taxes</th>
+                                            <td class="text-right"><span class="label label-default label_cp1">{{ value.dayt_summary.sum_taxes }}</span></td>
+                                          </tr>
+
+
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  </div>
+                                </div>
+
+
+
+                                <!-- Span4 start -->
+                                <div class="col-md-3">
+                                  <div class="widget">
+                                    <div class="widget-header">
+                                      <div class="title">
+                                        <span class="fs1" aria-hidden="true" data-icon=""></span> Outcome
+                                      </div>
+                                    </div>
+                                    <div class="widget-body">
+                                      <table class="table table-condensed table-bordered table-hover no-margin">
+                                        <tbody>
+                                          {% if value.dayt_summary.month_gain == 0 and value.dayt_summary.month_loss == 0 %}
+                                          <tr>
+                                            <th style="width:60%">Month</th>
+                                            <td style="width:40%" class="text-right"><span class="label label-default label_cp1">0.00</span></td>
+                                          </tr>
+                                          <tr>
+                                            <th>Month Net Loss</th>
+                                            <td class="text-right"><span class="label label-danger label_cp1">{{ value.dayt_summary.month_net_loss|floatformat:"2" }}</span>
+                                            </td>
+                                          </tr>
+                                          {% elif value.dayt_summary.month_gain > 0 %}
+                                          <tr>
+                                            <th style="width:60%">Month Gain</th>
+                                            <td style="width:40%" class="text-right"><span class="label label-success label_cp1">{{ value.dayt_summary.month_gain|floatformat:"2" }}</span></td>
+                                          </tr>
+                                          <tr>
+                                            <th>Month Net Gain</th>
+                                            <td class="text-right"><span class="label label-success label_cp1">{{ value.dayt_summary.month_net_gain|floatformat:"2" }}</span>
+                                            </td>
+                                          </tr>
+                                          {% elif value.dayt_summary.month_loss < 0 %}
+                                          <tr>
+                                            <th>Month Loss</th>
+                                            <td class="text-right"><span class="label label-danger label_cp1">{{ value.dayt_summary.month_loss|floatformat:"2" }}</span>
+                                            </td>
+                                          </tr>
+                                          <tr>
+                                            <th>Month Net Loss</th>
+                                            <td class="text-right"><span class="label label-danger label_cp1">{{ value.dayt_summary.month_net_loss|floatformat:"2" }}</span>
+                                            </td>
+                                          </tr>
+                                          {% endif %}
+                                          <tr>
+                                            <th>Prev. Accum. Loss</th>
+                                            <td class="text-right"><span class="label label-danger label_cp1">{{ value.dayt_summary.prev_month_cumulate_loss|floatformat:"2" }}</span></td>
+                                          </tr>
+                                          {% if value.dayt_summary.cumulate_gain > 0 %}
+                                          <tr>
+                                            <th style="width:60%">This Month Gain</th>
+                                            <td style="width:40%" class="text-right"><span class="label label-success label_cp1">{{ value.dayt_summary.cumulate_gain|floatformat:"2" }}</span></td>
+                                          </tr>
+                                          {% else %}
+                                          <tr>
+                                            <th>This Accum. Loss</th>
+                                            <td class="text-right"><span class="label label-danger label_cp1">{{ value.dayt_summary.cumulate_loss|floatformat:"2" }}</span></td>
+                                          </tr>
+                                          {% endif %}
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  </div>
+                                </div>
+                                <!-- Span4 end -->
+
+                                <!-- Span4 start -->
+                                <div class="col-md-3">
+                                  <div class="widget">
+                                    <div class="widget-header">
+                                      <div class="title">
+                                        <span class="fs1" aria-hidden="true" data-icon=""></span> Due IRPF
+                                      </div>
+                                    </div>
+                                    <div class="widget-body">
+                                      <table class="table table-condensed table-bordered table-hover no-margin">
+                                        <tbody>
+                                          <tr>
+                                            <th style="width:60%">Month Net Gain</th>
+                                            <td style="width:40%" class="text-right"><span class="label label-warning label_cp1">{{ value.dayt_summary.cumulate_gain|floatformat:"2" }}</span></td>
+                                          </tr>
+                                          <tr>
+                                            <th>Month Sales</th>
+                                            <td class="text-right"><span class="label label-warning label_cp1">{{ value.dayt_summary.month_sell }}</span></td>
+                                          </tr>
+                                          <tr class="bg-warning">
+                                          {% if value.dayt_summary.cumulate_gain > 0 and  value.dayt_summary.month_sell > 20000  %}
+                                            <th colspan="2" scope="row" class="text-center"><a href="https://sicalc.receita.economia.gov.br/sicalc/rapido/contribuinte" target="_blank">Pay {{ value.dayt_summary.tax.tax_amount|floatformat:"2" }}</a></th>
+                                          {% else %}
+                                            <th colspan="2" class="text-center">No tax due</th>
+                                          {% endif %}
+                                        </tr>
+                                        </tbody>
+                                      </table>
+                                    </div>
+
+                                    <button data-toggle="collapse" data-target="#ab__{{ value.dt|date:"F Y"|cut:' ' }}" style="float: right;">Account Balance</button>
+
+                                  </div>
+                                </div>
+                                <!-- Span4 end -->
+
+
+
+
+
+                                <!-- Daytrade Balance -->
+                                <div id="ab__{{ value.dt|date:"F Y"|cut:' ' }}" class="col-md-12 collapse account_balance" data-toggle="false">
+                                  <div class="widget">
+                                    <div class="widget-header">
+                                      <div class="title">
+                                        <span class="fs1" aria-hidden="true" data-icon=""></span> Account Balance
+                                      </div>
+                                    </div>
+
+
+                                    {% if value.dayt %}
+                                        {% for day in value.dayt  %}
+                                          <h3>{{ day }}</h3>
+                                          {% with value.dayt|get_item:day as stock_dict %}
+                                              <!-- {{ stock }} -->
+
+                                              {% for stock, values in stock_dict.items %}
+                                                <h4>{{ stock }}</h4>
+
+
+                                                {% with stock_dict|get_item:stock as stock_dict %}
+                                                <div  class="col-md-12" style="overflow:hidden; ">
+                                                  <div style="float:left; margin-right:20px">
+                                                    <b>Stock day trade result: </b>{{ stock_dict.operation_result }} <br>
+                                                  </div>
+                                                  <div style="float:left; margin-right:20px">
+                                                    <b>Qt inicial operations: </b>{{ stock_dict.qt_initial_operations }}<br>
+                                                  </div>
+                                                  <div style="float:left; margin-right:20px">
+                                                    <b>Qt remaining operations: </b>{{ stock_dict.qt_remaining_operations }}<br>
+                                                  </div>
+                                                  <div style="float:left; margin-right:20px">
+                                                    <b>Qt day trade reconciled operations: </b>{{ stock_dict.qt_real_dt_operations }}<br>
+                                                  </div>
+
+                                                </div>
+
+
+                                                <table class="table table-condensed table-striped table-hover table-bordered pull-left" id="data-table_{{ value.dt|date:"F Y" }}_2">
+                                                  <thead>
+                                                    <tr>
+                                                      <th colspan="7" class="text-center">Day Trade Original Operations </th>
+                                                    </tr>
+                                                    <tr>
+                                                      <th></th>
+                                                      <th>Oper</th>
+                                                      <th>Dt</th>
+                                                      <th>Qt</th>
+                                                      <th>Value</th>
+                                                      <th>Price</th>
+                                                    </tr>
+                                                  </thead>
+                                                  <tbody>
+
+                                                  {% for ds_rbo in stock_dict.original_operations.bought  %}
+                                                    <!-- {{ ds_rbo }}<br> -->
+                                                    <tr>
+                                                        <td><a href={% url 'history_detail' stock=stock %}>{{ stock }}</a></td>
+                                                        <td>{{ds_rbo.buy_sell}}</td>
+                                                        <td>{{ds_rbo.dt}}</td>
+                                                        <td>{{ds_rbo.qt}}</td>
+                                                        <td>{{ds_rbo.value}}</td>
+                                                        <td>{{ds_rbo.unit_price}}</td>
+                                                    </tr>
+                                                  {% endfor %}
+
+                                                  {% for ds_rso in stock_dict.original_operations.sold  %}
+                                                    <!-- {{ ds_rbo }}<br> -->
+                                                    <tr>
+                                                      <td><a href={% url 'history_detail' stock=stock %}>{{ stock }}</a></td>
+                                                        <td>{{ds_rso.buy_sell}}</td>
+                                                        <td>{{ds_rso.dt}}</td>
+                                                        <td>{{ds_rso.qt}}</td>
+                                                        <td>{{ds_rso.value}}</td>
+                                                        <td>{{ds_rso.unit_price}}</td>
+                                                    </tr>
+                                                  {% endfor %}
+                                              </tbody>
+                                            </table>
+
+                                                <table class="table table-condensed table-striped table-hover table-bordered pull-left" id="data-table_{{ value.dt|date:"F Y" }}_2">
+                                                  <thead>
+                                                    <tr>
+                                                      <th colspan="7" class="text-center">Day Trade Reconciled Operations </th>
+                                                    </tr>
+                                                    <tr>
+                                                      <th></th>
+                                                      <th>Oper</th>
+                                                      <th>Dt</th>
+                                                      <th>Qt</th>
+                                                      <th>Value</th>
+                                                      <th>Price</th>
+                                                      <th>Result</th>
+                                                    </tr>
+                                                  </thead>
+                                                  <tbody>
+
+                                                  {% for operation_bought, operation_sold in stock_dict.reconciled_operations  %}
+                                                  <tr>
+                                                      <td><a href={% url 'history_detail' stock=stock %}>{{ stock }}</a></td>
+                                                      <td>{{operation_bought.buy_sell}}</td>
+                                                      <td>{{operation_bought.dt}}</td>
+                                                      <td>{{operation_bought.qt}}</td>
+                                                      <td>{{operation_bought.value}}</td>
+                                                      <td>{{operation_bought.unit_price}}</td>
+                                                      <td>{{operation_bought.operation_result}}</td>
+                                                  </tr>
+                                                  <tr>
+                                                      <td><a href={% url 'history_detail' stock=stock %}>{{ stock }}</a></td>
+                                                      <td>{{operation_sold.buy_sell}}</td>
+                                                      <td>{{operation_sold.dt}}</td>
+                                                      <td>{{operation_sold.qt}}</td>
+                                                      <td>{{operation_sold.value}}</td>
+                                                      <td>{{operation_sold.unit_price}}</td>
+                                                      <td>{{operation_sold.result}}</td>
+                                                  </tr>
+                                                  {% endfor %}
+
+                                                  {% comment %}
+                                                  {% for ds_rbo in stock_dict.reconciled_bought_operations  %}
+                                                    <!-- {{ ds_rbo }}<br> -->
+                                                    <tr>
+                                                        <td><a href={% url 'history_detail' stock=stock %}>{{ stock }}</a></td>
+                                                        <td>{{ds_rbo.buy_sell}}</td>
+                                                        <td>{{ds_rbo.dt}}</td>
+                                                        <td>{{ds_rbo.qt}}</td>
+                                                        <td>{{ds_rbo.value}}</td>
+                                                        <td>{{ds_rbo.unit_price}}</td>
+                                                        <td>{{ds_rbo.operation_result}}</td>
+                                                    </tr>
+                                                  {% endfor %}
+
+                                                  {% for ds_rso in stock_dict.reconciled_sold_operations  %}
+                                                    <!-- {{ ds_rbo }}<br> -->
+                                                    <tr>
+                                                      <td><a href={% url 'history_detail' stock=stock %}>{{ stock }}</a></td>
+                                                        <td>{{ds_rso.buy_sell}}</td>
+                                                        <td>{{ds_rso.dt}}</td>
+                                                        <td>{{ds_rso.qt}}</td>
+                                                        <td>{{ds_rso.value}}</td>
+                                                        <td>{{ds_rso.unit_price}}</td>
+                                                        <td>{{ds_rso.result}}</td>
+                                                    </tr>
+                                                  {% endfor %}
+                                                  {% endcomment %}
+                                              </tbody>
+                                            </table>
+
+
+                                            {% if stock_dict.operations.bought or stock_dict.operations.sold %}
+
+                                            <table class="table table-condensed table-striped table-hover table-bordered pull-left" id="data-table_{{ value.dt|date:"F Y" }}_2">
+                                              <thead>
+                                                <tr>
+                                                  <th colspan="7" class="text-center">Day Trade Remaining Operations </th>
+                                                </tr>
+                                                <tr>
+                                                  <th></th>
+                                                  <th>Oper</th>
+                                                  <th>Dt</th>
+                                                  <th>Qt</th>
+                                                  <th>Value</th>
+                                                  <th>Price</th>
+                                                </tr>
+                                              </thead>
+                                              <tbody>
+
+                                              {% for ds_rbo in stock_dict.operations.bought reversed %}
+                                                <!-- {{ ds_rbo }}<br> -->
+                                                <tr>
+                                                    <td><a href={% url 'history_detail' stock=stock %}>{{ stock }}</a></td>
+                                                    <td>{{ds_rbo.buy_sell}}</td>
+                                                    <td>{{ds_rbo.dt}}</td>
+                                                    <td>{{ds_rbo.qt}}</td>
+                                                    <td>{{ds_rbo.value}}</td>
+                                                    <td>{{ds_rbo.unit_price}}</td>
+                                                </tr>
+                                              {% endfor %}
+
+                                              {% for ds_rso in stock_dict.operations.sold reversed %}
+                                                <!-- {{ ds_rbo }}<br> -->
+                                                <tr>
+                                                  <td><a href={% url 'history_detail' stock=stock %}>{{ stock }}</a></td>
+                                                    <td>{{ds_rso.buy_sell}}</td>
+                                                    <td>{{ds_rso.dt}}</td>
+                                                    <td>{{ds_rso.qt}}</td>
+                                                    <td>{{ds_rso.value}}</td>
+                                                    <td>{{ds_rso.unit_price}}</td>
+                                                </tr>
+                                              {% endfor %}
+                                          </tbody>
+                                        </table>
+                                        {% endif %}
+
+
+                                            {% endwith %}
+
+                                              {% endfor %}
+
+
+
+                                          {% endwith %}
+                                        {% endfor %}
+                                    {% endif %}
+
+
+
+
+
+
+                                            {% comment %}
+                                            {% with months_operations|get_item:key as operations %}
+                                            <table class="table table-condensed table-striped table-hover table-bordered pull-left" id="data-table_{{ value.dt|date:"F Y" }}_2">
+                                              <thead>
+                                                <tr>
+                                                  <th></th>
+                                                  <th colspan='6' class="text-center">Operation</th>
+                                                  <th colspan='4' class="text-center">Position</th>
+                                                </tr>
+                                                <tr>
+                                                  <th></th>
+
+                                                  <th>Oper</th>
+                                                  <th>Dt</th>
+                                                  <th>Qt</th>
+                                                  <th>Value</th>
+                                                  <th>Price</th>
+                                                  <th>Profit</th>
+                                                  <th>Loss</th>
+
+                                                  <th>Qt</th>
+                                                  <th>AvgPrice</th>
+                                                  <th>AvgPricePrev</th>
+                                                </tr>
+                                              </thead>
+                                              <tbody>
+                                              {% for stock, value in operations.items %}
+                                              {% for oper in value %}
+                                                <tr>
+                                                    <td><a href={% url 'history_detail' stock=oper.name %}>{{oper.name}}</a></td>
+                                                    <td>{{oper.buy_sell}}</td>
+                                                    <td>{{oper.dt}}</td>
+                                                    <td>{{oper.qt}}</td>
+                                                    <td>{{oper.value}}</td>
+                                                    <td>{{oper.unit_price}}</td>
+                                                    <td>{{oper.profit|floatformat:"2"}}</td>
+                                                    <td>{{oper.loss|floatformat:"2"}}</td>
+
+                                                    <td>{{oper.qt_total}}</td>
+                                                    <td>{{oper.avg_price|floatformat:"2"}}</td>
+                                                    <td>{{oper.avg_price_prev|floatformat:"2"}}</td>
+                                                </tr>
+                                                {% endfor %}
+                                              {% endfor %}
+                                            </tbody>
+                                            </table>
+                                            {% endwith %}
+
+                                            {% endcomment %}
+                                  </div>
+                                </div>
+
+
+
+
+
+                                        {% comment %}
+                                        {% if value.dayt %}
+                                            {% for day in value.dayt  %}
+                                              {{ day }}
+                                              {% with value.dayt|get_item:day as stock_dict %}
+                                                  <!-- {{ stock }} -->
+                                                  {% for stock, values in stock_dict.items %}
+                                                    <h3>{{ day }} - {{ stock }}</h3>
+
+                                                    {% with stock_dict|get_item:stock as stock_dict %}
+
+                                                    <!--
+                                                        {% for keys in stock %}
+                                                          {{ keys }}
+                                                          qt_total_sold_dayt qt_total_bought_dayt
+                                                          total_amount_sold_dayt total_amount_bought_dayt
+                                                          reconciled_dayt_operations
+                                                          operation_result
+                                                          avg_price_bought
+                                                          avg_price_sold
+                                                        {% endfor %}
+                                                      -->
+
+                                                      <!--
+                                                    -->
+                                                      <p>qt_total_dayt:{{ stock_dict.qt_total_dayt }}<br>
+                                                      total_amount_sold_dayt:{{ stock_dict.total_amount_sold_dayt }}<br>
+                                                      total_amount_bought_dayt:{{ stock_dict.total_amount_bought_dayt }}<br>
+                                                      operation_result:{{ stock_dict.operation_result }}<br>
+                                                      avg_price_bought:{{ stock_dict.avg_price_bought }}<br>
+                                                      avg_price_sold:{{ stock_dict.avg_price_sold }}</p>
+
+                                                      <p>Original Operations - <Br>
+                                                      {{ stock_dict.original_operations }}
+                                                      </p>
+
+                                                      <p>Remaining Operations - Go back to regular position wallet<Br>
+                                                      {{ stock_dict.operations }}
+                                                      </p>
+
+                                                      <p>
+                                                      Reconciled<br>
+                                                      Bought<br>
+                                                      {% for ds_rbo in stock_dict.reconciled_bought_operations  %}
+                                                        {{ ds_rbo }}<br>
+                                                      {% endfor %}
+                                                      Sold<br>
+                                                      {% for ds_rso in stock_dict.reconciled_sold_operations  %}
+                                                        {{ ds_rso }}<br>
+                                                      {% endfor %}
+                                                      </p>
+
+
+
+                                                      <!--
+                                                      <p>reconciled_bought_operations:{{ stock_dict.reconciled_bought_operations }}<br>
+                                                      <p>reconciled_sold_operations:{{ stock_dict.reconciled_sold_operations }}<br>
+                                                      -->
+
+                                                      <p>qt_initial_operations:{{ stock_dict.qt_initial_operations }}<br>
+
+                                                      <p>qt_remaining_operations:{{ stock_dict.qt_remaining_operations }}<br>
+                                                      <p>qt_real_dt_operations:{{ stock_dict.qt_real_dt_operations }}<br>
+
+
+
+
+                                                    {% endwith %}
+
+                                                  {% endfor %}
+                                              {% endwith %}
+                                            {% endfor %}
+                                        {% endif %}
+                                        {% endcomment %}
+
+                              </div>
+                              {% else %}
+                              <div class="li_tab_daytrade tab-pane fade in" id="daytrade_{{ value.dt|date:"F Y"|cut:" " }}">
+                                  <div class="alert alert-block alert-info jet-blue-bg no-margin">
+                                    <p class="text-white">No day trades this month</p>
+                                  </div>
+                              </div>
+                              {% endif %}
+
+                            </div>
+                          </div>
+                        </div>
+
+          <!-- col-md-12 end -->
           </div>
 
-
-          <div class="col-md-3">
-            <div class="widget">
-              <div class="widget-header">
-                <div class="title">
-                  <span class="fs1" aria-hidden="true" data-icon=""></span> Taxes
-                </div>
-              </div>
-              <div class="widget-body">
-                <table class="table table-condensed table-bordered table-hover no-margin">
-                  <tbody>
-                    <tr>
-                      <th style="width:60%">B3 Taxes</th>
-                      <td style="width:40%" class="text-right"><span class="label label-default label_cp1">{{ value.b3_taxes }}</span></td>
-                    </tr>
-                    <tr>
-                      <th>Broker Fees</th>
-                      <td class="text-right"><span class="label label-default label_cp1">{{ value.broker_taxes }}</span></td>
-                    </tr>
-                    <tr>
-                      <th>IRPF Withholding</th>
-                      <td class="text-right"><span class="label label-default label_cp1">{{ value.irpf_withholding }}</span></td>
-                    </tr>
-                    <tr>
-                      <th>Sum Taxes</th>
-                      <td class="text-right"><span class="label label-default label_cp1">{{ value.sum_taxes }}</span></td>
-                    </tr>
-
-
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-
-
-
-          <!-- Span4 start -->
-          <div class="col-md-3">
-            <div class="widget">
-              <div class="widget-header">
-                <div class="title">
-                  <span class="fs1" aria-hidden="true" data-icon=""></span> Outcome
-                </div>
-              </div>
-              <div class="widget-body">
-                <table class="table table-condensed table-bordered table-hover no-margin">
-                  <tbody>
-                    {% if value.month_gain == 0 and value.month_loss == 0 %}
-                    <tr>
-                      <th style="width:60%">Month</th>
-                      <td style="width:40%" class="text-right"><span class="label label-default label_cp1">0.00</span></td>
-                    </tr>
-                    <tr>
-                      <th>Month Net Loss</th>
-                      <td class="text-right"><span class="label label-danger label_cp1">{{ value.month_net_loss|floatformat:"2" }}</span>
-                      </td>
-                    </tr>
-                    {% elif value.month_gain > 0 %}
-                    <tr>
-                      <th style="width:60%">Month Gain</th>
-                      <td style="width:40%" class="text-right"><span class="label label-success label_cp1">{{ value.month_gain|floatformat:"2" }}</span></td>
-                    </tr>
-                    <tr>
-                      <th>Month Net Gain</th>
-                      <td class="text-right"><span class="label label-success label_cp1">{{ value.month_net_gain|floatformat:"2" }}</span>
-                      </td>
-                    </tr>
-                    {% elif value.month_loss < 0 %}
-                    <tr>
-                      <th>Month Loss</th>
-                      <td class="text-right"><span class="label label-danger label_cp1">{{ value.month_loss|floatformat:"2" }}</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>Month Net Loss</th>
-                      <td class="text-right"><span class="label label-danger label_cp1">{{ value.month_net_loss|floatformat:"2" }}</span>
-                      </td>
-                    </tr>
-                    {% endif %}
-                    <tr>
-                      <th>Prev. Accum. Loss</th>
-                      <td class="text-right"><span class="label label-danger label_cp1">{{ value.prev_month_cumulate_loss|floatformat:"2" }}</span></td>
-                    </tr>
-                    {% if value.cumulate_gain > 0 %}
-                    <tr>
-                      <th style="width:60%">This Month Gain</th>
-                      <td style="width:40%" class="text-right"><span class="label label-success label_cp1">{{ value.cumulate_gain|floatformat:"2" }}</span></td>
-                    </tr>
-                    {% else %}
-                    <tr>
-                      <th>This Accum. Loss</th>
-                      <td class="text-right"><span class="label label-danger label_cp1">{{ value.cumulate_loss|floatformat:"2" }}</span></td>
-                    </tr>
-                    {% endif %}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-          <!-- Span4 end -->
-
-          <!-- Span4 start -->
-          <div class="col-md-3">
-            <div class="widget">
-              <div class="widget-header">
-                <div class="title">
-                  <span class="fs1" aria-hidden="true" data-icon=""></span> Due IRPF
-                </div>
-              </div>
-              <div class="widget-body">
-                <table class="table table-condensed table-bordered table-hover no-margin">
-                  <tbody>
-                    <tr>
-                      <th style="width:60%">Month Net Gain</th>
-                      <td style="width:40%" class="text-right"><span class="label label-warning label_cp1">{{ value.cumulate_gain|floatformat:"2" }}</span></td>
-                    </tr>
-                    <tr>
-                      <th>Month Sales</th>
-                      <td class="text-right"><span class="label label-warning label_cp1">{{ value.month_sell }}</span></td>
-                    </tr>
-                    <tr class="bg-warning">
-                    {% if value.cumulate_gain > 0 and  value.month_sell > 20000  %}
-                      <th colspan="2" scope="row" class="text-center"><a href="https://sicalc.receita.economia.gov.br/sicalc/rapido/contribuinte" target="_blank">Pay {{ value.tax.tax_amount|floatformat:"2" }}</a></th>
-                    {% else %}
-                      <th colspan="2" class="text-center">No tax due</th>
-                    {% endif %}
-                  </tr>
-                  </tbody>
-                </table>
-              </div>
-
-
-            </div>
-          </div>
-          <!-- Span4 end -->
-
-
-          <div id="ab_{{ key|safe }}" class="col-md-12 collapse account_balance" data-toggle="false">
-            <div class="widget">
-              <div class="widget-header">
-                <div class="title">
-                  <span class="fs1" aria-hidden="true" data-icon=""></span> Account Balance
-                </div>
-              </div>
-
-                      {% with months_operations|get_item:key as operations %}
-                      <table class="table table-condensed table-striped table-hover table-bordered pull-left" id="data-table_{{ value.dt|date:"F Y" }}_2">
-                        <thead>
-                          <tr>
-                            <th></th>
-                            <th colspan='6' class="text-center">Operation</th>
-                            <th colspan='4' class="text-center">Position</th>
-                          </tr>
-                          <tr>
-                            <th></th>
-
-                            <th>Oper</th>
-                            <th>Dt</th>
-                            <th>Qt</th>
-                            <th>Value</th>
-                            <th>Price</th>
-                            <th>Profit</th>
-                            <th>Loss</th>
-
-                            <th>Qt</th>
-                            <th>AvgPrice</th>
-                            <th>AvgPricePrev</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                        {% for stock, value in operations.items %}
-                        {% for oper in value %}
-                          <tr>
-                              <td><a href={% url 'history_detail' stock=oper.name %}>{{oper.name}}</a></td>
-                              <td>{{oper.buy_sell}}</td>
-                              <td>{{oper.dt}}</td>
-                              <td>{{oper.qt}}</td>
-                              <td>{{oper.value}}</td>
-                              <td>{{oper.unit_price}}</td>
-                              <td>{{oper.profit|floatformat:"2"}}</td>
-                              <td>{{oper.loss|floatformat:"2"}}</td>
-
-                              <td>{{oper.qt_total}}</td>
-                              <td>{{oper.avg_price|floatformat:"2"}}</td>
-                              <td>{{oper.avg_price_prev|floatformat:"2"}}</td>
-                          </tr>
-                          {% endfor %}
-                        {% endfor %}
-                      </tbody>
-                      </table>
-                      {% endwith %}
-
-
-            </div>
-            <!-- Row end -->
-          </div>
+      <!-- Row end -->
       </div>
       {% endfor %}
       <!-- Dashboard wrapper end -->

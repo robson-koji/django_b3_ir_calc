@@ -190,11 +190,12 @@ class LastZeroedStocks(ProxyView, TemplateView):
             # print(month)
             for idx, asset in months_operations[month].items():
                 for oper in asset:
-                    if oper['dt'] > dt_start and oper['dt'] < dt_end:
-                        if oper['qt_total'] == 0 :
-                            zeroed_stocks[oper['name']] = True
+                    # import pdb; pdb.set_trace()
+                    if oper.dt > dt_start and oper.dt < dt_end:
+                        if oper.qt_total == 0 :
+                            zeroed_stocks[oper.name] = True
                         else:
-                            zeroed_stocks[oper['name']] = False
+                            zeroed_stocks[oper.name] = False
                         # import pdb; pdb.set_trace()
 
             # print(zeroed_stocks)

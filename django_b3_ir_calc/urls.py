@@ -23,7 +23,7 @@ from django.views.generic import TemplateView
 
 
 from report import urls
-from report.views import StockPriceView
+from report.views import StockPriceView, TvChartView
 
 urlpatterns = [
 
@@ -35,6 +35,7 @@ urlpatterns = [
     path('file_upload/', include('file_upload.urls')),
 
     url(r'^stock_quotes/$', StockPriceView.as_view(), name='stock_quotes'),
+    url(r'^tv_charts/$', TvChartView.as_view(), name='tv_charts'),
 
     url(r'^accounts/', include('allauth.urls')),
 

@@ -26,9 +26,10 @@ https://dzone.com/articles/taking-browser-screenshots-no
 stocks = StockPrice.objects.all()
 
 images_dir = myapp_defaults.MEDIA_ROOT + 'tradingview_charts/'
+ff_profile = myapp_defaults.FF_SELENIUM_PROFILE
 
 def screenshot_tradingview(stock):
-    fp = webdriver.FirefoxProfile('/home/robson/.mozilla/firefox/mbinghgc.selenium_tradingview')
+    fp = webdriver.FirefoxProfile(ff_profile)
 
     browser = webdriver.Firefox(fp)
 

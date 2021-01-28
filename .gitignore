@@ -2,6 +2,7 @@
 *.pdf
 *.log
 
+local_settings.py
 
 files/*
 !files/test_sample/

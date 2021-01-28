@@ -31,6 +31,7 @@
             <div class="col-md-12">
               <!-- <h3>Investing</h3> -->
               <div class="widget">
+                {% comment %}
                 <div class="widget-body">
                   <div id="dt_example" class="example_alt_pagination">
                     <table class="table table-condensed table-striped">
@@ -45,7 +46,41 @@
                     {% endfor %}
                     </table>
 
-                    </div></div></div></div></div>
+                    </div></div>
+                    {% endcomment %}
+
+                    <div class="widget-body">
+
+                      {% for group_stock in stocks %}
+                          <div class="row gallery">
+                            {% for stock_list in group_stock %}
+                              {% for k, v in stock_list.items %}
+                                <div class="col-md-6 col-sm-12">
+                                  <div class="visual">
+                                    <img src="/media/tradingview_charts/{{ k }}.png" alt="">
+                                    <div class="mask">
+                                      <h4>
+                                        <a target="_blank" href="https://br.tradingview.com/chart?symbol=BMFBOVESPA%3A{{ k }}" data-original-title="" title="">
+                                          {{ k }}</a>
+                                      </h4>
+                                      <ul>
+                                        <li><b>Indice:</b> {{ v.0 }}</li>
+                                        <li><b>Sum BTC/Termo:</b> {{ v.1 }}</li>
+                                        <li><b>BTC:</b> {{ v.2 }}</li>
+                                        <li><b>Termo:</b> {{ v.3 }}</li>
+                                        <li><b>Sector:</b> {{ v.4 }}</li>
+                                      </ul>
+                                    </div>
+                                  </div>
+                                </div>
+                              {% endfor %}
+                            {% endfor %}
+                          </div>
+                          <br><br>
+                      {% endfor %}
+                    </div>
+
+                  </div></div></div>
       <!-- Dashboard wrapper end -->
     </div>
 

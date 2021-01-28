@@ -28,6 +28,7 @@ class ProxyView(View):
     stock_price_file = None
     stock_detail = None
     broker = None
+    get_dayt = False
 
     def dispatch(self, request, *args, **kwargs):
         self.ativos = Ativos.objects.all()
@@ -90,7 +91,8 @@ class ProxyView(View):
             b3_tax_obj = ObjectifyData(mkt_type='VIS', path=path, file=file, \
                                         broker_taxes=self.get_broker_taxes(), \
                                         b3_taxes=self.get_b3_taxes(), \
-                                        corporate_events=CorporateEventView)
+                                        corporate_events=CorporateEventView, \
+                                        get_dayt=self.get_dayt)
             return b3_tax_obj
         except FileNotFoundError:
             raise
@@ -101,7 +103,7 @@ class ProxyView(View):
 
     def months_reconcile(self, b3_tax_obj):
         months = b3_tax_obj.file2object(stock_detail=self.stock_detail)
-        months.month_add_detail()
+        months.month_add_detail(get_dayt=self.get_dayt)
         return months
 
     def generate_reports(self, stock_price_file, stocks_wallet, months):
@@ -132,6 +134,23 @@ class ProxyView(View):
         cev = CorporateEventView()
         self.cev = cev.corporate_events
 
+    def get_btc_termo_setorial(self, papel):
+        papel = papel.rstrip(string.digits)
+
+        try:
+            ativo = self.ativos.get(ativo=papel)
+            # import pdb; pdb.set_trace()
+            setorial = ativo.setorial.get_arvore_setorial()
+            # import pdb; pdb.set_trace()
+            indices = '  '.join([str(i) for i in ativo.indice.all()])
+            # import pdb; pdb.set_trace()
+            return (indices,
+                    str(ativo.get_pct_sum_btc_termo_vm()),
+                    str(ativo.get_pct_btc_vm()),
+                    str(ativo.get_pct_termo_vm()),
+                    setorial)
+        except:
+            return ('','','','','')
 
 
 class PositionView(ProxyView, TemplateView):
@@ -139,7 +158,7 @@ class PositionView(ProxyView, TemplateView):
     template_name = "report/position.html"
 
     defensivas = ['BRAP4','CESP6','CPLE6','ENBR3', 'GTWR11','TAEE11','TIET11','VALE3']
-
+    get_dayt = True
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # self.report.get_current_quotations()
@@ -184,8 +203,11 @@ class LastZeroedStocks(ProxyView, TemplateView):
 
         last_months = list(months_operations.keys())[0:3]
         dt_end =  date.today() - timedelta(days=5)
-        dt_start =  date.today() - timedelta(days=45)
+        dt_start =  date.today() - timedelta(days=120)
         last_months.reverse()
+
+        stocks = []
+        ignore_stocks = []
         for month in last_months:
             # print(month)
             for idx, asset in months_operations[month].items():
@@ -194,6 +216,10 @@ class LastZeroedStocks(ProxyView, TemplateView):
                     if oper.dt > dt_start and oper.dt < dt_end:
                         if oper.qt_total == 0 :
                             zeroed_stocks[oper.name] = True
+                            if not oper.name in ignore_stocks:
+                                ignore_stocks.append(oper.name)
+                                stocks.append({oper.name:self.get_btc_termo_setorial(oper.name)})
+
                         else:
                             zeroed_stocks[oper.name] = False
                         # import pdb; pdb.set_trace()
@@ -201,7 +227,18 @@ class LastZeroedStocks(ProxyView, TemplateView):
             # print(zeroed_stocks)
             # import pdb; pdb.set_trace()
 
+
+        stocks = [stocks[x:x+4] for x in range(0, len(stocks), 4)]
+
+        # for x in range(0, len(stocks), 4):
+        #     import pdb; pdb.set_trace()
+        #
+
+
         context['zeroed_stocks'] = dict(zeroed_stocks)
+        # import pdb; pdb.set_trace()
+        context['stocks'] = stocks
+
 
 
 
@@ -212,6 +249,7 @@ class HistoryView(ProxyView, TemplateView):
     """ History of operations """
 
     template_name = "report/history.html"
+    get_dayt = True
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -223,6 +261,7 @@ class HistoryView(ProxyView, TemplateView):
 class HistoryDetailView(ProxyView, TemplateView):
     """ History of operations for one specific stock """
     template_name = "report/history.html"
+    get_dayt = True
 
     def dispatch(self, request, *args, **kwargs):
         self.stock_detail = kwargs['stock'].upper()
@@ -450,23 +489,7 @@ class Endorse11View(PositionView):
 
     template_name = "report/endorse_11.html"
 
-    def get_btc_termo_setorial(self, papel):
-        papel = papel.rstrip(string.digits)
 
-        try:
-            ativo = self.ativos.get(ativo=papel)
-            # import pdb; pdb.set_trace()
-            setorial = ativo.setorial.get_arvore_setorial()
-            # import pdb; pdb.set_trace()
-            indices = '  '.join([str(i) for i in ativo.indice.all()])
-            # import pdb; pdb.set_trace()
-            return (indices,
-                    str(ativo.get_pct_sum_btc_termo_vm()),
-                    str(ativo.get_pct_btc_vm()),
-                    str(ativo.get_pct_termo_vm()),
-                    setorial)
-        except:
-            return ('','','','','')
 
     def check_exists_in_list_get_index(self, segmento):
         if self.recomenda_xp is None:
@@ -565,4 +588,27 @@ class Endorse11View(PositionView):
         if resolve(self.request.path_info).url_name == 'tech_analysis':
             # import pdb; pdb.set_trace()
             self.template_name = "report/tech_analysis.html"
+        return context
+
+
+class TvChartView(TemplateView):
+    template_name = "generic/tv_charts.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        stocks = StockPrice.objects.all()
+
+        # Group stocks to display on template.
+        stocks = [stocks[x:x+4] for x in range(0, len(stocks), 4)]
+
+        #
+        # for g_stock in stocks:
+        #     print()
+        #     print( len(g_stock))
+        #     for stock in g_stock:
+        #         print(stock.stock)
+        # import pdb; pdb.set_trace()
+
+        context['stocks'] = stocks
         return context

@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block content %}
+    <!-- Dashboard wrapper start -->
+    <div class="dashboard-wrapper">
+
+      <!-- Page title start -->
+      <div class="page-title clearfix">
+        <h2>
+          {% trans "Stock Charts" %}
+          <small>
+            <ul>
+              <li>Home</li>
+              <li>/</li>
+              <li>Dashboard</li>
+              <li>/</li>
+              <li>Tables</li>
+            </ul>
+          </small>
+        </h2>
+
+        <ul class="stats hidden-xs">
+          <li class="jet-blue-bg">
+            <span class="fs1" aria-hidden="true" data-icon="&#xe047;"></span>
+            <div class="details">
+              <span class="big">{{ stocks.0.last_update }}</span>
+              <span class="small">Last Update - this date is from stocks. change to charts</span>
+            </div>
+          </li>
+          </ul>
+      </div>
+      <!-- Page title end -->
+
+      <div class="row">
+        <div class="col-md-12">
+        <!-- List of uploaded documents -->
+        <!-- Row start -->
+            <div class="widget">
+              <div class="widget-header">
+                <div class="title">
+                  <span class="fs1" aria-hidden="true" data-icon="&#xe1b5;"></span>Charts
+                </div>
+              </div>
+
+
+
+
+              <div class="widget-body">
+
+                {% for group_stock in stocks %}
+                    <div class="row gallery">
+                      {% for stock in group_stock %}
+                        <div class="col-md-6 col-sm-12">
+                          <div class="visual">
+                            <img src="/media/tradingview_charts/{{ stock.stock }}.png" alt="">
+                            <div class="mask">
+                              <h4>
+                                <a target="_blank" href="https://br.tradingview.com/chart?symbol=BMFBOVESPA%3A{{ stock.stock }}" data-original-title="" title="">
+                                  {{ stock.stock }}</a>
+                              </h4>
+                              <p>""</p>
+                            </div>
+                          </div>
+                        </div>
+                      {% endfor %}
+                    </div>
+                    <br><br>
+                {% endfor %}
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+{% endblock %}

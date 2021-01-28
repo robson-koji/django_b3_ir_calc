@@ -18,3 +18,12 @@ input[type="search"] {
 #dt_example .dataTables_length select{
   height: unset;
 }
+
+
+.gallery .visual {
+  height: unset;
+}
+
+.gallery .visual .mask{
+  text-align: left;
+}

@@ -1,7 +1,9 @@
+from PIL import Image
+from time import sleep
 import urllib, datetime
 from selenium import webdriver
-from time import sleep
-from PIL import Image
+from selenium.webdriver.firefox.options import Options
+
 
 
 import os, django
@@ -26,15 +28,17 @@ https://dzone.com/articles/taking-browser-screenshots-no
 stocks = StockPrice.objects.all()
 
 images_dir = myapp_defaults.MEDIA_ROOT + 'tradingview_charts/'
-ff_profile = myapp_defaults.FF_SELENIUM_PROFILE
+
 
 def screenshot_tradingview(stock):
+    ff_profile = myapp_defaults.FF_SELENIUM_PROFILE
     fp = webdriver.FirefoxProfile(ff_profile)
 
-    browser = webdriver.Firefox(fp)
+    opts = Options()
+    opts.headless = True
+    opts.add_argument("window-size=1024,576")
 
-    browser.set_window_position(0, 0)
-    browser.set_window_size(1024, 576)
+    browser = webdriver.Firefox(firefox_profile=fp, firefox_options=opts)
 
     #browser.get("https://br.tradingview.com/chart?symbol=BMFBOVESPA%3AB3SA3")
     # import pdb; pdb.set_trace()
@@ -49,4 +53,4 @@ def screenshot_tradingview(stock):
 
 for stock in stocks:
     screenshot_tradingview(stock)
-    sleep(150)
+    # sleep(150)

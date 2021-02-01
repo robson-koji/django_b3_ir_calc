@@ -24,23 +24,26 @@ from django.views.generic import TemplateView
 
 from report import urls
 from report.views import StockPriceView, TvChartView
+from trial import urls
+
+
+
 
 urlpatterns = [
 
-    path('', include('file_upload.urls')),
+
+    path('', TemplateView.as_view(template_name='home_page/index.html')),
+    # path('', include('file_upload.urls')),
 
     path('admin/', admin.site.urls),
-
     path('report/', include('report.urls')),
+    path('trial/', include('trial.urls')),
     path('file_upload/', include('file_upload.urls')),
+    path('reference_data/indexes/', TemplateView.as_view(template_name='reference_data/indexes.html')),
 
     url(r'^stock_quotes/$', StockPriceView.as_view(), name='stock_quotes'),
     url(r'^tv_charts/$', TvChartView.as_view(), name='tv_charts'),
-
     url(r'^accounts/', include('allauth.urls')),
-
-
-    path('reference_data/indexes/', TemplateView.as_view(template_name='reference_data/indexes.html')),
 ]
 
 

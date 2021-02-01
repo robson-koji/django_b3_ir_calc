@@ -34,6 +34,9 @@ def update_stock_price(sender, instance, **kwargs):
     Signal - After save document (csv file uploaded by user),
     create or update stock price
     """
+    # If file is trail, dont update stock prices.
+    if 'trial_cei_file.csv' in instance.docfile.name:
+        return
 
     # Para testar sem ter que atualizar sempre.
     today = date.today() - timedelta(days=4)

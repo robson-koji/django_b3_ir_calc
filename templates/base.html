@@ -71,10 +71,11 @@
       <div id="optional-dropdown">
         <ul>
           <li>
-            <a href="index.html">
+            <a href="/">
               <span class="fs1" aria-hidden="true" data-icon="&#xe000;" ></span>
             </a>
           </li>
+          {% comment %}
           <li>
             <a href="invoice.html">
               <span class="fs1" aria-hidden="true" data-icon="&#xe099;"></span>
@@ -110,6 +111,7 @@
               </li>
             </ul>
           </li>
+          {% endcomment %}
           <li>
             <a href="faq.html">
               <i class="fa fa-question fa-2x" aria-hidden="true"></i>
@@ -149,6 +151,7 @@
             </ul>
           </li>
 
+          {% if request.user.is_staff %}
 
           <li class="hidden-sm">
             <a href="mail.html">
@@ -163,6 +166,7 @@
               {% endfor %}
             </ul>
           </li>
+
 
 
           <li>
@@ -200,6 +204,18 @@
             </ul>
             {% endif %}
           </li>
+            {% else %}
+
+          {% if not user.is_authenticated %}
+          <!-- Anonymous user expire session -->
+          <li>
+            <a href="/trial/logout">
+              <span class="text-label">Logout </span><span class="fs1" aria-hidden="true" data-icon="&#xe088;"></span>
+            </a>
+          </li>
+          {% endif %}
+
+          {% endif %}
 
         </ul>
       </div>
@@ -264,6 +280,7 @@
                   <strong>{% trans "History" %}</strong>
                 </a>
               </li>
+              {% if request.user.is_staff %}
               <li class="li-menu">
                 <a href="/report/tech_analysis/">
                   <div class="current-page" style="display:None"></div>
@@ -304,6 +321,7 @@
                   <strong>Stock Quotes</strong>
                 </a>
               </li>
+              {% endif %}
               <li class="li-menu">
                 <a href="/file_upload/">
                   <div class="current-page" style="display:None"></div>

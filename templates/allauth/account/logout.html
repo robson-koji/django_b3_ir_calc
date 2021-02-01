@@ -1,21 +1,35 @@
 {% extends "account/base.html" %}
 
 {% load i18n %}
-
-{% block head_title %}{% trans "Sign Out" %}{% endblock %}
+{% load account %}
 
 {% block content %}
-<h1>{% trans "Sign Out" %}</h1>
-
-<p>{% trans 'Are you sure you want to sign out?' %}</p>
-
-<form method="post" action="{% url 'account_logout' %}">
-  {% csrf_token %}
-  {% if redirect_field_value %}
-  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
-  {% endif %}
-  <button type="submit">{% trans 'Sign Out' %}</button>
-</form>
+  <div class="row">
+    {% if user.is_authenticated %}
+    {% include "account/snippets/already_logged_in.html" %}
+    {% endif %}
 
 
+
+    <form name="form_logout" method="POST" action="{% url 'account_logout' %}" class="login-wrapper">
+      {% csrf_token %}
+      {% if redirect_field_value %}
+      <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+      {% endif %}
+      <div class="header">
+        <div class="row">
+          <div class="col-md-12">
+            <h3 style="color:black">Control Money - Logout</h3>
+            <p>{% trans 'Are you sure you want to sign out?' %}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <a href="javascript:form_logout.submit()" class="btn btn-info">{% trans 'Logout' %}</a>
+        <div class="clearfix"></div>
+      </div>
+    </form>
+
+  </div>
 {% endblock %}

@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'charts',
     'corporate_events',
     'django_b3_ir_calc',
+    'trial',
 
 # The following apps are required by allauth:
     'django.contrib.sites',
@@ -216,7 +217,8 @@ ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 LOGIN_REDIRECT_URL = '/report/position'
-ACCOUNT_LOGOUT_REDIRECT_URL ="/accounts/login"
+#ACCOUNT_LOGOUT_REDIRECT_URL ="/accounts/login"
+ACCOUNT_LOGOUT_REDIRECT_URL ="/"
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 

@@ -1,46 +1,120 @@
-<!-- {% extends "account/base.html" %} -->
+{% extends "account/base.html" %}
 
-{% load i18n %}
 {% load account socialaccount %}
+{% load i18n %}
 
-{% block head_title %}{% trans "Sign In" %}{% endblock %}
+
+
+
 
 {% block content %}
 
-<h1>{% trans "Sign In" %}</h1>
 
-{% get_providers as socialaccount_providers %}
+      <div class="row">
 
-{% if socialaccount_providers %}
-<p>{% blocktrans with site.name as site_name %}Please sign in with one
-of your existing third party accounts. Or, <a href="{{ signup_url }}">sign up</a>
-for a {{ site_name }} account and sign in below:{% endblocktrans %}</p>
+        {% comment %}
+        <form action="#" class="login-wrapper" method="post">
+          <div class="header">
+            <div class="row">
+              <div class="col-md-12">
+                <h3 style="color:black">Control Money - Login</h3>
+                <p>
+                  Preencha os dados abaixo para fazer o login, ou cadastre-se <a href="{{ signup_url }}">aqui</a>.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="content">
+            <div class="row">
+              <div class="col-md-12 col-sm-12">
+                <input class="input col-md-12 col-sm-12 email" id="" name="" placeholder="example@mailll.com" required="required" type="email" value="">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12 col-sm-12">
+                <input class="input col-md-12 col-sm-12 password" id="" name="" placeholder="********" required="required" type="password">
+              </div>
+            </div>
+          </div>
+          <div class="actions">
+            <a href="index.html" class="btn btn-danger">Login</a>
+            <a class="link" href="#">Forgot Password?</a>
+            <div class="clearfix"></div>
+          </div>
+        </form>
+        {% endcomment %}
 
-<div class="socialaccount_ballot">
 
-  <ul class="socialaccount_providers">
-    {% include "socialaccount/snippets/provider_list.html" with process="login" %}
-  </ul>
 
-  <div class="login-or">{% trans 'or' %}</div>
 
-</div>
+        <form name="form" class="login-wrapper" method="POST" action="{% url 'account_login' %}">
+          <div class="header">
+            <div class="row">
+              <div class="col-md-12">
+                <h3 style="color:black">Control Money - Login</h3>
+                <p>
+                  Preencha os dados abaixo para fazer o login.
+                </p>
+              </div>
+            </div>
+          </div>
+          {% csrf_token %}
+          <div class="content">
+            <div class="row">
+              <div class="col-md-12 col-sm-12">
+                {{ form.login }}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12 col-sm-12">
+                {{ form.password }}
+              </div>
+            </div>
+          </div>
+          <div class="actions">
+            <a href="javascript:form.submit()" class="btn btn-success">Login</a>
+            <a class="link" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+            <div class="clearfix"></div>
+          </div>
 
-{% include "socialaccount/snippets/login_extra.html" %}
+          {% if redirect_field_value %}
+            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+          {% endif %}
 
-{% else %}
-<p>{% blocktrans %}Create account
-<a href="{{ signup_url }}">here</a>.{% endblocktrans %}</p>
-{% endif %}
 
-<form class="login" method="POST" action="{% url 'account_login' %}">
-  {% csrf_token %}
-  {{ form.as_p }}
-  {% if redirect_field_value %}
-  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-  {% endif %}
-  <a class="button secondaryAction" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
-  <button class="primaryAction" type="submit">{% trans "Sign In" %}</button>
-</form>
+
+          <div class="actions">
+            <!-- Social login, not tested  -->
+          {% get_providers as socialaccount_providers %}
+
+          {% if socialaccount_providers %}
+          <p>{% blocktrans with site.name as site_name %}Please sign in with one
+          of your existing third party accounts. Or, <a href="{{ signup_url }}">sign up</a>
+          for a {{ site_name }} account and sign in below:{% endblocktrans %}</p>
+
+          <div class="socialaccount_ballot">
+
+            <ul class="socialaccount_providers">
+              {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+            </ul>
+
+            <div class="login-or">{% trans 'or' %}</div>
+
+          </div>
+
+          {% include "socialaccount/snippets/login_extra.html" %}
+
+          {% else %}
+          <p>Cadastre-se
+          <a href="{{ signup_url }}">aqui</a>.</p>
+          {% endif %}
+          </div>
+        </form>
+
+
+
+
+
+      </div>
 
 {% endblock %}

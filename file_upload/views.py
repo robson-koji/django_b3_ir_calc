@@ -124,6 +124,7 @@ def documents_home(request):
         doc.docfile.short_name = name
         doc.docfile.date = date
         doc.docfile.csv_url = doc.docfile.url.replace('.xls', '.csv')
+        # import pdb; pdb.set_trace()
 
     # Render list page with the documents and the form
     context = {'documents': documents, 'form': form, 'message': message}

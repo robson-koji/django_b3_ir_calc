@@ -113,7 +113,8 @@
           </li>
           {% endcomment %}
           <li>
-            <a href="faq.html">
+            <a href="">
+              <!-- <a href="faq.html"> -->
               <i class="fa fa-question fa-2x" aria-hidden="true"></i>
 
 
@@ -136,7 +137,7 @@
       <div id="mini-nav" class="hidden-phone">
         <ul>
           <li class="hidden-sm">
-            <a href="mail.html">
+            <a href="">
               <span class="fs1" aria-hidden="true" data-icon="&#xe026;" ></span>
               Stocks File
             </a>
@@ -154,7 +155,7 @@
           {% if request.user.is_staff %}
 
           <li class="hidden-sm">
-            <a href="mail.html">
+            <a href="">
               <span class="fs1" aria-hidden="true" data-icon="&#xe026;" ></span>
               Endorsement File
             </a>
@@ -175,10 +176,15 @@
               <span class="text-label">Login </span><span class="fs1" aria-hidden="true" data-icon="&#xe088;"></span>
             </a>
             {% else %}
-            <a href="/profile">
+            <a href="">
               <span class="text-label">{{ user.email }} </span><span class="fs1" aria-hidden="true" data-icon="&#xe088;"></span>
             </a>
+            {% comment %}
+            <a href="/profile">
+            </a>
+            {% endcomment %}
             <ul class="user-summary">
+              {% comment %}
               <li>
                 <div class="summary">
                   <div class="user-pic">
@@ -197,6 +203,7 @@
                   <div class="clearfix"></div>
                 </div>
               </li>
+              {% endcomment %}
               <li>
                 <button class="btn btn-xs btn-danger pull-right" onclick="location.href='/accounts/logout'">Logout</button>
                 <span class="clearfix"></span>

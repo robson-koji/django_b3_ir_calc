@@ -41,20 +41,31 @@
       <!-- Dashboard wrapper start -->
       <div class="dashboard-wrapper">
 
+
+
+        {% if user.is_anonymous %}
+        <div class="row" style="margin-bottom:40px">
+          <div class="col-md-12">
+            <div class="callout callout-warning no-margin">
+              <h4>Control Money [Ctrl-$]</h4>
+              <p>Página para upload de arquivo B3 CEI. </p>
+              <div class="stylish-lists">
+                <ul>
+                  <li>Você pode fazer o <a href="{% url 'documents_home' %}">upload</a> de um arquivo B3 CEI nesta sessão de teste. Nenhum usuário visualizará os dados do seu arquivo porque você está em uma sessão única. </li>
+                  <li>Ao fazer o logout a sua sessão será finalizada, e não será mais possível acessar os dados dos arquivos enviados.
+                     Mas você poderá fazer o <a href="{% url 'documents_home' %}">upload</a> novamente, ou se <a href="/accounts/signup">cadastrar aqui</a> para salvar os seus arquivos</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+
         <!-- Page title start -->
         <div class="page-title clearfix">
           <h2>
-
             {% trans "File Upload" %}
-            <small>
-              <ul>
-                <li>Home</li>
-                <li>/</li>
-                <li>Dashboard</li>
-                <li>/</li>
-                <li>Tables</li>
-              </ul>
-            </small>
           </h2>
         </div>
         <!-- Page title end -->
@@ -69,52 +80,42 @@
                         </div>
                       </div>
                       <div class="widget-body">
+                        <div class="row show-grid">
+
+                          <div class="col-md-6 col-sm-6 col-xs-3">
+                            <h4 class="media-heading">Upload your B3 CEI file</h4>
+                            <p>You can upload as many as you want, to compare then</p>
+                            <!-- Upload form. Note enctype attribute! -->
+                            <form action="{% url "documents_home" %}" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                {{ message }}
+                                <p>{{ form.non_field_errors }}</p>
+
+                                <!-- <p>{{ form.docfile.label_tag }} {{ form.docfile.help_text }}</p> -->
+                                <p>
+                                    {{ form.docfile.errors }}
+                                    {{ form.docfile }}
+                                </p>
+
+                                <p><input type="submit" value="Upload"/></p>
+                            </form>
+                          </div>
+                          <div class="col-md-6 col-sm-6 col-xs-3">
+                            <img class="media-object" alt="64x64" style="width: 64px; height: 64px; float:left; margin-right:10px" src="/static/imagens/cei.png">
+                            <h4 class="media-heading">Get your B3 CEI file</h4>
+                            <p>
+                              You can have it from <a href="https://cei.b3.com.br/CEI_Responsivo/" target="_blank"><b>B3 - Canal Eletrônico do Investidor</b> </a>
+                            </p>
+
+                          </div>
+                        </div>
+
                         <ul class="media-list">
-                          <li class="media">
-                            <a class="pull-left" href="#" data-original-title="" title="">
-                              <img class="media-object" alt="64x64" style="width: 64px; height: 64px;" src="/static/imagens/cei.png">
-                            </a>
-                            <div class="media-body">
-                              <h4 class="media-heading">Get your B3 CEI file</h4>
-                              <p>
-                                You can have it from <a href="https://cei.b3.com.br/CEI_Responsivo/" target="_blank"><b>B3 - Canal Eletrônico do Investidor</b> </a>
-                              </p>
-                            </div>
-                          </li>
-
-
-                          <li class="media">
-                            <a class="pull-left" href="#" data-original-title="" title="">
-                              <img class="media-object" alt="64x64" style="width: 64px; height: 64px;" src="/static/imagens/cei.png">
-                            </a>
-                            <div class="media-body">
-                              <h4 class="media-heading">Upload your B3 CEI file</h4>
-                              <p>You can upload as many as you want, to compare then</p>
-                              <!-- Upload form. Note enctype attribute! -->
-                              <form action="{% url "documents_home" %}" method="post" enctype="multipart/form-data">
-                                  {% csrf_token %}
-                                  {{ message }}
-                                  <p>{{ form.non_field_errors }}</p>
-
-                                  <!-- <p>{{ form.docfile.label_tag }} {{ form.docfile.help_text }}</p> -->
-                                  <p>
-                                      {{ form.docfile.errors }}
-                                      {{ form.docfile }}
-                                  </p>
-
-                                  <p><input type="submit" value="Upload"/></p>
-                              </form>
-
-                            </div>
-                          </li>
 
                           {% if documents %}
                           <li class="media">
-                            <a class="pull-left" href="#" data-original-title="" title="">
-                              <img class="media-object" alt="64x64" style="width: 64px; height: 64px;" src="/static/imagens/cei.png">
-                            </a>
                             <div class="media-body">
-                              <h4 class="media-heading">Your B3 CEI file</h4>
+                              <h4 class="media-heading">Your B3 CEI files list</h4>
                               <p>These are your uploaded files.</p>
 
                               <!-- List of uploaded documents -->

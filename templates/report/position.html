@@ -120,7 +120,7 @@
                     <tbody>
                       {% for position in current_position%}
                         <tr class="gradeX">
-                          <td><b><a target="_blank" href="https://br.tradingview.com/chart?symbol=BMFBOVESPA%3A{{ position.stock }}">{{ position.stock }}</a></b></td>
+                          <td><b><a rel="noreferrer" target="_blank" href="https://br.tradingview.com/chart?symbol=BMFBOVESPA%3A{{ position.stock }}">{{ position.stock }}</a></b></td>
                           <td class="text-center">{{ position.qt }}</td>
                           <td class="text-right">{{ position.buy_avg|floatformat:"2" }}</td>
                           <td class="text-right">{{ position.curr_price|floatformat:"2" }}</td>

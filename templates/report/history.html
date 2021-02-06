@@ -27,6 +27,26 @@
       <!-- Dashboard wrapper start -->
       <div class="dashboard-wrapper">
 
+        {% if user.is_anonymous %}
+        <div class="row" style="margin-bottom:40px">
+          <div class="col-md-12">
+            <div class="callout callout-warning no-margin">
+              <h4>Control Money [Ctrl-$]</h4>
+              <p>Página do histórico de operações de um arquivo de testes B3 CEI. </p>
+              <div class="stylish-lists">
+                <ul>
+                  <li>Para mais informações sobre a apresentação dos dados nesta página, clique no ítem " ? " do menu acima.
+                  </li>
+                  <li>Você pode fazer o <a href="{% url 'documents_home' %}">upload</a> de um arquivo B3 CEI nesta sessão de teste. Nenhum usuário visualizará os dados do seu arquivo porque você está em uma sessão única. </li>
+                  <li>Ao fazer o logout a sua sessão será finalizada, e não será mais possível acessar os dados dos arquivos enviados.
+                     Mas você poderá fazer o <a href="{% url 'documents_home' %}">upload</a> novamente, ou se <a href="/accounts/signup">cadastrar aqui</a> para salvar os seus arquivos</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
         <!-- Page title start -->
         <div class="page-title clearfix">
           <h2>

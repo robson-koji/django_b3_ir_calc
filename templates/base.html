@@ -61,7 +61,7 @@
 
       <!-- Logo start -->
       <div class="logo">
-        B3<span> IR Calc</span>
+        <span>[Ctrl-$]</span>
       </div>
       <!-- Logo end -->
 
@@ -220,7 +220,7 @@
         </ul>
       </div>
       <!-- Mini navigation end -->
-
+      {% comment %}
       {% if not user or user != 'AnonymousUser' %}
       <div style="padding-top:10px; padding-left:300px">
         <span class="label label-danger">
@@ -229,6 +229,7 @@
         </span>
       </div>
       {% endif %}
+      {% endcomment %}
 
     </header>
     <!-- Header end -->

@@ -72,6 +72,9 @@ class ProxyView(View):
         # self.gather_iligal_operation(b3_tax_obj.iligal_operation)
         # import pdb; pdb.set_trace()
         self.months = self.months_reconcile(b3_tax_obj)
+
+        # print(b3_tax_obj.stocks_wallet)
+        # import pdb; pdb.set_trace()
         self.report = self.generate_reports(self.stock_price_file, b3_tax_obj.stocks_wallet, self.months)
 
 
@@ -306,19 +309,22 @@ class HistoryDetailView(ProxyView, TemplateView):
         # Dupĺicate last elements
         # bar_chart_data[k].append(bar_chart_data[k][-1])
         # Update last elements
+
+        # import pdb; pdb.set_trace()
         today = "%i/%s - %s" % (date.today().day, date.today().strftime('%b'), 'Projection')
         today_price = StockPrice.objects.get(stock=self.stock_detail).price
         if int(bar_chart_data['qt_total'][-1]) == 0:
             qt_total = int(bar_chart_data['qt_total'][-2])
         else:
             qt_total = int(bar_chart_data['qt_total'][-1])
-        my_position =  qt_total * Decimal(bar_chart_data['avg_price'][-1])
+        my_position =  qt_total * Decimal(bar_chart_data['avg_price'][-2])
         mkt_position = qt_total * today_price
 
         chk_higher_values = {'dt':today, 'qt_total':qt_total,'unit_price':today_price,
                             'my_position':my_position, 'mkt_position':mkt_position,
                             'value':0, 'avg_price':0}
 
+        # import pdb; pdb.set_trace()
         bar_chart_data['dt'].append(today)
         bar_chart_data['qt_total'].append(bar_chart_data['qt_total'][-1])
         bar_chart_data['unit_price'].append(str(today_price))
@@ -340,6 +346,7 @@ class HistoryDetailView(ProxyView, TemplateView):
         bar_chart_data['balance'].append(str(profit_loss))
         chk_higher_values['balance'] = profit_loss
 
+        # import pdb; pdb.set_trace()
         # bar_chart_data['avg_price'].append(bar_chart_data['avg_price'][-1])
         self.get_higher_values(chk_higher_values)
 

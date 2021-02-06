@@ -32,7 +32,7 @@ else:
 SECRET_KEY = 'fgkx0r--c-5#k&vc5$1#!=6m2(5a(go5obgirw&g$!+b#9g^*)'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 

@@ -217,14 +217,42 @@ ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 LOGIN_REDIRECT_URL = '/report/position'
-#ACCOUNT_LOGOUT_REDIRECT_URL ="/accounts/login"
 ACCOUNT_LOGOUT_REDIRECT_URL ="/"
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 
 SITE_ID = 2
 
+
+SERVER_EMAIL = 'sf@b3ircalc.online'
+ADMINS = [('Koji', 'rbsnkjmr@gmail.com')]
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'ERROR',
+            'class': 'logging.StreamHandler',
+        },
+        'file': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': '/var/log/django_b3_ir_calc/error.log',
+        },
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler'
+        }
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file', 'mail_admins', 'console'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    },
+}
 
 try:
     if IS_DOCKER:

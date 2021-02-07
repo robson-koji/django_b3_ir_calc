@@ -167,17 +167,27 @@
               {% endfor %}
             </ul>
           </li>
+          {%  endif %}
 
 
 
-          <li>
             {% if not user.is_authenticated %}
+          <!-- <li>
             <a href="/accounts/login">
-              <span class="text-label">Login </span><span class="fs1" aria-hidden="true" data-icon="&#xe088;"></span>
+              <span class="text-label">Login ( Usuário Cadastrado ) </span><span class="fs1" aria-hidden="true" data-icon="&#xe088;"></span>
             </a>
+          </li> -->
+          <!-- Anonymous user expire session -->
+          <li>
+            <a href="/trial/logout">
+              <span class="text-label">Logout </span><span class="fs1" aria-hidden="true" data-icon="&#xe088;"></span>
+            </a>
+          </li>
+
             {% else %}
+            <li>
             <a href="">
-              <span class="text-label">{{ user.email }} </span><span class="fs1" aria-hidden="true" data-icon="&#xe088;"></span>
+              <span class="text-label">{{ user.email }} </span><span class="fs1" aria-hidden="true" data-icon="&#xe0fe;"></span>
             </a>
             {% comment %}
             <a href="/profile">
@@ -203,26 +213,24 @@
                   <div class="clearfix"></div>
                 </div>
               </li>
-              {% endcomment %}
               <li>
                 <button class="btn btn-xs btn-danger pull-right" onclick="location.href='/accounts/logout'">Logout</button>
                 <span class="clearfix"></span>
               </li>
+              {% endcomment %}
             </ul>
-            {% endif %}
-          </li>
-            {% else %}
-
-          {% if not user.is_authenticated %}
-          <!-- Anonymous user expire session -->
+            </li>
+          <!-- <li>
+            <button class="btn btn-xs btn-danger pull-right" onclick="location.href='/accounts/logout'">Logout</button>
+            <span class="clearfix"></span>
+          </li> -->
           <li>
-            <a href="/trial/logout">
+            <a href="/accounts/logout">
               <span class="text-label">Logout </span><span class="fs1" aria-hidden="true" data-icon="&#xe088;"></span>
             </a>
           </li>
           {% endif %}
 
-          {% endif %}
 
         </ul>
       </div>

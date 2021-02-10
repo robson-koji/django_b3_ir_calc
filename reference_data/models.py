@@ -86,6 +86,8 @@ class Broker(models.Model):
             bt = self.brokertaxes_set.filter(type=type).get(date_from__lte=date, date_to__gte=date)
         return bt
 
+    def __str__(self):
+        return "%i: %s" % (self.code, self.broker)
 # Broker Brokerage Type
 BBT_CHOICES = (
     ('fixed','Fixed'),
@@ -108,6 +110,8 @@ class BrokerTaxes(models.Model):
     options_trade_brokerage = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
     options_trade_iss = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
 
+    def __str__(self):
+        return "%s: %s - De: %s - Ate: %s" % (self.broker, self.type, self.date_from, self.date_to)
 
 IDX_CHOICES = (
     ('ICON', 'Consumo'),

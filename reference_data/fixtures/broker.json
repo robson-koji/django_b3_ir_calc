@@ -1,0 +1,698 @@
+[
+{
+    "model": "reference_data.broker",
+    "pk": 1,
+    "fields": {
+        "code": 262,
+        "broker": "MIRAE ASSET WEALTH MANAGEMENT"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 2,
+    "fields": {
+        "code": 1,
+        "broker": "MAGLIANO S.A. CCVM"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 3,
+    "fields": {
+        "code": 3,
+        "broker": "XP INVESTIMENTOS CCTVM S/A"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 4,
+    "fields": {
+        "code": 4,
+        "broker": "ALFA CCVM S.A."
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 5,
+    "fields": {
+        "code": 8,
+        "broker": "UBS BRASIL CCTVM S/A"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 6,
+    "fields": {
+        "code": 13,
+        "broker": "MERRILL LYNCH S/A CTVM"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 7,
+    "fields": {
+        "code": 15,
+        "broker": "GUIDE INVESTIMENTOS S.A. CV"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 8,
+    "fields": {
+        "code": 16,
+        "broker": "J. P. MORGAN CCVM S.A."
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 9,
+    "fields": {
+        "code": 18,
+        "broker": "BOCOM BBM CCVM S/A"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 10,
+    "fields": {
+        "code": 21,
+        "broker": "VOTORANTIM ASSET MANAG. DTVM"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 11,
+    "fields": {
+        "code": 23,
+        "broker": "NECTON INVESTIMENTOS S.A. CVMC"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 12,
+    "fields": {
+        "code": 27,
+        "broker": "SANTANDER CCVM S/A"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 13,
+    "fields": {
+        "code": 29,
+        "broker": "UNILETRA CCTVM S.A."
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 14,
+    "fields": {
+        "code": 33,
+        "broker": "LEROSA S.A. CVC"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 15,
+    "fields": {
+        "code": 37,
+        "broker": "UM INVESTIMENTOS S.A. CTVM"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 16,
+    "fields": {
+        "code": 39,
+        "broker": "AGORA CTVM S/A"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 17,
+    "fields": {
+        "code": 40,
+        "broker": "MORGAN STANLEY CTVM S/A"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 18,
+    "fields": {
+        "code": 41,
+        "broker": "ING CCT S/A"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 19,
+    "fields": {
+        "code": 45,
+        "broker": "CREDIT SUISSE BRASIL S.A. CTVM"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 20,
+    "fields": {
+        "code": 58,
+        "broker": "SOCOPA SC PAULISTA S.A."
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 21,
+    "fields": {
+        "code": 59,
+        "broker": "SAFRA CVC LTDA."
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 22,
+    "fields": {
+        "code": 63,
+        "broker": "NOVINVEST CVM LTDA."
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 23,
+    "fields": {
+        "code": 72,
+        "broker": "BRADESCO S/A CTVM"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 24,
+    "fields": {
+        "code": 74,
+        "broker": "COINVALORES CCVM LTDA."
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 25,
+    "fields": {
+        "code": 77,
+        "broker": "CITIGROUP GMB CCTVM S.A."
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 26,
+    "fields": {
+        "code": 83,
+        "broker": "MAXIMA S/A CTVM"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 27,
+    "fields": {
+        "code": 85,
+        "broker": "BTG PACTUAL CTVM S.A."
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 28,
+    "fields": {
+        "code": 88,
+        "broker": "CM CAPITAL MARKETS CCTVM LTDA"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 29,
+    "fields": {
+        "code": 90,
+        "broker": "EASYNVEST \u2013 TITULO CV S.A."
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 30,
+    "fields": {
+        "code": 92,
+        "broker": "RENASCENCA DTVM LTDA."
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 31,
+    "fields": {
+        "code": 93,
+        "broker": "NOVA FUTURA CTVM LTDA"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 32,
+    "fields": {
+        "code": 106,
+        "broker": "MERC. DO BRASIL COR. S.A. CTVM"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 33,
+    "fields": {
+        "code": 107,
+        "broker": "TERRA INVESTIMENTOS DTVM LTDA"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 34,
+    "fields": {
+        "code": 110,
+        "broker": "SLW CVC LTDA."
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 35,
+    "fields": {
+        "code": 114,
+        "broker": "ITAU CV S/A"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 36,
+    "fields": {
+        "code": 115,
+        "broker": "H.COMMCOR DTVM LTDA"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 37,
+    "fields": {
+        "code": 120,
+        "broker": "GENIAL INSTITUCIONAL CCTVM S.A"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 38,
+    "fields": {
+        "code": 122,
+        "broker": "BGC LIQUIDEZ DTVM"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 39,
+    "fields": {
+        "code": 127,
+        "broker": "TULLETT PREBON"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 40,
+    "fields": {
+        "code": 129,
+        "broker": "PLANNER CV S.A"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 41,
+    "fields": {
+        "code": 131,
+        "broker": "FATOR S.A. CV"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 42,
+    "fields": {
+        "code": 133,
+        "broker": "DIBRAN DTVM LTDA"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 43,
+    "fields": {
+        "code": 147,
+        "broker": "ATIVA INVESTIMENTOS S.A. CTCV"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 44,
+    "fields": {
+        "code": 172,
+        "broker": "BANRISUL S/A CVMC"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 45,
+    "fields": {
+        "code": 173,
+        "broker": "GENIAL INVESTIMENTOS CVM S.A."
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 46,
+    "fields": {
+        "code": 174,
+        "broker": "ELITE CCVM LTDA."
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 47,
+    "fields": {
+        "code": 177,
+        "broker": "SOLIDUS S/A CCVM"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 48,
+    "fields": {
+        "code": 181,
+        "broker": "MUNDINVEST S.A. CCVM"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 49,
+    "fields": {
+        "code": 186,
+        "broker": "CORRETORA GERAL DE VC LTDA"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 50,
+    "fields": {
+        "code": 187,
+        "broker": "SITA SCCVM S.A."
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 51,
+    "fields": {
+        "code": 191,
+        "broker": "SENSO CCVM S.A."
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 52,
+    "fields": {
+        "code": 226,
+        "broker": "AMARIL FRANKLIN CTV LTDA."
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 53,
+    "fields": {
+        "code": 234,
+        "broker": "CODEPE CV E CAMBIO S/A"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 54,
+    "fields": {
+        "code": 238,
+        "broker": "GOLDMAN SACHS DO BRASIL CTVM"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 55,
+    "fields": {
+        "code": 251,
+        "broker": "BANCO BNP PARIBAS BRASIL S/A"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 56,
+    "fields": {
+        "code": 262,
+        "broker": "MIRAE ASSET WEALTH MANAGEMENT"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 57,
+    "fields": {
+        "code": 308,
+        "broker": "CLEAR CORRETORA \u2013 Grupo XP"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 58,
+    "fields": {
+        "code": 359,
+        "broker": "BANCO DAYCOVAL"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 59,
+    "fields": {
+        "code": 386,
+        "broker": "RICO INVESTIMENTOS \u2013 Grupo XP"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 60,
+    "fields": {
+        "code": 442,
+        "broker": "BANCO OURINVEST"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 61,
+    "fields": {
+        "code": 683,
+        "broker": "BANCO MODAL"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 62,
+    "fields": {
+        "code": 711,
+        "broker": "DILLON S.A. DTVM"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 63,
+    "fields": {
+        "code": 713,
+        "broker": "BB GESTAO DE RECURSOS DTVM S/A"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 64,
+    "fields": {
+        "code": 735,
+        "broker": "ICAP DO BRASIL CTVM LTDA"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 65,
+    "fields": {
+        "code": 820,
+        "broker": "BB BANCO DE INVESTIMENTO S/A"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 66,
+    "fields": {
+        "code": 979,
+        "broker": "ADVALOR DTVM LTDA"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 67,
+    "fields": {
+        "code": 1089,
+        "broker": "RB CAPITAL INVESTIMENTOS DTVM"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 68,
+    "fields": {
+        "code": 1099,
+        "broker": "INTER DTVM LTDA"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 69,
+    "fields": {
+        "code": 1106,
+        "broker": "Ourinvest DTVM S.A."
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 70,
+    "fields": {
+        "code": 1116,
+        "broker": "BANCO CITIBANK"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 71,
+    "fields": {
+        "code": 1130,
+        "broker": "INTL FCStone DTVM Ltda."
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 72,
+    "fields": {
+        "code": 1570,
+        "broker": "CAIXA ECONOMICA FEDERAL"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 73,
+    "fields": {
+        "code": 1618,
+        "broker": "IDEAL CTVM SA"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 74,
+    "fields": {
+        "code": 1982,
+        "broker": "MODAL DTVM LTDA"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 75,
+    "fields": {
+        "code": 2197,
+        "broker": "BCO FIBRA"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 76,
+    "fields": {
+        "code": 2379,
+        "broker": "ORLA DTVM S/A"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 77,
+    "fields": {
+        "code": 2492,
+        "broker": "POSITIVA CTVM S/A"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 78,
+    "fields": {
+        "code": 2570,
+        "broker": "SANTANDER SECURITIES SERVICES"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 79,
+    "fields": {
+        "code": 2640,
+        "broker": "LLA DTVM LTDA"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 80,
+    "fields": {
+        "code": 3112,
+        "broker": "BANESTES DTVM S/A"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 81,
+    "fields": {
+        "code": 3371,
+        "broker": "RIO BRAVO INVEST S.A. DTVM"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 82,
+    "fields": {
+        "code": 3701,
+        "broker": "ORAMA DTVM S.A."
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 83,
+    "fields": {
+        "code": 3762,
+        "broker": "RJI CTVM LTDA"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 84,
+    "fields": {
+        "code": 4002,
+        "broker": "BANCO ANDBANK (BRASIL) S.A."
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 85,
+    "fields": {
+        "code": 4015,
+        "broker": "BS2 DTVM S/A"
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 86,
+    "fields": {
+        "code": 4090,
+        "broker": "TORO CTVM LTDA."
+    }
+},
+{
+    "model": "reference_data.broker",
+    "pk": 87,
+    "fields": {
+        "code": 6003,
+        "broker": "C6 CTVM LTDA"
+    }
+}
+]

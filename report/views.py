@@ -115,7 +115,7 @@ class ProxyView(View):
 
     def get_broker(self):
         """ Get broker from self.file """
-        self.broker = Broker.objects.get(id=1)
+        self.broker = Broker.objects.get(id=56)
 
     def get_broker_taxes(self):
         """ return function bellow to b3_ir_calc """

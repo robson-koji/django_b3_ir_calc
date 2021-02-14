@@ -38,6 +38,11 @@ def update_stock_price(sender, instance, **kwargs):
     if 'trial_cei_file.csv' in instance.docfile.name:
         return
 
+    # If merged file... Does not update if someone uploads a "merged" on filename.
+    if '_merged_' in  instance.docfile.name:
+        return
+
+
     # Para testar sem ter que atualizar sempre.
     today = date.today() - timedelta(days=4)
     file = instance.docfile.name

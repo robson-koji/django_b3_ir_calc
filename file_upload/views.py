@@ -1,17 +1,20 @@
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User, AnonymousUser
+from django.views.generic.base import TemplateView
+from django.core.files.base import ContentFile
 from django.shortcuts import redirect, render
-from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.urls import reverse
+from django.conf import settings
 from django.db.models import Q
+
+
+from endorsement.views import DataEleven, DataXp, endorsement_broker
+from collections import OrderedDict
+import os, csv
 
 from .models import Document, get_upload_path
 from .forms import DocumentForm
-
-from django.conf import settings
-from endorsement.views import DataEleven, DataXp, endorsement_broker
-import os
-
 
 
 def redirect_view(request):
@@ -92,6 +95,7 @@ def documents_home(request):
             # File with session, to split in model
             session_file = "|%s" % (session_key)
             request.FILES['docfile'].name += session_file
+
             if user.is_anonymous:
                 newdoc = Document(docfile=request.FILES['docfile'], user=None, session_key=session_key)
             else:
@@ -164,3 +168,107 @@ def handle_uploaded_file(f, pdfs_dir):
     for chunk in f.chunks():
         destination.write(chunk)
     destination.close()
+
+
+
+class MergeFiles(TemplateView):
+    """ O merge de dois arquivos eh feito considerando que sao dois subconjuntos de operacoes
+    de um mesmo cliente de uma mesma corretora.
+    Desta maneira, os arquivos refletem a mesma coisa, com a possibilidade de um ter mais
+    dados que o outro, seja em data passada, ou em data recente. Nao eh possivel haver operacoes
+    no meio dos arquivos, que tenham em um mes e nao em outro.
+    """
+    def dispatch(self, request, *args, **kwargs):
+        if len(self.request.POST.getlist('merge_files')) != 2:
+            return HttpResponse("Para fazer o merge devem ser selecionados dois e somente dois arquivos.")
+
+        try:
+            mf1 = self.request.POST.getlist('merge_files')[0].replace('/media/', '')
+            self.f1_name = mf1.split('/')[-1]
+            self.f1 = self.get_dict_from_file(self.request.POST.getlist('merge_files')[0].replace('/media/', ''))
+        except:
+            return HttpResponse("Erro ao abrir arquivo: %s" % (self.f1_name))
+
+        try:
+            mf2 = self.request.POST.getlist('merge_files')[1].replace('/media/', '')
+            self.f2_name = mf2.split('/')[-1]
+            self.f2 = self.get_dict_from_file(self.request.POST.getlist('merge_files')[1].replace('/media/', ''))
+        except:
+            return HttpResponse("Erro ao abrir arquivo: %s" % (self.f2_name))
+
+        self.merge()
+        self.merged_name = "%s_merged_%s.csv" % (self.f1_name.replace('.csv', ''), self.f2_name.replace('.csv', ''))
+
+        try:
+            self.save_merged()
+            return redirect('documents_home')
+        except:
+            return HttpResponse("Erro no merge dos arquivos")
+
+
+    def merge(self):
+        self.merged = ''
+        for key in self.f1:
+            if key in self.f2:
+                if len(self.f1[key]) > len(self.f2[key]) or len(self.f1[key]) == len(self.f2[key]):
+                    self.merged += self.f1[key]
+                else:
+                    self.merged += self.f2[key]
+                del self.f2[key]
+            else:
+                # import pdb; pdb.set_trace()
+                self.merged += self.f1[key]
+
+        # Meses em f2 que nao hah em f1.
+        if self.f2:
+            for key in self.f2:
+                self.merged += self.f2[key]
+
+
+    def save_merged(self):
+        (user, session_key) = get_session_key(self.request)
+        # File with session, to split in model
+        session_file = "|%s" % (session_key)
+        self.merged_name  += session_file
+        merged_doc = Document()
+        merged_doc.docfile.save(self.merged_name, ContentFile(self.merged))
+
+        if user.is_anonymous:
+            user = None
+        else:
+            user = user
+
+        merged_doc.user=user
+        merged_doc.session_key=session_key
+        merged_doc.save()
+
+
+    def get_dict_from_file(self, f):
+        """ Get CVS data from CSV file. Dont have to convert always from PDF. """
+        # import pdb; pdb.set_trace()
+        try:
+            out_csv =   settings.MEDIA_ROOT + f
+            dict_csv = OrderedDict()
+            with open(out_csv, 'r') as read_obj:
+                csv_reader = csv.reader(read_obj)
+                # list_of_rows = list(csv_reader)
+                for row in csv_reader:
+                    # import pdb; pdb.set_trace()
+                    ym_tuple = '%s%s' % (row[0].split('/')[2], row[0].split('/')[1])
+                    if not ym_tuple in dict_csv:
+                        dict_csv[ym_tuple] = ''
+                    # dict_csv[ym_tuple] += ','.join(row) + '\n'
+
+                    for e in row:
+                        if ',' in e:
+                            e = '"' + e + '"'
+                        dict_csv[ym_tuple] += e + ','
+
+                    dict_csv[ym_tuple] = dict_csv[ym_tuple].rstrip(',')
+                    dict_csv[ym_tuple] += '\n'
+
+                    # print(dict_csv[ym_tuple])
+                    # import pdb; pdb.set_trace()
+            return dict_csv
+        except IOError:
+            raise

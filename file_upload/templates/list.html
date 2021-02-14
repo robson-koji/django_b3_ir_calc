@@ -38,6 +38,11 @@
   };
 </script>
 
+<form id="analysis_form" action="{% url 'open-file' %}" method="POST">
+  {% csrf_token %}
+
+</form>
+
       <!-- Dashboard wrapper start -->
       <div class="dashboard-wrapper">
 
@@ -120,7 +125,8 @@
 
                               <!-- List of uploaded documents -->
                               <!-- Row start -->
-                              <form id="analysis_form" action="open_file/" method="POST">
+                              <form id="merge_files_form" action="{% url 'merge_files' %}" method="POST">
+
                                  {% csrf_token %}
                                 <table class="table table-condensed table-bordered table-hover no-margin">
                                   <thead>
@@ -128,10 +134,12 @@
                                       <th>Arquivo / Data</th>
                                       <th>Fonte de dados</th>
                                       <th>Download (CSV)</th>
-
+                                      <th>Merge</th>
                                     </tr>
                                   </thead>
                                   {% for document in documents %}
+
+
 
                                     <tr>
                                         <td>
@@ -143,8 +151,17 @@
                                         <td>
                                           <a href="{{ document.docfile.csv_url }}">Download CSV</a><Br>
                                         </td>
+                                        <td>
+                                          <input name="merge_files" type="checkbox" nome="merge_docs" value="{{ document.docfile.csv_url }}" >
+                                        </td>
                                     </tr>
                                   {% endfor %}
+                                  <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><button type="submit" name="myButton" value="foo">Merge</button></td>
+                                  </tr>
                                 </table>
                               </form>
                             </div>
@@ -171,10 +188,6 @@
             </div>
           </div>
         {% endif %}
-
-
-
-
       <div class="row">
         <div class="col-md-12">
 

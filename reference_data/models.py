@@ -57,6 +57,10 @@ B3MKT_CHOICES = (
 )
 
 class B3Taxes(models.Model):
+    """
+    Nesta pg, o arquivo BVBG.072.01 deveria ter os custos da B3, porem na data de 14/02/21, nao tem a liquidacao para acoes a vista.
+    http://www.b3.com.br/pt_br/market-data-e-indices/servicos-de-dados/market-data/historico/boletins-diarios/pesquisa-por-pregao/pesquisa-por-pregao/
+    """
     type =  models.CharField(max_length=12, choices=B3MKT_CHOICES, default='regular')
 
     date_from = models.DateField(null=True, blank=True)

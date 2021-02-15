@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'corporate_events',
     'django_b3_ir_calc',
     'trial',
+    'social',
 
 # The following apps are required by allauth:
     'django.contrib.sites',

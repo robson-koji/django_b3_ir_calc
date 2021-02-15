@@ -22,7 +22,11 @@
 }
 </style>
 
-
+<script type="text/javascript">
+  submit_get = function() {
+         document.getElementById('ignore_taxes_form').submit();
+  };
+</script>
 
       <!-- Dashboard wrapper start -->
       <div class="dashboard-wrapper">
@@ -74,6 +78,11 @@
             <label class="radio-inline">
               <input type="radio" name="trade_type" id="day_trade" value="day_trade">Day Trade
             </label>
+          </div>
+          <div class="widget-body">
+              <form id="ignore_taxes_form" action="" method="get">
+                <input type="checkbox" name="ignore_taxes" id="ignore_taxes" onclick="submit_get();" {{ ignore_taxes }}> Ignore Taxes
+            </form>
           </div>
         </div>
 
@@ -166,7 +175,7 @@
                                   </div>
                                 </div>
 
-
+                                {% if not ignore_taxes %}
                                 <div class="col-md-3">
                                   <div class="widget">
                                     <div class="widget-header">
@@ -200,6 +209,7 @@
                                     </div>
                                   </div>
                                 </div>
+                                {% endif %}
 
 
 
@@ -363,8 +373,9 @@
                                 </div>
                               </div>
 
+                              <!-- Day Trade -->
 
-                              {% if value.dayt_summary.sum_taxes %}
+                              {% if value.dayt_summary %}
                               <div class="li_tab_daytrade tab-pane fade in" id="daytrade_{{ value.dt|date:"F Y"|cut:" " }}">
 
                                 {% comment %}
@@ -401,6 +412,7 @@
                                 </div>
 
 
+                                {% if not ignore_taxes %}
                                 <div class="col-md-3">
                                   <div class="widget">
                                     <div class="widget-header">
@@ -427,13 +439,12 @@
                                             <th>Sum Taxes</th>
                                             <td class="text-right"><span class="label label-default label_cp1">{{ value.dayt_summary.sum_taxes }}</span></td>
                                           </tr>
-
-
                                         </tbody>
                                       </table>
                                     </div>
                                   </div>
                                 </div>
+                                {% endif %}
 
 
 
@@ -748,140 +759,8 @@
                                     {% endif %}
 
 
-
-
-
-
-                                            {% comment %}
-                                            {% with months_operations|get_item:key as operations %}
-                                            <table class="table table-condensed table-striped table-hover table-bordered pull-left" id="data-table_{{ value.dt|date:"F Y" }}_2">
-                                              <thead>
-                                                <tr>
-                                                  <th></th>
-                                                  <th colspan='6' class="text-center">Operation</th>
-                                                  <th colspan='4' class="text-center">Position</th>
-                                                </tr>
-                                                <tr>
-                                                  <th></th>
-
-                                                  <th>Oper</th>
-                                                  <th>Dt</th>
-                                                  <th>Qt</th>
-                                                  <th>Value</th>
-                                                  <th>Price</th>
-                                                  <th>Profit</th>
-                                                  <th>Loss</th>
-
-                                                  <th>Qt</th>
-                                                  <th>AvgPrice</th>
-                                                  <th>AvgPricePrev</th>
-                                                </tr>
-                                              </thead>
-                                              <tbody>
-                                              {% for stock, value in operations.items %}
-                                              {% for oper in value %}
-                                                <tr>
-                                                    <td><a href={% url 'history_detail' stock=oper.name %}>{{oper.name}}</a></td>
-                                                    <td>{{oper.buy_sell}}</td>
-                                                    <td>{{oper.dt}}</td>
-                                                    <td>{{oper.qt}}</td>
-                                                    <td>{{oper.value}}</td>
-                                                    <td>{{oper.unit_price}}</td>
-                                                    <td>{{oper.profit|floatformat:"2"}}</td>
-                                                    <td>{{oper.loss|floatformat:"2"}}</td>
-
-                                                    <td>{{oper.qt_total}}</td>
-                                                    <td>{{oper.avg_price|floatformat:"2"}}</td>
-                                                    <td>{{oper.avg_price_prev|floatformat:"2"}}</td>
-                                                </tr>
-                                                {% endfor %}
-                                              {% endfor %}
-                                            </tbody>
-                                            </table>
-                                            {% endwith %}
-
-                                            {% endcomment %}
                                   </div>
                                 </div>
-
-
-
-
-
-                                        {% comment %}
-                                        {% if value.dayt %}
-                                            {% for day in value.dayt  %}
-                                              {{ day }}
-                                              {% with value.dayt|get_item:day as stock_dict %}
-                                                  <!-- {{ stock }} -->
-                                                  {% for stock, values in stock_dict.items %}
-                                                    <h3>{{ day }} - {{ stock }}</h3>
-
-                                                    {% with stock_dict|get_item:stock as stock_dict %}
-
-                                                    <!--
-                                                        {% for keys in stock %}
-                                                          {{ keys }}
-                                                          qt_total_sold_dayt qt_total_bought_dayt
-                                                          total_amount_sold_dayt total_amount_bought_dayt
-                                                          reconciled_dayt_operations
-                                                          operation_result
-                                                          avg_price_bought
-                                                          avg_price_sold
-                                                        {% endfor %}
-                                                      -->
-
-                                                      <!--
-                                                    -->
-                                                      <p>qt_total_dayt:{{ stock_dict.qt_total_dayt }}<br>
-                                                      total_amount_sold_dayt:{{ stock_dict.total_amount_sold_dayt }}<br>
-                                                      total_amount_bought_dayt:{{ stock_dict.total_amount_bought_dayt }}<br>
-                                                      operation_result:{{ stock_dict.operation_result }}<br>
-                                                      avg_price_bought:{{ stock_dict.avg_price_bought }}<br>
-                                                      avg_price_sold:{{ stock_dict.avg_price_sold }}</p>
-
-                                                      <p>Original Operations - <Br>
-                                                      {{ stock_dict.original_operations }}
-                                                      </p>
-
-                                                      <p>Remaining Operations - Go back to regular position wallet<Br>
-                                                      {{ stock_dict.operations }}
-                                                      </p>
-
-                                                      <p>
-                                                      Reconciled<br>
-                                                      Bought<br>
-                                                      {% for ds_rbo in stock_dict.reconciled_bought_operations  %}
-                                                        {{ ds_rbo }}<br>
-                                                      {% endfor %}
-                                                      Sold<br>
-                                                      {% for ds_rso in stock_dict.reconciled_sold_operations  %}
-                                                        {{ ds_rso }}<br>
-                                                      {% endfor %}
-                                                      </p>
-
-
-
-                                                      <!--
-                                                      <p>reconciled_bought_operations:{{ stock_dict.reconciled_bought_operations }}<br>
-                                                      <p>reconciled_sold_operations:{{ stock_dict.reconciled_sold_operations }}<br>
-                                                      -->
-
-                                                      <p>qt_initial_operations:{{ stock_dict.qt_initial_operations }}<br>
-
-                                                      <p>qt_remaining_operations:{{ stock_dict.qt_remaining_operations }}<br>
-                                                      <p>qt_real_dt_operations:{{ stock_dict.qt_real_dt_operations }}<br>
-
-
-
-
-                                                    {% endwith %}
-
-                                                  {% endfor %}
-                                              {% endwith %}
-                                            {% endfor %}
-                                        {% endif %}
-                                        {% endcomment %}
 
                               </div>
                               {% else %}

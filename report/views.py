@@ -29,6 +29,7 @@ class ProxyView(View):
     stock_detail = None
     broker = None
     get_dayt = False
+    ignore_taxes = False
 
     def dispatch(self, request, *args, **kwargs):
         self.ativos = Ativos.objects.all()
@@ -95,7 +96,7 @@ class ProxyView(View):
                                         broker_taxes=self.get_broker_taxes(), \
                                         b3_taxes=self.get_b3_taxes(), \
                                         corporate_events=CorporateEventView, \
-                                        get_dayt=self.get_dayt)
+                                        get_dayt=self.get_dayt, ignore_taxes=self.ignore_taxes)
             return b3_tax_obj
         except FileNotFoundError:
             raise
@@ -106,7 +107,7 @@ class ProxyView(View):
 
     def months_reconcile(self, b3_tax_obj):
         months = b3_tax_obj.file2object(stock_detail=self.stock_detail)
-        months.month_add_detail(get_dayt=self.get_dayt)
+        months.month_add_detail(get_dayt=self.get_dayt, ignore_taxes=self.ignore_taxes)
         return months
 
     def generate_reports(self, stock_price_file, stocks_wallet, months):
@@ -254,10 +255,18 @@ class HistoryView(ProxyView, TemplateView):
     template_name = "report/history.html"
     get_dayt = True
 
+    def dispatch(self, request, *args, **kwargs):
+        # print(self.request.GET)
+        if 'ignore_taxes' in self.request.GET and self.request.GET['ignore_taxes']:
+            self.ignore_taxes = True
+        return super(HistoryView, self).dispatch(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['months'] = self.report.months_build_data()[0]
         context['months_operations'] = self.report.months_build_data()[1]
+        if self.ignore_taxes:
+            context['ignore_taxes'] = 'checked'
         return context
 
 

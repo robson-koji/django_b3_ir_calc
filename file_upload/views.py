@@ -185,14 +185,14 @@ class MergeFiles(TemplateView):
         try:
             mf1 = self.request.POST.getlist('merge_files')[0].replace('/media/', '')
             self.f1_name = mf1.split('/')[-1]
-            self.f1 = self.get_dict_from_file(self.request.POST.getlist('merge_files')[0].replace('/media/', ''))
+            self.f1_broker_client, self.f1 = self.get_dict_from_file(self.request.POST.getlist('merge_files')[0].replace('/media/', ''))
         except:
             return HttpResponse("Erro ao abrir arquivo: %s" % (self.f1_name))
 
         try:
             mf2 = self.request.POST.getlist('merge_files')[1].replace('/media/', '')
             self.f2_name = mf2.split('/')[-1]
-            self.f2 = self.get_dict_from_file(self.request.POST.getlist('merge_files')[1].replace('/media/', ''))
+            self.f2_broker_client, self.f2 = self.get_dict_from_file(self.request.POST.getlist('merge_files')[1].replace('/media/', ''))
         except:
             return HttpResponse("Erro ao abrir arquivo: %s" % (self.f2_name))
 
@@ -206,8 +206,14 @@ class MergeFiles(TemplateView):
             return HttpResponse("Erro no merge dos arquivos")
 
 
+
+
     def merge(self):
-        self.merged = ''
+        if not self.f1_broker_client == self.f2_broker_client:
+            raise ValueError('Corretora e/ou cliente são diferentes')
+
+        self.merged = ','.join(self.f1_broker_client) + "\n"
+        self.merged += ','.join([""] * 8) + '\n'
         for key in self.f1:
             if key in self.f2:
                 if len(self.f1[key]) > len(self.f2[key]) or len(self.f1[key]) == len(self.f2[key]):
@@ -242,16 +248,19 @@ class MergeFiles(TemplateView):
         merged_doc.session_key=session_key
         merged_doc.save()
 
-
     def get_dict_from_file(self, f):
         """ Get CVS data from CSV file. Dont have to convert always from PDF. """
         # import pdb; pdb.set_trace()
         try:
             out_csv =   settings.MEDIA_ROOT + f
             dict_csv = OrderedDict()
+
+
             with open(out_csv, 'r') as read_obj:
                 csv_reader = csv.reader(read_obj)
-                # list_of_rows = list(csv_reader)
+                broker_client = next(csv_reader)
+                next(csv_reader)
+
                 for row in csv_reader:
                     # import pdb; pdb.set_trace()
                     ym_tuple = '%s%s' % (row[0].split('/')[2], row[0].split('/')[1])
@@ -269,6 +278,6 @@ class MergeFiles(TemplateView):
 
                     # print(dict_csv[ym_tuple])
                     # import pdb; pdb.set_trace()
-            return dict_csv
+            return (broker_client, dict_csv)
         except IOError:
             raise

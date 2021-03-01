@@ -1,3 +1,5 @@
+
+*.csv
 *.sqlite3
 *.pdf
 *.log

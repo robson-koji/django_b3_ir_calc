@@ -13,8 +13,8 @@ Tb template, e views...
 
 
 class BrokerPeriod(models.Model):
-    broker = models.ForeignKey('Broker', on_delete=models.CASCADE)
-    type =  models.CharField('Tipo de corretagem', max_length=12, choices=BBT_CHOICES, default='order')
+    # broker = models.ForeignKey('Broker', on_delete=models.CASCADE)
+    # type =  models.CharField('Tipo de corretagem', max_length=12, choices=BBT_CHOICES, default='order')
 
     date_from = models.DateField('De', null=True, blank=True)
     date_to = models.DateField('Até', null=True, blank=True)

@@ -116,7 +116,7 @@ class ProxyView(View):
 
     def get_broker(self):
         """ Get broker from self.file """
-        self.broker = Broker.objects.get(id=56)
+        self.broker = Broker.objects.get(id=59)
 
     def get_broker_taxes(self):
         """ return function bellow to b3_ir_calc """
@@ -187,6 +187,29 @@ class PositionView(ProxyView, TemplateView):
         self.curr_prices_dt = date.today()
 
         (self.current_position, summary) = self.report.current_position()
+
+        pie_qt = defaultdict(int)
+        pie_value = defaultdict(float)
+        for pos in self.current_position:
+            pos['indices_btc'] = self.get_btc_termo_setorial(pos['stock'])
+            if pos['indices_btc'][0]  == '':
+                pie_qt['Outros'] += 1
+                pie_value['Outros'] += float(pos['cur_total'])
+            else:
+                pie_qt[pos['indices_btc'][0]] += 1
+                pie_value[pos['indices_btc'][0]] += float(pos['cur_total'])
+
+
+        """ !!! Fazer o grafico de pizza """
+        # list(map(list, pie_qt.items()))
+
+        context['pie_qt'] = list(map(list, pie_qt.items()))
+        context['pie_value'] = list(map(list, pie_value.items()))
+
+
+# str(round(self.higher_values[max_key]/self.higher_values[key], 2))
+
+
         context['current_position'] = self.current_position
         context['summary'] = summary
         return context

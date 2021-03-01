@@ -116,7 +116,13 @@ class ProxyView(View):
 
     def get_broker(self):
         """ Get broker from self.file """
-        self.broker = Broker.objects.get(id=59)
+        with open("%s%s" % (self.path, self.file)) as f:
+            first_line = f.readline()
+        try:
+            self.broker = Broker.objects.get(code=int(first_line.split(',')[0]))
+        except:
+            raise
+
 
     def get_broker_taxes(self):
         """ return function bellow to b3_ir_calc """

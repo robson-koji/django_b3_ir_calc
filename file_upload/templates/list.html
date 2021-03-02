@@ -1,10 +1,6 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
-
-
-
-
 {% block content %}
 <style media="screen">
   .tim {
@@ -20,6 +16,8 @@
   }
 </style>
 
+
+<!-- Form submit to Postion View -->
 <script type="text/javascript">
   upld_stock_sbmt_form = function() {
     $(".mylink").click(function () {
@@ -29,19 +27,42 @@
          input.setAttribute("type", "hidden");
          input.setAttribute("name", "path");
          input.setAttribute("value", path);
-         document.getElementById("analysis_form").appendChild(input);
 
-         // Submit form
+         document.getElementById("analysis_form").appendChild(input);
          document.getElementById('analysis_form').submit();
          return false;
      });
   };
 </script>
-
 <form id="analysis_form" action="{% url 'open-file' %}" method="POST">
   {% csrf_token %}
-
 </form>
+
+
+<!-- Form submit to Delete Files View -->
+<script type="text/javascript">
+  function deleteFile(){
+    var checkboxes = document.querySelectorAll('input[name="delete_file"]:checked');
+    var delete_files_chkbox = ''
+    for (var checkbox of checkboxes) {
+      delete_files_chkbox += checkbox.value + '|'
+    }
+
+    var input = document.createElement("input");
+    input.setAttribute("type", "hidden");
+    input.setAttribute("name", "delete_files_chkbox");
+    input.setAttribute("value", delete_files_chkbox);
+
+    document.getElementById("delete_form").appendChild(input);
+    document.getElementById('delete_form').submit();
+    return false;
+  }
+</script>
+<form id="delete_form" action="{% url 'delete_files' %}" method="POST">
+  {% csrf_token %}
+</form>
+
+
 
       <!-- Dashboard wrapper start -->
       <div class="dashboard-wrapper">
@@ -135,6 +156,7 @@
                                       <th>Fonte de dados</th>
                                       <th>Download (CSV)</th>
                                       <th>Merge</th>
+                                      <th>Delete</th>
                                     </tr>
                                   </thead>
                                   {% for document in documents %}
@@ -154,6 +176,10 @@
                                         <td>
                                           <input name="merge_files" type="checkbox" nome="merge_docs" value="{{ document.docfile.csv_url }}" >
                                         </td>
+                                        <td>
+                                          <input name="delete_file" type="checkbox" value="{{ document.docfile.url }}" >
+                                        </td>
+
                                     </tr>
                                   {% endfor %}
                                   <tr>
@@ -161,6 +187,7 @@
                                     <td></td>
                                     <td></td>
                                     <td><button type="submit" name="myButton" value="foo">Merge</button></td>
+                                    <td><a class="button" href="javascript:void(0);" onclick="deleteFile();" id="delete_file">Delete</a></td>
                                   </tr>
                                 </table>
                               </form>
@@ -188,18 +215,6 @@
             </div>
           </div>
         {% endif %}
-      <div class="row">
-        <div class="col-md-12">
-
-
-
-
-
-
-
-
-      </div>
-    </div>
   </div>
 
 {% endblock %}

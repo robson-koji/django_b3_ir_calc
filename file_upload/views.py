@@ -287,3 +287,19 @@ class MergeFiles(TemplateView):
             return (first_trade, broker_client, dict_csv)
         except IOError:
             raise
+
+
+class DeleteFiles(TemplateView):
+    def dispatch(self, request, *args, **kwargs):
+        # import pdb; pdb.set_trace()
+        if not 'delete_files_chkbox' in request.POST:
+            return super(DeleteFiles, self).dispatch(request, *args, **kwargs)
+
+        delete_files_chkbox = request.POST['delete_files_chkbox'].split('|')
+
+        for dfc in delete_files_chkbox:
+            if dfc:
+                docfile = dfc.replace('/media/', '')
+                Document.objects.get(docfile=docfile).delete()
+
+        return redirect('documents_home')

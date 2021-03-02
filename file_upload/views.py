@@ -11,6 +11,7 @@ from django.db.models import Q
 
 from endorsement.views import DataEleven, DataXp, endorsement_broker
 from collections import OrderedDict
+from datetime import datetime, date
 import os, csv
 
 from .models import Document, get_upload_path
@@ -185,14 +186,14 @@ class MergeFiles(TemplateView):
         try:
             mf1 = self.request.POST.getlist('merge_files')[0].replace('/media/', '')
             self.f1_name = mf1.split('/')[-1]
-            self.f1_broker_client, self.f1 = self.get_dict_from_file(self.request.POST.getlist('merge_files')[0].replace('/media/', ''))
+            self.f1_first_trade, self.f1_broker_client, self.f1 = self.get_dict_from_file(self.request.POST.getlist('merge_files')[0].replace('/media/', ''))
         except:
             return HttpResponse("Erro ao abrir arquivo: %s" % (self.f1_name))
 
         try:
             mf2 = self.request.POST.getlist('merge_files')[1].replace('/media/', '')
             self.f2_name = mf2.split('/')[-1]
-            self.f2_broker_client, self.f2 = self.get_dict_from_file(self.request.POST.getlist('merge_files')[1].replace('/media/', ''))
+            self.f2_first_trade, self.f2_broker_client, self.f2 = self.get_dict_from_file(self.request.POST.getlist('merge_files')[1].replace('/media/', ''))
         except:
             return HttpResponse("Erro ao abrir arquivo: %s" % (self.f2_name))
 
@@ -212,23 +213,30 @@ class MergeFiles(TemplateView):
         if not self.f1_broker_client == self.f2_broker_client:
             raise ValueError('Corretora e/ou cliente são diferentes')
 
+        f1 = self.f1
+        f2 = self.f2
+
+        # Troca file 1 com file 2, para funcionar adequadaemnte no loop abaixo.
+        if self.f1_first_trade < self.f2_first_trade:
+            f1 = self.f2
+            f2 = self.f1
+
         self.merged = ','.join(self.f1_broker_client) + "\n"
         self.merged += ','.join([""] * 8) + '\n'
-        for key in self.f1:
-            if key in self.f2:
-                if len(self.f1[key]) > len(self.f2[key]) or len(self.f1[key]) == len(self.f2[key]):
-                    self.merged += self.f1[key]
+        for key in f1:
+            if key in f2:
+                if len(f1[key]) > len(f2[key]) or len(f1[key]) == len(f2[key]):
+                    self.merged += f1[key]
                 else:
-                    self.merged += self.f2[key]
-                del self.f2[key]
+                    self.merged += f2[key]
+                del f2[key]
             else:
-                # import pdb; pdb.set_trace()
-                self.merged += self.f1[key]
+                self.merged += f1[key]
 
         # Meses em f2 que nao hah em f1.
-        if self.f2:
-            for key in self.f2:
-                self.merged += self.f2[key]
+        if f2:
+            for key in f2:
+                self.merged += f2[key]
 
 
     def save_merged(self):
@@ -255,7 +263,6 @@ class MergeFiles(TemplateView):
             out_csv =   settings.MEDIA_ROOT + f
             dict_csv = OrderedDict()
 
-
             with open(out_csv, 'r') as read_obj:
                 csv_reader = csv.reader(read_obj)
                 broker_client = next(csv_reader)
@@ -276,8 +283,7 @@ class MergeFiles(TemplateView):
                     dict_csv[ym_tuple] = dict_csv[ym_tuple].rstrip(',')
                     dict_csv[ym_tuple] += '\n'
 
-                    # print(dict_csv[ym_tuple])
-                    # import pdb; pdb.set_trace()
-            return (broker_client, dict_csv)
+                first_trade = datetime.strptime(row[0], '%d/%m/%Y').date()
+            return (first_trade, broker_client, dict_csv)
         except IOError:
             raise

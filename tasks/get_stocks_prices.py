@@ -12,18 +12,19 @@ from datetime import datetime
 # To import stock_price.models from django_b3_ir_calc
 import os, django
 from django.conf import settings
+from django.utils import timezone
 from django_b3_ir_calc import settings as myapp_defaults
+
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_b3_ir_calc.settings')
 django.setup()
 from stock_price.models import StockPrice
 from stock_price.stock_price import get_stocks, get_price, read_csvs_dir
 
-
 def save_stocks(stock, price, hour):
     stock_obj, created = StockPrice.objects.get_or_create(stock=stock)
     stock_obj.price = price
     stock_obj.hour = hour
-    stock_obj.last_update = datetime.now()
+    stock_obj.last_update = timezone.now()
     stock_obj.save()
 
 
@@ -43,3 +44,6 @@ if __name__ == "__main__":
                 save_stocks(stock, price, hour)
         except:
             pass
+
+
+'As of  12:03PM BRT. Market open.'

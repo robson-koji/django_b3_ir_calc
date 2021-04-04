@@ -353,9 +353,10 @@ class HistoryDetailView(ProxyView, TemplateView):
         today_price = StockPrice.objects.get(stock=self.stock_detail).price
         if int(bar_chart_data['qt_total'][-1]) == 0:
             qt_total = int(bar_chart_data['qt_total'][-2])
+            my_position =  qt_total * Decimal(bar_chart_data['avg_price'][-2])
         else:
             qt_total = int(bar_chart_data['qt_total'][-1])
-        my_position =  qt_total * Decimal(bar_chart_data['avg_price'][-2])
+            my_position =  qt_total * Decimal(bar_chart_data['avg_price'][-1])
         mkt_position = qt_total * today_price
 
         chk_higher_values = {'dt':today, 'qt_total':qt_total,'unit_price':today_price,
@@ -405,7 +406,7 @@ class HistoryDetailView(ProxyView, TemplateView):
                 operations_list.reverse()
                 # Operations in month
                 for idx, val in enumerate(  operations_list ):
-
+                    val.calculate_position()
                     dt = "%i/%s" % (val.dt.day, val.dt.strftime('%b'))
                     for fcv in self.for_chart_values:
                         try:
@@ -415,7 +416,6 @@ class HistoryDetailView(ProxyView, TemplateView):
                         except:
                             # import pdb; pdb.set_trace()
                             continue
-
                     bar_chart_data['dt'].appendleft(dt)
                     bar_chart_data['balance'].appendleft(str(balance))
                     val.balance = balance
@@ -430,6 +430,7 @@ class HistoryDetailView(ProxyView, TemplateView):
         self.today_position(bar_chart_data)
         self.normalize_chart_values()
 
+        # print(bar_chart_data)
         context['show_chart'] = True
 
         corporate_events = self.cev.values_list('asset__ativo', flat=True)

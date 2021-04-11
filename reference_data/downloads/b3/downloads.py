@@ -186,8 +186,8 @@ class Aluguel(downloadMain, PdTableMixin):
         #self.pg_url = 'http://www.b3.com.br/pt_br/market-data-e-indices/servicos-de-dados/market-data/consultas/mercado-a-vista/termo/posicoes-em-aberto/'
         self.pg_url = 'http://www.b3.com.br/pt_br/produtos-e-servicos/emprestimo-de-ativos/renda-variavel/posicoes-em-aberto/renda-variavel-8AE490C9701B5B35017039842ACE1F91.htm?data=%s&f=0' % (self.today)
 
-PEGAR DAQUI, MAS SOH CONSEGUI UM A UM
-                        http://www.b3.com.br/pt_br/produtos-e-servicos/emprestimo-de-ativos/renda-variavel/posicoes-em-aberto/
+# PEGAR DAQUI, MAS SOH CONSEGUI UM A UM
+#                         http://www.b3.com.br/pt_br/produtos-e-servicos/emprestimo-de-ativos/renda-variavel/posicoes-em-aberto/
 
 
     def get_pg_data(self):

@@ -31,8 +31,8 @@ def redirect_view(request):
             file = request.POST.get('path').split('/')[-1]
 
             print("\n\n\nView de redirect do Upload")
-            print(path)
-            print(file)
+            # print(path)
+            # print(file)
 
             docfile = path.split('/')
             date = "%s/%s/%s" % (docfile[4], docfile[5], docfile[6])

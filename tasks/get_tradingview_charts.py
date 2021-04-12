@@ -46,7 +46,7 @@ def screenshot_tradingview(stock):
     img_name = "%s%s.png" % (images_dir, stock.stock)
     browser.get(url)
     # browser.get("https://www.lambdatest.com/feature")
-    sleep(10)
+    sleep(90)
     featureElement=browser.find_element_by_class_name('layout__area--center').screenshot(img_name)
     browser.quit()
 

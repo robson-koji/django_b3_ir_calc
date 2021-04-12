@@ -46,7 +46,7 @@ def get_price(stock):
 
     url = 'https://finance.yahoo.com/quote/%s.sa' % (stock)
     try:
-        print(url)
+        # print(url)
         page = urlopen(url)
         soup = bs4.BeautifulSoup(page,'html.parser')
         price = soup.find('div',{'class': 'My(6px) Pos(r) smartphone_Mt(6px)'}).find('span').text

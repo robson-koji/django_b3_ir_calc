@@ -1,4 +1,4 @@
-import string
+import string, itertools
 
 from django.views.generic.base import TemplateView
 from django.http import HttpResponse
@@ -658,3 +658,40 @@ class TvChartView(TemplateView):
 
         context['stocks'] = stocks
         return context
+
+
+
+class RsiView(TemplateView):
+    template_name = "report/rsi.html"
+
+    def pack(self, _list):
+        it = iter(_list)
+        nested = [list(b) for b in itertools.zip_longest(it, it)]
+        return nested
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['acoes'] = []
+        context['acoes_status'] = []
+
+        with open("/var/tmp/stocks_rsi.txt") as f:
+
+            for row in f:
+                fields  = row.split()
+                if not '.SA' in fields[0]:
+                    continue
+                fields[0] = fields[0].replace('.SA', '')
+
+                if len(fields) < 7:
+                    last = fields[5]
+                    fields[5] = ' '
+                    fields.append(last)
+                else:
+                    context['acoes_status'].append(fields[0])
+
+                context['acoes'].append(fields)
+
+        context['acoes_status'] = self.pack(context['acoes_status'])
+        return context
+
+        'BRKM5.SA     52.62   44.928    26.8719   79.33 🔥  https://finance.yahoo.com/quote/BRKM5.SA/chart?p=BRKM5.SA\n'

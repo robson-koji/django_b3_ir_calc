@@ -13,6 +13,7 @@ urlpatterns = [
     url(r'^endorse/$', Endorse11View.as_view(), name='endorse'),
     url(r'^tech_analysis/$', Endorse11View.as_view(), name='tech_analysis'),
     url(r'^last_zeroed/$', LastZeroedStocks.as_view(), name='last_zeroed'),
+    url(r'^rsi/$', RsiView.as_view(), name='rsi_view'),
 
 
     # path('indices/', TemplateView.as_view(template_name='report/indices.html')),

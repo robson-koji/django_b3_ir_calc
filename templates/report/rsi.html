@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+{% load iterate_dicts %}
+{% load mathfilters %}
+{% load i18n %}
+
+
+{% block content %}
+
+
+
+<style media="screen">
+  h3:after {
+    content:"";
+    /* top:80%; */
+    bottom: 7px;
+    left: 0;
+    right: 0;
+
+    width:97%;
+    margin-left:15px;
+
+    height:2px;
+    position:absolute;
+    background:#4264ab;
+}
+
+tr[role=row]{
+  background-color:#FFFFFF;
+}
+</style>
+
+
+
+      <!-- Dashboard wrapper start -->
+      <div class="dashboard-wrapper">
+
+        <!-- Page title start -->
+        <div class="page-title clearfix">
+          <h2>
+            RSI
+            <small>
+              <ul>
+                <li>Home</li>
+                <li>/</li>
+                <li>Dashboard</li>
+                <li>/</li>
+                <li>Tables</li>
+              </ul>
+            </small>
+          </h2>
+
+        </div>
+        <!-- Page title end -->
+
+
+
+
+
+
+
+        <!-- Row start -->
+        <div class="row">
+          <div class="col-md-12">
+            <h3>RSI</h3>
+
+            <div class="widget">
+              <div class="widget-body">
+                <div id="dt_example" class="example_alt_pagination">
+
+                  <table class="table table-condensed table-striped table-hover table-bordered pull-left" id="data-table-position">
+
+                    <thead>
+                      <tr>
+                        <th class="text-center">{% trans "Ticker" %}</th>
+                        <th class="text-center">{% trans "Price" %}</th>
+                        <th class="text-center">{% trans "20 MA" %}</th>
+                        <th class="text-center">{% trans "200 MA" %}</th>
+                        <th class="text-center">{% trans "RSI" %}</th>
+                        <th class="text-center">{% trans "Status" %}</th>
+                        <th class="text-center">{% trans "Yahoo" %}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for acao in acoes%}
+                      <tr class="gradeX">
+                          <td class="text-center"><a  rel="noreferrer" target="_blank" href="https://br.tradingview.com/chart?symbol=BMFBOVESPA%3A{{ acao.0 }}">{{ acao.0 }}</a></td>
+                          <td><b>{{ acao.1 }}</b></td>
+                          <td class="text-center">{{ acao.2 }}</td>
+                          <td class="text-center">{{ acao.3 }}</td>
+                          <td class="text-center">{{ acao.4 }}</td>
+                          <td class="text-center">{{ acao.5 }}</td>
+                          <td class="text-center"><a  rel="noreferrer" target="_blank" href="{{ acao.6 }}">Yahoo</a></td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!-- Row end -->
+
+
+
+
+
+
+        <div class="row">
+          <div class="col-md-12">
+          <!-- List of uploaded documents -->
+          <!-- Row start -->
+              <div class="widget">
+                <div class="widget-header">
+                  <div class="title">
+                    <span class="fs1" aria-hidden="true" data-icon="&#xe1b5;"></span>Charts - RSI Alert
+                  </div>
+                </div>
+
+                <div class="widget-body">
+
+                  {% for group_stock in acoes_status %}
+                      <div class="row gallery">
+                        {% for stock in group_stock %}
+
+                          <div class="col-md-6 col-sm-12">
+                            <div class="visual">
+                              <img src="/media/tradingview_charts/{{ stock }}.png" alt="">
+                              <div class="mask">
+                                <h4>
+                                  <a rel="noreferrer" target="_blank" href="https://br.tradingview.com/chart?symbol=BMFBOVESPA%3A{{ stock }}" data-original-title="" title="">
+                                    {{ stock }}</a>
+                                </h4>
+                                <p>""</p>
+                              </div>
+                            </div>
+                          </div>
+                          {% endfor %}
+                      </div>
+                      <br><br>
+                  {% endfor %}
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+
+
+
+
+
+
+
+
+    </div>
+
+
+
+
+{% endblock content %}

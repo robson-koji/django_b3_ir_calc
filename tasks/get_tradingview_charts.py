@@ -52,5 +52,6 @@ def screenshot_tradingview(stock):
 
 
 for stock in stocks:
+    if 'BOVA' in stock.stock:
+        continue
     screenshot_tradingview(stock)
-    # sleep(150)

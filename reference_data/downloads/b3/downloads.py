@@ -21,6 +21,7 @@ class downloadMain():
         # Find download_url by id or text. Depends on page layout.
         self.link_text_to_find = ''
         self.link_id = ''
+        self.link_id_form = ''
         self.files_dir_path = 'reference_data/downloads/b3/files/'
         self.b3_domain = 'http://b3.com.br/'
 
@@ -35,6 +36,7 @@ class downloadMain():
             self.download_url = soup.find_all('form', attrs = {'id': self.link_id_form})[0].get('action')
         elif self.link_text_to_find:
             links = soup.find_all("a")
+            import pdb; pdb.set_trace()
             for link in links:
                 if self.link_text_to_find in link.text:
                     self.download_url = self.b3_domain + link.get('href').replace('../', '')
@@ -71,14 +73,15 @@ class classifSetorial(downloadMain):
         zipped_archive = self.files_dir_path + "%s" % (self.filename)
         open(zipped_archive, 'wb').write(self.response.content)
 
+        # import pdb; pdb.set_trace()
         # Check zipped archive lenght
         listOfiles = self.get_zipped_file(zipped_archive)
         if len(listOfiles) != 1:
             # Wait for one zipped file only
             raise IndexError('list index out of range')
 
-        self.file + "/%s" % (listOfiles[0])
-
+        # self.file + "/%s" % (listOfiles[0])
+        self.file = self.files_dir_path + "/%s" % (listOfiles[0])
         # Unzip file
         self.unzip_file(zipped_archive)
 
@@ -140,8 +143,10 @@ class classifSetorial(downloadMain):
 class valorMercado(downloadMain):
     def __init__(self):
         super(valorMercado, self).__init__()
-        self.pg_url = 'http://www.b3.com.br/pt_br/market-data-e-indices/servicos-de-dados/market-data/consultas/mercado-a-vista/valor-de-mercado-das-empresas-listadas/bolsa-de-valores/'
-        self.link_text_to_find = 'Histórico diário'
+        self.pg_url = 'http://www.b3.com.br/pt_br/market-data-e-indices/servicos-de-dados/market-data/consultas/mercado-a-vista/valor-de-mercado-das-empresas-listadas/bolsa-de-valores-diario/'
+        # self.pg_url = 'http://www.b3.com.br/pt_br/market-data-e-indices/servicos-de-dados/market-data/consultas/mercado-a-vista/valor-de-mercado-das-empresas-listadas/bolsa-de-valores/'
+        # self.link_text_to_find = 'Histórico diário'
+        self.link_text_to_find = 'Download'
 
     def download(self):
         self.get_download_url()
@@ -247,13 +252,16 @@ class Termo(downloadMain, PdTableMixin):
 if __name__ == "__main__":
     if sys.argv[1] == 'classif_setorial':
         classif_setorial = classifSetorial()
-        #classif_setorial.download()
+        classif_setorial.download()
         classif_setorial.read_csv()
         classif_setorial.store_data()
 
+    """ Os tres abaixo estao quebrados.
+    Valore de mercado dah para pegar um json, mas precisa codar. 
+    """
     if sys.argv[1] == 'valor_mercado':
         valor_mercado = valorMercado()
-        # valor_mercado.download()
+        valor_mercado.download()
         valor_mercado.read_csv_store_valor_mercado()
 
     if sys.argv[1] == 'aluguel':

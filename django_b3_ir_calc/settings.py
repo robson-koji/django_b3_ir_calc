@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'reference_data',
     'charts',
     'corporate_events',
+    'data_source',
     'django_b3_ir_calc',
     'trial',
     'social',

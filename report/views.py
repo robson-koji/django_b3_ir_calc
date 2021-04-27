@@ -11,12 +11,13 @@ from datetime import datetime, timedelta, date
 from collections import defaultdict, deque
 from builtins import any as b_any
 
-from b3_ir_calc.b3_ir_calc.ir_calc import *
-from stock_price.models import StockPrice
-from django_excel_csv.views import GetExcel
-from reference_data.models import *
 from endorsement.views import DataEleven, DataXp, endorsement_broker
 from corporate_events.views import CorporateEventView
+from b3_ir_calc.b3_ir_calc.ir_calc import *
+from django_excel_csv.views import GetExcel
+from stock_price.models import StockPrice
+from reference_data.models import *
+from data_source.views import *
 
 
 class ProxyView(View):
@@ -470,7 +471,11 @@ class Endorse11Download(PositionView, GetExcel):
 
     def merge(self):
         """ Merge dos dados de current_position e 11 recomenda """
-        self.recomenda_11 = data_11.get_csv_from_file()
+        # self.recomenda_11 = data_11.get_csv_from_file()
+
+        #Antes recebia lista, agora recebe set. Ver se quebra.
+
+        self.recomenda_11 = list(get_stocks_endorsement())
         self.current_position
 
         cp_endorsed = []
@@ -671,25 +676,12 @@ class RsiView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
         context['acoes'] = []
         context['acoes_status'] = []
 
-        with open("/var/tmp/stocks_rsi.txt") as f:
+        get_stocks_rsi(context['acoes'], context['acoes_status'])
 
-            for row in f:
-                fields  = row.split()
-                if not '.SA' in fields[0]:
-                    continue
-                fields[0] = fields[0].replace('.SA', '')
-
-                if len(fields) < 7:
-                    last = fields[5]
-                    fields[5] = ' '
-                    fields.append(last)
-                else:
-                    context['acoes_status'].append(fields[0])
-
-                context['acoes'].append(fields)
 
         context['acoes_status'] = self.pack(context['acoes_status'])
         return context

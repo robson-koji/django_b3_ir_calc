@@ -10,9 +10,9 @@ from django.dispatch import receiver
 from django.conf import settings
 
 from b3_ir_calc.b3_ir_calc.b3excel2csv import excel_to_csv
-from stock_price.stock_price import get_stocks, get_price
+from data_source.views import get_stocks_from_user_file
+from stock_price.stock_price import get_price
 from stock_price.models import StockPrice
-
 
 
 def get_upload_path(instance, filename):
@@ -55,7 +55,7 @@ def update_stock_price(sender, instance, **kwargs):
     stocks = set()
 
     # Get stocks from csv
-    get_stocks(csv_path, stocks)
+    get_stocks_from_user_file(csv_path, stocks)
 
     # Check stock exists and utodaypdate price.
     for stock in stocks:
@@ -73,29 +73,3 @@ def update_stock_price(sender, instance, **kwargs):
             # import pdb; pdb.set_trace()
         else:
             print("Atualizado: %s" % (stock_obj.stock))
-
-
-
-
-"""
-def get_stocks(filename, stocks):
-
-    def hasNumbers(inputString):
-        return any(char.isdigit() for char in inputString)
-
-    # stocks = set()
-    with open(filename) as file_handler:
-        csv_reader = csv.reader(file_handler, quotechar='"', delimiter=',')
-
-        print(filename)
-        for line in csv_reader:
-            # print(line)
-            if '.' in line[4] or 'null' in line[4]:
-                continue
-
-            if not hasNumbers(line[4]):
-                continue
-
-            stocks.add(line[4].split()[0])
-    # return stocks
-"""

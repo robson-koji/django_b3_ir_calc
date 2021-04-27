@@ -41,18 +41,6 @@ class EndorsementFile():
             final_data = self.read_pdf(pdf_file)
             return final_data
 
-    def get_csv_from_file(self):
-        """ Get CVS data from CSV file. Dont have to convert always from PDF. """
-        # import pdb; pdb.set_trace()
-        try:
-            out_csv =  BASE_DIR + self.csv_dir + 'out.csv'
-            with open(out_csv, 'r') as read_obj:
-                csv_reader = csv.reader(read_obj)
-                list_of_rows = list(csv_reader)
-            return list_of_rows
-        except FileNotFoundError:
-            return None
-
 
     def get_dict_from_file(self):
         """ Get CVS data from CSV file. Dont have to convert always from PDF. """

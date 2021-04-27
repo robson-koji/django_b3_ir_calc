@@ -9,23 +9,7 @@ from collections import defaultdict
 from datetime import datetime, date
 
 
-def get_stocks(filename, stocks):
-    """ Read CSV file to store stocks on DB """
-
-    def hasNumbers(inputString):
-        return any(char.isdigit() for char in inputString)
-
-    with open(filename) as file_handler:
-        csv_reader = csv.reader(file_handler, quotechar='"', delimiter=',')
-        for line in csv_reader:
-            # print(line)
-            if '.' in line[4] or 'null' in line[4]:
-                continue
-
-            if not hasNumbers(line[4]):
-                continue
-
-            stocks.add(line[4].split()[0])
+from data_source.views import get_stocks_from_user_file
 
 
 def read_csvs_dir():
@@ -35,10 +19,9 @@ def read_csvs_dir():
     stocks = set()
     for filename in glob.iglob(csvs_path + '**/*.csv', recursive=True):
         print(filename)
-        get_stocks(filename, stocks)
+        get_stocks_from_user_file(filename, stocks)
 
     return (stocks)
-
 
 
 def get_price(stock):
@@ -111,4 +94,4 @@ if __name__ == "__main__":
         # save_stocks(stock, price, hour)
 
 
-    save_json(stock_price)
+    # save_json(stock_price)

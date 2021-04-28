@@ -42,16 +42,17 @@ def screenshot_tradingview(stock):
 
     #browser.get("https://br.tradingview.com/chart?symbol=BMFBOVESPA%3AB3SA3")
     # import pdb; pdb.set_trace()
-    url = "https://br.tradingview.com/chart?symbol=BMFBOVESPA:%s" % (stock.stock)
-    img_name = "%s%s.png" % (images_dir, stock.stock)
+    url = "https://br.tradingview.com/chart?symbol=BMFBOVESPA:%s" % (stock)
+    img_name = "%s%s.png" % (images_dir, stock)
     browser.get(url)
     # browser.get("https://www.lambdatest.com/feature")
-    sleep(90)
+    sleep(60)
     featureElement=browser.find_element_by_class_name('layout__area--center').screenshot(img_name)
     browser.quit()
+
 
 
 for stock in stocks:
     if 'BOVA' in stock.stock:
         continue
-    screenshot_tradingview(stock)
+    screenshot_tradingview(stock.stock)

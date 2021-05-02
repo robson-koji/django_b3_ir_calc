@@ -1,6 +1,8 @@
 import os, re, csv, glob
 import pdftotext
 from django.conf import settings
+from stock_price.models import StockPrice
+
 
 BASE_DIR = settings.BASE_DIR
 
@@ -26,9 +28,18 @@ class EndorsementFile():
             latest_file = None
         return (latest_file)
 
+
+    def stocks_to_db(self, file_stocks):
+        """ Save stocks from endorsement to db """
+        for stock in file_stocks:
+            p, created = StockPrice.objects.get_or_create(
+                stock=stock[1]
+            )
+
     def store_csv(self, final_data):
         """ Grava arquivo CSV em disco """
         #print(*final_data, sep='\n')
+        self.stocks_to_db(final_data)
         csv_path = BASE_DIR + self.csv_dir + 'out.csv'
         with open(csv_path, "w", newline="") as f:
             writer = csv.writer(f)

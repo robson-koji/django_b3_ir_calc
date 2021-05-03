@@ -1,6 +1,7 @@
-import csv
+import csv, string
 
 from django.conf import settings
+from reference_data.models import Ativos
 
 
 
@@ -46,7 +47,28 @@ def get_stocks_from_user_file(filename, stocks):
             stocks.add(line[4].split()[0])
 
 
+
+def get_btc_termo_setorial(papel):
+    papel = papel.rstrip(string.digits)
+
+    try:
+        ativo = Ativos.objects.get(ativo=papel)
+        # import pdb; pdb.set_trace()
+        setorial = ativo.setorial.get_arvore_setorial()
+        # import pdb; pdb.set_trace()
+        indices = '  '.join([str(i) for i in ativo.indice.all()])
+        # import pdb; pdb.set_trace()
+        return (indices,
+                str(ativo.get_pct_sum_btc_termo_vm()),
+                str(ativo.get_pct_btc_vm()),
+                str(ativo.get_pct_termo_vm()),
+                setorial)
+    except:
+        return ('','','','','')
+
+
 def get_stocks_rsi(todas_acoes, acoes_com_status):
+    """ Get RSI index for stocks """
     with open("/var/tmp/stocks_rsi.txt") as f:
         for row in f:
             try:
@@ -55,13 +77,14 @@ def get_stocks_rsi(todas_acoes, acoes_com_status):
                     continue
                 fields[0] = fields[0].replace('.SA', '')
 
+                # Qdo rsi acima de 70 ou abaixo de 30, vem um campo a mais.
                 if len(fields) < 7:
                     last = fields[5]
                     fields[5] = ' '
                     fields.append(last)
+                    fields.append(get_btc_termo_setorial(fields[0]))
                 else:
                     acoes_com_status.append(fields[0])
-
                 todas_acoes.append(fields)
             except:
                 pass

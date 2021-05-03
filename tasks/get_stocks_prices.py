@@ -18,7 +18,7 @@ from django_b3_ir_calc import settings as myapp_defaults
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_b3_ir_calc.settings')
 django.setup()
 from stock_price.models import StockPrice
-from stock_price.stock_price import get_stocks, get_price, read_csvs_dir
+from stock_price.stock_price import get_price, read_csvs_dir
 from corporate_events.models import CorporateEvent
 
 def save_stocks(stock, price, hour):

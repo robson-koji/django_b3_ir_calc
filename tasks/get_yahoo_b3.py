@@ -66,6 +66,7 @@ if __name__ == "__main__":
     for stock in stocks_lst:
         if not stock in data.keys():
             continue
+        # import pdb; pdb.set_trace()
         for i, row in data[stock].iterrows():
             try:
                 if np.isnan(row['Open']):
@@ -73,7 +74,8 @@ if __name__ == "__main__":
                 Cotacoes.objects.get_or_create(
                         stock = stock, datetime = i,
                         open = row['Open'], high = row['High'],
-                        low = row['Low'], close = row['Close']
+                        low = row['Low'], close = row['Close'],
+                        volume = row['Volume']
                 )
             except:
                 continue

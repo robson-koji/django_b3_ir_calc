@@ -88,3 +88,21 @@ def get_stocks_rsi(todas_acoes, acoes_com_status):
                 todas_acoes.append(fields)
             except:
                 pass
+
+
+def get_all_stocks_cleaned_SA():
+    """ return all stocks with SA at the end, for yahoo. """
+
+    # Ignore anything you want
+    ignore = ['BOVA', 'GTWR', 'TIET11', 'CNTO3', 'BMGB11', 'LOGÍSTICA']
+    def cleanup_stocks(stock):
+        for ig in ignore:
+            if ig in stock:
+                return None
+        return stock + ".SA"
+
+    db_stocks = get_stocks_from_db()
+    file_stocks = get_stocks_endorsement()
+    union = set.union(db_stocks, file_stocks)
+    s_l = list(map(cleanup_stocks, union))
+    return [x for x in s_l if x is not None  ]

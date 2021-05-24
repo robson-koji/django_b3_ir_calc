@@ -1,5 +1,5 @@
 from django.db import models
-from datetime import date
+from datetime import date, datetime
 
 class Setorial(models.Model):
     """ Economy sector of the company, reference data """
@@ -131,3 +131,15 @@ class Indice(models.Model):
     indice = models.CharField(max_length=12, choices=IDX_CHOICES, default='order')
     def __str__(self):
             return self.indice
+
+
+class Cotacoes(models.Model):
+    stock = models.CharField(max_length=12, null=True, blank=True)
+    datetime = models.DateTimeField()
+    open = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    high = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    low = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    close = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+
+    class Meta:
+        unique_together = ('stock', 'datetime') 

@@ -140,6 +140,7 @@ class Cotacoes(models.Model):
     high = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     low = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     close = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    volume = models.IntegerField(null=True, blank=True)
 
     class Meta:
-        unique_together = ('stock', 'datetime') 
+        unique_together = ('stock', 'datetime')

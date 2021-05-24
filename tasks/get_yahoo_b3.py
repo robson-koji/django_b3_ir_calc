@@ -17,10 +17,10 @@ from reference_data.models import Cotacoes
 from data_source.views import get_all_stocks_cleaned_SA
 
 stocks_lst = get_all_stocks_cleaned_SA()
-# stocks_lst = ['PETR4.SA', 'BRFS3.SA']
+stocks_lst = ['PETR4.SA', 'BRFS3.SA']
 
 stocks_str = ' '.join(stocks_lst)
-# stocks_str = 'PETR4.SA BRFS3.SA'
+stocks_str = 'PETR4.SA BRFS3.SA'
 
 
 def get_data():
@@ -64,7 +64,7 @@ def get_data():
 if __name__ == "__main__":
     data = get_data()
     for stock in stocks_lst:
-        if not stock in data.index:
+        if not stock in data.keys():
             continue
         for i, row in data[stock].iterrows():
             try:

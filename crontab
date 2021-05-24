@@ -1,3 +1,64 @@
+# Output of the crontab jobs (including errors) is sent through
+# email to the user the crontab file belongs to (unless redirected).
+# 
+# For example, you can run a backup of all your user accounts
+# at 5 a.m every week with:
+# 0 5 * * 1 tar -zcf /var/backups/home.tgz /home/
+# 
+# For more information see the manual pages of crontab(5) and cron(8)
+# 
 
-* * * * * root echo "Hello world" >> /var/log/cron.log 2>&1
-# Don't remove the empty line at the end of this file. It is required to run the cron job
+
+SHELL=/bin/bash
+MAILTO=robson.koji@gmail.com
+
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+
+0   9    *    *    1-5    /home/sf/.virtualenvs/checa_dividendos/bin/python /home/sf/projetos/dividendos/checa_dividendos_lf_gi.py > /dev/null
+0   16    *    *    1-5    /home/sf/.virtualenvs/checa_dividendos/bin/python /home/sf/projetos/dividendos/checa_dividendos_lf_gi.py > /dev/null 
+
+10   9    *    *    1-5    /home/sf/.virtualenvs/checa_dividendos/bin/python /home/sf/projetos/top_picks/top_picks.py >> /var/log/cron.log 2>&1 
+10   16    *    *    1-5    /home/sf/.virtualenvs/checa_dividendos/bin/python /home/sf/projetos/top_picks/top_picks.py >> /var/log/cron.log 2>&1
+
+
+# Atualiza cotacoes
+35 10,12,14,16,18 * * 1-5 export PYTHONPATH=/home/sf/projetos/django_b3_ir_calc/ && /home/sf/.virtualenvs/django_b3_ir_calc/bin/python /home/sf/projetos/django_b3_ir_calc/tasks/get_stocks_prices.py  >> /var/log/cron.log 2>&1
+
+35 10 * * 6-7 export PYTHONPATH=/home/sf/projetos/django_b3_ir_calc/ && /home/sf/.virtualenvs/django_b3_ir_calc/bin/python /home/sf/projetos/django_b3_ir_calc/tasks/get_stocks_prices.py  >> /var/log/cron.log 2>&1
+
+
+#35 7,10,15,19,21 * * 1-5 export PYTHONPATH=/home/sf/projetos/django_b3_ir_calc/ && /home/sf/.virtualenvs/django_b3_ir_calc/bin/python /home/sf/projetos/django_b3_ir_calc/tasks/get_stocks_prices.py  >> /var/log/cron.log 2>&1
+
+
+# B3 dados referenciais - classif_setorial, valor_mercado, aluguel, termo
+0 5 * * 1-5 export PYTHONPATH=/home/sf/projetos/django_b3_ir_calc/ && /home/sf/.virtualenvs/django_b3_ir_calc/bin/python /home/sf/projetos/django_b3_ir_calc/reference_data/downloads/b3/downloads.py classif_setorial >> /var/log/cron.log 2>&1
+
+0 8,14,20 * * 1-5 export PYTHONPATH=/home/sf/projetos/django_b3_ir_calc/ && /home/sf/.virtualenvs/django_b3_ir_calc/bin/python /home/sf/projetos/django_b3_ir_calc/reference_data/downloads/b3/downloads.py valor_mercado >> /var/log/cron.log 2>&1
+
+0 8,14,20 * * 1-5 export PYTHONPATH=/home/sf/projetos/django_b3_ir_calc/ && /home/sf/.virtualenvs/django_b3_ir_calc/bin/python /home/sf/projetos/django_b3_ir_calc/reference_data/downloads/b3/downloads.py aluguel >> /var/log/cron.log 2>&1
+
+0 8,14,20 * * 1-5 export PYTHONPATH=/home/sf/projetos/django_b3_ir_calc/ && /home/sf/.virtualenvs/django_b3_ir_calc/bin/python /home/sf/projetos/django_b3_ir_calc/reference_data/downloads/b3/downloads.py termo >> /var/log/cron.log 2>&1
+
+# Indices Setoriais
+0 4 * * 1-5 export PYTHONPATH=/home/sf/projetos/django_b3_ir_calc/ && /home/sf/.virtualenvs/django_b3_ir_calc/bin/python /home/sf/projetos/django_b3_ir_calc/reference_data/downloads/infomoney/download.py /var/log/cron.log 2>&1
+
+
+# Graficos screenshot
+15 3 * * 1-5 export PYTHONPATH=/home/sf/projetos/django_b3_ir_calc/ && /home/sf/.virtualenvs/django_b3_ir_calc/bin/python /home/sf/projetos/django_b3_ir_calc/tasks/get_tradingview_charts.py  >> /var/log/cron.log 2>&1
+
+
+# RSI
+# Gera arquivos
+0 17 * * 1-7 export pythonpath=/home/sf/projetos/django_b3_ir_calc/ && /home/sf/.virtualenvs/django_b3_ir_calc/bin/python /home/sf/projetos/django_b3_ir_calc/tasks/gen_python-rsi_file.py >> /var/log/cron.log 2>&1
+
+# Get from Yahoo
+0 19 * * 1-5 export pythonpath=/home/sf/projetos/python-rsi/ && /home/sf/.virtualenvs/python-rsi/bin/python /home/sf/projetos/python-rsi/src/main.py > /var/tmp/stocks_rsi.txt 2>&1
+
+
+# Get cotacoes acoes from Yahoo
+*/15 8-18 * * 1-5 export PYTHONPATH=/home/sf/projetos/django_b3_ir_calc/ && /home/sf/.virtualenvs/django_b3_ir_calc/bin/python /home/sf/projetos/django_b3_ir_calc/tasks/get_yahoo_b3.py  >> /var/log/cron.log 2>&1
+
+
+
+

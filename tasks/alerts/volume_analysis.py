@@ -10,7 +10,7 @@ django.setup()
 from reference_data.models import Cotacoes
 from utils.views import send_email
 from data_source.views import *
-
+from alerts.models import *
 
 
 def resample(tframe, ts):
@@ -22,7 +22,7 @@ def resample(tframe, ts):
     return ts.resample(tframe).agg({'open':'first', 'high':'max', 'low':'min', 'close':'last', 'volume': 'sum'})
 
 
-def get_stocks(tf, rsi_threshold):
+def get_stocks(rsi_threshold):
     """ Recupera acoes sobrevendidas """
     # All Stocks
     stocks_lst = get_all_stocks_cleaned_SA()
@@ -72,20 +72,10 @@ def ma(span, ts):
     return ts
 
 
-def buy_mm(ts):
-    """ Sinal de compra cruzamento MM com base em tf definido para cada papel """
-    (ewm_blast, ewm_last) = ma(9, ts)[-2:]
-    close_blast = ts['close'][1]
-    low_last = ts['low'][0]
-
-    if low_last < ewm_last and close_blast > ewm_blast:
-        print(low_last , ewm_last , close_blast , ewm_blast)
-        #import pdb; pdb.set_trace()
-        return True
-    return False
 
 
-def loop_stocks(stocks_lst, check_business):
+
+def loop_stocks_awake(tframe, stocks_lst, check_business):
     html = ''
     for stock in stocks_lst:
         print(stock)
@@ -93,7 +83,7 @@ def loop_stocks(stocks_lst, check_business):
         try:
             df = pd.DataFrame(list(Cotacoes.objects.filter(stock=stock).order_by('-datetime').values()))
             ts = df.set_index('datetime')
-            sr = resample(tf, ts)
+            sr = resample(tframe, ts)
         except Exception as e:
             print(e)
             continue
@@ -113,21 +103,73 @@ def loop_stocks(stocks_lst, check_business):
     return html
 
 
+
+
+
+
+
+
+
+# def get_mmalert():
+def buy_mm(ts):
+    """ Sinal de compra cruzamento MM com base em tf definido para cada papel """
+    (ewm_blast, ewm_last) = ma(9, ts)[-2:]
+    close_blast = ts['close'][1]
+    low_last = ts['low'][0]
+
+    if low_last < ewm_last and close_blast > ewm_blast:
+        # print(low_last , ewm_last , close_blast , ewm_blast)
+        #import pdb; pdb.set_trace()
+        return True
+    return False
+
+
+def loop_stocks_mm_alert(stocks_lst):
+    html = ''
+    for stk in stocks_lst:
+        stock = stk.stock + '.SA'
+#        print(stock)
+        try:
+            df = pd.DataFrame(list(Cotacoes.objects.filter(stock=stock).order_by('-datetime').values()))
+            ts = df.set_index('datetime')
+            sr = resample(stk.timeframe, ts)
+        except Exception as e:
+            print(e)
+            continue
+
+        # Drop row when column is NAN
+        sr.dropna(subset = ["open"], inplace=True)
+
+        mean = stk.smm if stk.smm else stk.emm
+        if buy_mm(sr):
+            html += '<b>Stock: %s </b> - Date: %s - Value: %s - Mean: %s - Timeframe: %s <br>' % \
+                (stock, str(sr.index[-1]), str(sr.index[-1]), str(mean), str(stk.timeframe[-1]))
+    return html
+
+
+
 if __name__ == "__main__":
     """
     sys.argv[1] == 'chk_awake': Verifica se tem papel sobrevendido.
+    sys.argv[1] == 'mm_alert': Verifica se tem papel sobrevendido.
     """
 
     if sys.argv[1] == 'chk_awake':
         # Ativa compra nos 15
-        tf = '15min'
+        tframe = '15min'
         rsi_threshold = 35
-        stocks_lst = get_stocks(tf, rsi_threshold)
-
-
-        awake_html = loop_stocks(stocks_lst, check_business='chk_awake')        
+        stocks_lst = get_stocks(rsi_threshold)
+        awake_html = loop_stocks_awake(tframe, stocks_lst, check_business='chk_awake')
         if awake_html:
             send_email('Awakening', awake_html)
+
+    if sys.argv[1] == 'mm_alert':
+        stocks_lst = MmAlert.objects.filter(active=True)
+        #stocks_lst = mm_alerts.values_list('stock', flat=True)
+        mm_alert_html = loop_stocks_mm_alert(stocks_lst)
+        if mm_alert_html:
+            send_email('MM Alert', mm_alert_html)
+
 
 
     # Ativa compra em MM nos tempos que o mercado estah operando.

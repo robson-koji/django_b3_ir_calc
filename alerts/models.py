@@ -23,3 +23,9 @@ class MmAlert(models.Model):
 
     def __str__(self):
             return "%s: %s SMM: %s EMM: %s" % (self.stock, self.timeframe, self.smm, self.emm)
+
+class SendAlert(models.Model):
+    stock = models.CharField(max_length=12, null=True, blank=True)
+    alert = models.CharField(max_length=64, null=True, blank=True)
+    desc = models.CharField(max_length=1024, null=True, blank=True)
+    date = models.DateField()

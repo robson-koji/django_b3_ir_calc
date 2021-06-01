@@ -1,7 +1,9 @@
-import os, django
-from django.conf import settings
-import pandas as pd
 import sys
+import os, django
+import pandas as pd
+from datetime import date
+
+from django.conf import settings
 
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_b3_ir_calc.settings')
@@ -19,8 +21,8 @@ def resample(tframe, ts):
     de acordo com a necessidade.
     https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.resample.html
     """
-    return ts.resample(tframe).agg({'open':'first', 'high':'max', 'low':'min', 'close':'last', 'volume': 'sum'})
-
+    ts = ts.tz_convert('America/Sao_Paulo')
+    return ts.resample(tframe, origin='start').agg({'open':'first', 'high':'max', 'low':'min', 'close':'last', 'volume': 'sum'})
 
 def get_stocks(rsi_threshold):
     """ Recupera acoes sobrevendidas """
@@ -78,7 +80,7 @@ def ma(span, ts):
 def loop_stocks_awake(tframe, stocks_lst, check_business):
     html = ''
     for stock in stocks_lst:
-        print(stock)
+        # print(stock)
         stock = stock + '.SA'
         try:
             df = pd.DataFrame(list(Cotacoes.objects.filter(stock=stock).order_by('-datetime').values()))
@@ -91,21 +93,21 @@ def loop_stocks_awake(tframe, stocks_lst, check_business):
         # Drop row when column is NAN
         sr.dropna(subset = ["open"], inplace=True)
 
-        # Precisa criar um app para gravar os alarmes.
-        #print(buy_mm(sr))
         if check_business == 'chk_awake':
             mean = awake(sr)
+
             if mean:
-                # import pdb; pdb.set_trace()
-                html += '<b>Stock: %s </b> - Date: %s - Mean: %s - Close: %s <br>' % \
-                    (stock, str(sr.index[-1]),  str(mean), str(sr['close'][-1]))
-                # awake_lst.append([stock, sr.index[-1],  mean, sr['close'][-1]])
+                p, created = SendAlert.objects.get_or_create(date=date.today(),
+                                                            stock=stock,
+                                                            alert='awake',
+                                                            desc='Stock: %s - Date: %s - Mean: %s - Close: %s' % \
+                                                                (stock, str(sr.index[-1]),  str(mean), str(sr['close'][-1]))
+                                                            )
+                # Envia somente uma vez por dia.
+                if created:
+                    html += '<b>Stock: %s </b> - Date: %s - Mean: %s - Close: %s <br>' % \
+                        (stock, str(sr.index[-1]),  str(mean), str(sr['close'][-1]))
     return html
-
-
-
-
-
 
 
 
@@ -118,8 +120,6 @@ def buy_mm(ts):
     low_last = ts['low'][0]
 
     if low_last < ewm_last and close_blast > ewm_blast:
-        # print(low_last , ewm_last , close_blast , ewm_blast)
-        #import pdb; pdb.set_trace()
         return True
     return False
 
@@ -127,6 +127,10 @@ def buy_mm(ts):
 def loop_stocks_mm_alert(stocks_lst):
     html = ''
     for stk in stocks_lst:
+
+        # if stk.stock != 'WEGE3':
+        #     continue
+
         stock = stk.stock + '.SA'
 #        print(stock)
         try:
@@ -142,8 +146,16 @@ def loop_stocks_mm_alert(stocks_lst):
 
         mean = stk.smm if stk.smm else stk.emm
         if buy_mm(sr):
-            html += '<b>Stock: %s </b> - Date: %s - Value: %s - Mean: %s - Timeframe: %s <br>' % \
-                (stock, str(sr.index[-1]), str(sr.index[-1]), str(mean), str(stk.timeframe[-1]))
+            p, created = SendAlert.objects.get_or_create(date=date.today(),
+                                                        stock=stock,
+                                                        alert='mm_alert',
+                                                        desc='Stock: %s - Date: %s - Mean: %s - Low: %s - Timeframe: %s' % \
+                                                            (stock, str(sr.index[-1]), str(mean), str(sr['low'][-1]), str(stk.timeframe[-1]))
+                                                        )
+            # Envia somente uma vez por dia.
+            if created:
+                html += '<b>Stock: %s </b> - Date: %s - Mean: %s - Low: %s - Timeframe: %s <br>' % \
+                    (stock, str(sr.index[-1]), str(mean), str(sr['low'][-1]), str(stk.timeframe[-1]))
     return html
 
 

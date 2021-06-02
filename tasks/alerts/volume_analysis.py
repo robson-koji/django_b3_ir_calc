@@ -116,9 +116,15 @@ def loop_stocks_awake(tframe, stocks_lst, check_business):
 def buy_mm(ts):
     """ Sinal de compra cruzamento MM com base em tf definido para cada papel """
     (ewm_blast, ewm_last) = ma(9, ts)[-2:]
-    close_blast = ts['close'][1]
-    low_last = ts['low'][0]
+    close_blast = ts['low'][-2]
+    low_last = ts['low'][-1]
 
+    print("ewm_blast: %s" % (str(ewm_blast)))
+    print("ewm_last: %s" % (str(ewm_last)))
+    print("low_last: %s" % (str(low_last)))
+    print("close_blast: %s" % (str(close_blast)))
+
+    #import pdb; pdb.set_trace()
     if low_last < ewm_last and close_blast > ewm_blast:
         return True
     return False
@@ -128,8 +134,8 @@ def loop_stocks_mm_alert(stocks_lst):
     html = ''
     for stk in stocks_lst:
 
-        # if stk.stock != 'WEGE3':
-        #     continue
+        if stk.stock != 'WEGE3':
+            continue
 
         stock = stk.stock + '.SA'
 #        print(stock)
@@ -145,6 +151,8 @@ def loop_stocks_mm_alert(stocks_lst):
         sr.dropna(subset = ["open"], inplace=True)
 
         mean = stk.smm if stk.smm else stk.emm
+        print( stock )
+        print( mean )
         if buy_mm(sr):
             p, created = SendAlert.objects.get_or_create(date=date.today(),
                                                         stock=stock,

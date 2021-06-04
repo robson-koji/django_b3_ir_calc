@@ -134,8 +134,8 @@ def loop_stocks_mm_alert(stocks_lst):
     html = ''
     for stk in stocks_lst:
 
-        if stk.stock != 'WEGE3':
-            continue
+        # if stk.stock != 'WEGE3':
+        #     continue
 
         stock = stk.stock + '.SA'
 #        print(stock)

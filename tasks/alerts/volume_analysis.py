@@ -1,4 +1,4 @@
-import sys
+import sys, pdb, math
 import os, django
 import pandas as pd
 from datetime import date
@@ -113,16 +113,25 @@ def loop_stocks_awake(tframe, stocks_lst, check_business):
 
 
 # def get_mmalert():
-def buy_mm(ts):
+def buy_mm(ts, stk):
     """ Sinal de compra cruzamento MM com base em tf definido para cada papel """
-    (ewm_blast, ewm_last) = ma(9, ts)[-2:]
+    mm = stk.smm if stk.smm else stk.emm
+
+    (ewm_blast, ewm_last) = ma(mm, ts)[-2:]
     close_blast = ts['low'][-2]
     low_last = ts['low'][-1]
 
-    print("ewm_blast: %s" % (str(ewm_blast)))
-    print("ewm_last: %s" % (str(ewm_last)))
+    if math.isnan(ewm_last) or math.isnan(ewm_blast):
+        return False
+
+    print ("low_last < ewm_last: %s" % (str(low_last < ewm_last)))
     print("low_last: %s" % (str(low_last)))
+    print("ewm_last: %s" % (str(ewm_last)))
+
+    print ("close_blast > ewm_blast: %s" % (str(close_blast > ewm_blast)))
     print("close_blast: %s" % (str(close_blast)))
+    print("ewm_blast: %s" % (str(ewm_blast)))
+    print()
 
     #import pdb; pdb.set_trace()
     if low_last < ewm_last and close_blast > ewm_blast:
@@ -152,8 +161,8 @@ def loop_stocks_mm_alert(stocks_lst):
 
         mean = stk.smm if stk.smm else stk.emm
         print( stock )
-        print( mean )
-        if buy_mm(sr):
+        print( "Mean: %i" % (mean) )
+        if buy_mm( sr, stk ):
             p, created = SendAlert.objects.get_or_create(date=date.today(),
                                                         stock=stock,
                                                         alert='mm_alert',

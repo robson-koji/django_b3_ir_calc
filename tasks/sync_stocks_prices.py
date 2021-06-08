@@ -43,8 +43,8 @@ if __name__ == "__main__":
     # import pdb; pdb.set_trace()
     for stock in stocks_list:
         try:
-            stock = stock + '.SA'
-            stock_sync = Cotacoes.objects.filter(stock=stock).order_by('id').last()
+            stock_sa = stock + '.SA'
+            stock_sync = Cotacoes.objects.filter(stock=stock_sa).order_by('id').last()
             save_stocks(stock, stock_sync.close, str(stock_sync.datetime))
         except:
             continue

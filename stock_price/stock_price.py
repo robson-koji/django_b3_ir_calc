@@ -4,7 +4,7 @@ import glob, csv
 import bs4, json, requests
 
 from bs4 import BeautifulSoup
-from urllib.request import urlopen
+from urllib.request import urlopen, Request
 from collections import defaultdict
 from datetime import datetime, date
 
@@ -24,16 +24,35 @@ def read_csvs_dir():
     return (stocks)
 
 
+def get_headers():
+    return {"accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+            "accept-encoding": "gzip, deflate, br",
+            "accept-language": "en-GB,en;q=0.9,en-US;q=0.8,ml;q=0.7",
+            "cache-control": "max-age=0",
+            "dnt": "1",
+            "sec-fetch-dest": "document",
+            "sec-fetch-mode": "navigate",
+            "sec-fetch-site": "none",
+            "sec-fetch-user": "?1",
+            "upgrade-insecure-requests": "1",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.122 Safari/537.36"}
+
+
+
 def get_price(stock):
     """ Get stock prices on Yahoo Finance """
 
+    # stock = 'KLBN11'
     url = 'https://finance.yahoo.com/quote/%s.sa' % (stock)
+    # import pdb; pdb.set_trace()
     try:
         # print(url)
-        page = urlopen(url)
-        soup = bs4.BeautifulSoup(page,'html.parser')
+        #page = urlopen(url)
+        page = requests.get(url, headers=get_headers())
+        soup = bs4.BeautifulSoup(page.content,'html.parser')
         price = soup.find('div',{'class': 'My(6px) Pos(r) smartphone_Mt(6px)'}).find('span').text
         hour = soup.find('div',{'class': 'My(6px) Pos(r) smartphone_Mt(6px)'}).findAll('span')[-1].text
+        # import pdb; pdb.set_trace()
         return (price, hour)
     except AttributeError:
         print(url)

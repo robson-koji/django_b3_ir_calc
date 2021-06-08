@@ -118,7 +118,7 @@ def buy_mm(ts, stk):
     mm = stk.smm if stk.smm else stk.emm
 
     (ewm_blast, ewm_last) = ma(mm, ts)[-2:]
-    close_blast = ts['low'][-2]
+    low_blast = ts['low'][-2]
     low_last = ts['low'][-1]
 
     if math.isnan(ewm_last) or math.isnan(ewm_blast):
@@ -128,13 +128,13 @@ def buy_mm(ts, stk):
     print("low_last: %s" % (str(low_last)))
     print("ewm_last: %s" % (str(ewm_last)))
 
-    print ("close_blast > ewm_blast: %s" % (str(close_blast > ewm_blast)))
-    print("close_blast: %s" % (str(close_blast)))
+    print ("low_blast > ewm_blast: %s" % (str(low_blast > ewm_blast)))
+    print("low_blast: %s" % (str(low_blast)))
     print("ewm_blast: %s" % (str(ewm_blast)))
     print()
 
     #import pdb; pdb.set_trace()
-    if low_last < ewm_last and close_blast > ewm_blast:
+    if low_last < ewm_last and low_blast > ewm_blast:
         return True
     return False
 

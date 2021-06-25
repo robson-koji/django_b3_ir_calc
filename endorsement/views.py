@@ -32,9 +32,12 @@ class EndorsementFile():
     def stocks_to_db(self, file_stocks):
         """ Save stocks from endorsement to db """
         for stock in file_stocks:
-            p, created = StockPrice.objects.get_or_create(
-                stock=stock[1]
-            )
+            try:
+                p, created = StockPrice.objects.get_or_create(
+                    stock=stock[1]
+                )
+            except:
+                pass
 
     def store_csv(self, final_data):
         """ Grava arquivo CSV em disco """

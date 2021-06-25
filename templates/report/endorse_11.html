@@ -184,8 +184,10 @@ tr[role=row]{
                         <!-- Anchor in error case -->
                         <a name="upload_endorse_file"></a>
                         <h5>
-                          Brokerage analysis
+                          Brokerage analysis - 11 layout Only
                         </h5>
+                        {% comment %}
+                        Nao existe mais o arquivo da XP.
                         <p>
                           <label class="radio-inline">
                             <input type="radio" name="optionsRadiosEndorsement" value="eleven"> Eleven
@@ -194,6 +196,8 @@ tr[role=row]{
                             <input type="radio" name="optionsRadiosEndorsement" value="xp">XP
                           </label>
                         </p>
+                        {% endcomment %}
+                        <input type="hidden" name="optionsRadiosEndorsement" value="eleven" />
                         <p><input type="file" name="upload_endorse_file" id="upload_endorse_file" /></p>
                         <p><button type="submit">Submit</button></p>
                     </div>

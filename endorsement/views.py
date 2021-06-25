@@ -127,14 +127,31 @@ class DataEleven(EndorsementFile):
 
             line = line.replace('%', '')
 
-
             line_split = line.split()
             line_split.reverse()
+
+
+            # Bloco incluido no dia 24/Jun/21
+            # Alteracao no layout
+            if not any(char.isdigit() for char in line_split[-2]):
+                line_split[-2] = line_split[-1] + ' ' + line_split[-2]
+                line_split.pop()
+            line_split.pop(0)
+            ##
 
             if line_split[5] == '-':
                 line_split.insert( 6, '-')
 
             nome = ''
+
+
+
+            # print(line_split)
+            # print(len(line_split))
+
+
+
+
             for idx in range(len(line_split)):
                 if idx <= 11:
                     dict_line['data'].append(line_split[idx])
@@ -146,8 +163,11 @@ class DataEleven(EndorsementFile):
             dict_line['data'].append(dict_line['alerta'])
             list_data.append(dict_line['data'])
 
-        #print(*list_data, sep='\n')
+        # print(*list_data, sep='\n')
 
+        # for ld in list_data:
+        #     print("%s: %s" % (ld[1], ld[7]))
+        # import pdb; pdb.set_trace()
         return list_data
 
 

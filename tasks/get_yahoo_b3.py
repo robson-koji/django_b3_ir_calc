@@ -18,10 +18,10 @@ from data_source.views import get_all_stocks_cleaned_SA
 
 stocks_lst = get_all_stocks_cleaned_SA()
 # stocks_lst = ['PETR4.SA', 'BRFS3.SA']
+stocks_lst = [stock.replace('.SA.SA', '.SA') for stock in stocks_lst]
 
 stocks_str = ' '.join(stocks_lst)
 # stocks_str = 'PETR4.SA BRFS3.SA'
-
 
 def get_data():
     data = yf.download(  # or pdr.get_data_yahoo(...

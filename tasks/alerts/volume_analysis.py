@@ -22,7 +22,7 @@ def resample(tframe, ts):
     https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.resample.html
     """
     ts = ts.tz_convert('America/Sao_Paulo')
-    return ts.resample(tframe, origin='start').agg({'open':'first', 'high':'max', 'low':'min', 'close':'last', 'volume': 'sum'})
+    return ts.resample(tframe).agg({'open':'first', 'high':'max', 'low':'min', 'close':'last', 'volume': 'sum'})
 
 def get_stocks(rsi_threshold):
     """ Recupera acoes sobrevendidas """

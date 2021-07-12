@@ -41,6 +41,9 @@ if __name__ == "__main__":
     stocks_list = list(set(stocks) | set(stocks_db) | set(stocks_new_code))
     # import pdb; pdb.set_trace()
     for stock in stocks_list:
+        if stock is None:
+            continue
+        stock = stock.replace('.SA', '')
         try:
             (price, hour) = get_price(stock)
             if price and hour:

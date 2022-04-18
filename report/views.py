@@ -117,8 +117,11 @@ class ProxyView(View):
 
     def get_broker(self):
         """ Get broker from self.file """
-        with open("%s%s" % (self.path, self.file)) as f:
-            first_line = f.readline()
+        try:
+            with open("%s%s" % (self.path, self.file)) as f:
+                first_line = f.readline()
+        except:
+            return None
         try:
             self.broker = Broker.objects.get(code=int(first_line.split(',')[0]))
         except:

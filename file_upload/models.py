@@ -46,12 +46,15 @@ def update_stock_price(sender, instance, **kwargs):
     # Para testar sem ter que atualizar sempre.
     today = date.today() - timedelta(days=4)
     file = instance.docfile.name
+    if not '.csv' in file:        
+        # Excel 2 CSV conversion
+        excel_to_csv(path=None, file=file)
 
-    # Excel 2 CSV conversion
-    excel_to_csv(path=None, file=file)
-
-    csv_path = "%s%s" % (settings.MEDIA_ROOT, file)
-    csv_path = csv_path.replace('.xls', '.csv')
+        csv_path = "%s%s" % (settings.MEDIA_ROOT, file)
+        csv_path = csv_path.replace('.xls', '.csv')
+    else:
+        csv_path = "%s%s" % (settings.MEDIA_ROOT, file)
+        
     stocks = set()
 
     # Get stocks from csv

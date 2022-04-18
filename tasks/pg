@@ -1,1 +1,0 @@
-﻿SELECT * FROM reference_data_cotacoes WHERE stock = 'WEGE3.SA'

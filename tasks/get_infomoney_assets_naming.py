@@ -92,8 +92,8 @@ def get_b3_detail(stock=None, dev=False):
             
         soup = bs4.BeautifulSoup(page.content,'html.parser')
     try:
-        
-        return (soup.find('div',{'class': 'acao-desc'}).text) #--> InvestNews
+        text = soup.find('div',{'class': 'acao-desc'}).text.strip()        
+        return (text) #--> InvestNews
         #return (soup.find('p',{'class': 'stock-name'}).text) --> Infomoney
     except AttributeError:
         return None
@@ -101,7 +101,7 @@ def get_b3_detail(stock=None, dev=False):
 
 def save_stocks(stock, name, setor):
     try:
-        stock_obj = StockPrice.objects.get(stock=stock)
+        stock_obj, created = StockPrice.objects.get_or_create(stock=stock)
         stock_obj.name = name
         stock_obj.sector = setor
         stock_obj.save()
@@ -113,6 +113,7 @@ if __name__ == '__main__':
     empty_names =  set(StockPrice.objects.filter(name__isnull=True).values_list('stock', flat=True))
     # setores = get_b3_list(dev=True)
 
+    empty_names = ['CMIN3']
     # pdb.set_trace()
 
     for stock in empty_names:            

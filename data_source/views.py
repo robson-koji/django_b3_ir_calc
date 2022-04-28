@@ -1,4 +1,5 @@
 import csv, string
+import pdb
 
 from django.conf import settings
 from reference_data.models import Ativos
@@ -37,13 +38,19 @@ def get_stocks_from_user_file(filename, stocks):
     with open(filename) as file_handler:
         csv_reader = csv.reader(file_handler, quotechar='"', delimiter=',')
         for line in csv_reader:
-            # print(line)
-            if '.' in line[4] or 'null' in line[4]:
-                continue
+            try:
+                if len(line) == 0:
+                    continue
+                
+                if '.' in line[4] or 'null' in line[4]:
+                    continue
 
-            if not hasNumbers(line[4]):
-                continue
-
+                if not hasNumbers(line[4]):
+                    continue
+            except Exception as e:
+                print(e)
+                print(line)                
+                pdb.set_trace()
             stocks.add(line[4].split()[0])
 
 

@@ -3,6 +3,7 @@
 *.sqlite3
 *.pdf
 *.log
+*.ods
 
 local_settings.py
 
@@ -11,6 +12,7 @@ files/*
 
 local_conf.py
 stock_price.json
+cp.py
 
 # Created by https://www.gitignore.io/api/python
 # Edit at https://www.gitignore.io/?templates=python
